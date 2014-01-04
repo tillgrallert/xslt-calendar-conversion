@@ -30,7 +30,6 @@
                 Distributed under a Creative Commons Attribution-ShareAlike 3.0
                 Unported License http://creativecommons.org/licenses/by-sa/3.0/ 
                 
-                2. http://www.opensource.org/licenses/BSD-2-Clause
                 
                 All rights reserved.
                 
