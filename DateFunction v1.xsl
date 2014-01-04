@@ -697,6 +697,153 @@
         <xsl:value-of select="$vMonth"/>
     </xsl:template>
     
+    <!-- This template takes a date string as input and outputs a correctly formatted tei:date node with @when and @when-custom attributes depending on the calendar -->
+    <xsl:template name="funcDateFormatTei">
+        <xsl:param name="pDate"/>
+        <!-- pCal selects the input calendar: 'G', 'J', 'M', or 'H' -->
+        <xsl:param name="pCal"/>
+        <!-- pOutput establishes whether the original input or a formatted date is produced as output / content of the tei:date node. Values are 'original' and 'formatted' -->
+        <xsl:param name="pOutput" select="'original'"/>
+        <xsl:element name="tei:date">
+            <!-- attributes -->
+            <xsl:choose>
+                <xsl:when test="$pCal='G'">
+                    <xsl:attribute name="when" select="$pDate"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:choose>
+                        <xsl:when test="$pCal='J'">
+                            <xsl:variable name="vDateG">
+                                <xsl:call-template name="funcDateJ2G">
+                                    <xsl:with-param name="pDateJ" select="$pDate"/>
+                                </xsl:call-template>
+                            </xsl:variable>
+                            <xsl:attribute name="when" select="$vDateG"/> 
+                            <xsl:attribute name="when-custom" select="$pDate"/>
+                            <xsl:attribute name="calendar" select="'#julian'"/>
+                            <xsl:attribute name="datingMethod" select="'#julian'"/>
+                        </xsl:when>
+                        <xsl:when test="$pCal='M'">
+                            <!--<xsl:variable name="vDateG">
+                                <xsl:call-template name="funcDateM2G">
+                                    <xsl:with-param name="pDateM" select="$pDate"/>
+                                </xsl:call-template>
+                            </xsl:variable>
+                            <xsl:attribute name="when" select="$vDateG"/> -->
+                            <xsl:attribute name="when-custom" select="$pDate"/>
+                            <xsl:attribute name="calendar" select="'#ottomanfiscal'"/>
+                            <xsl:attribute name="datingMethod" select="'#ottomanfiscal'"/>
+                        </xsl:when>
+                        <xsl:when test="$pCal='H'">
+                            <xsl:variable name="vDateG">
+                                <xsl:call-template name="funcDateH2G">
+                                    <xsl:with-param name="pDateH" select="$pDate"/>
+                                </xsl:call-template>
+                            </xsl:variable>
+                            <xsl:attribute name="when" select="$vDateG"/> 
+                            <xsl:attribute name="when-custom" select="$pDate"/>
+                            <xsl:attribute name="calendar" select="'#islamic'"/>
+                            <xsl:attribute name="datingMethod" select="'#islamic'"/>
+                        </xsl:when>
+                    </xsl:choose>
+                </xsl:otherwise>
+            </xsl:choose>
+            <!-- element content -->
+            <xsl:choose>
+                <xsl:when test="$pOutput='formatted'">
+                    <xsl:choose>
+                        <xsl:when test="$pCal='G'">
+                            <xsl:value-of select="format-number(number(tokenize($pDate,'-')[3]),'0')"/>
+                            <xsl:text> </xsl:text>
+                            <xsl:call-template name="funcDateMonthNameNumber">
+                                <xsl:with-param name="pDate" select="$pDate"/>
+                                <xsl:with-param name="pMode" select="'name'"/>
+                                <xsl:with-param name="pLang" select="'Gen'"/>
+                            </xsl:call-template>
+                            <xsl:text> </xsl:text>
+                            <xsl:value-of select="tokenize($pDate,'-')[1]"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:choose>
+                                <xsl:when test="$pCal='J'">
+                                    <xsl:value-of select="format-number(number(tokenize($pDate,'-')[3]),'0')"/>
+                                    <xsl:text> </xsl:text>
+                                    <xsl:call-template name="funcDateMonthNameNumber">
+                                        <xsl:with-param name="pDate" select="$pDate"/>
+                                        <xsl:with-param name="pMode" select="'name'"/>
+                                        <xsl:with-param name="pLang" select="'JIjmes'"/>
+                                    </xsl:call-template>
+                                    <xsl:text> </xsl:text>
+                                    <xsl:value-of select="tokenize($pDate,'-')[1]"/>
+                                </xsl:when>
+                                <xsl:when test="$pCal='M'">
+                                    <xsl:value-of select="format-number(number(tokenize($pDate,'-')[3]),'0')"/>
+                                    <xsl:text> </xsl:text>
+                                    <xsl:call-template name="funcDateMonthNameNumber">
+                                        <xsl:with-param name="pDate" select="$pDate"/>
+                                        <xsl:with-param name="pMode" select="'name'"/>
+                                        <xsl:with-param name="pLang" select="'MIjmes'"/>
+                                    </xsl:call-template>
+                                    <xsl:text> </xsl:text>
+                                    <xsl:value-of select="tokenize($pDate,'-')[1]"/>
+                                </xsl:when>
+                                <xsl:when test="$pCal='H'">
+                                    <xsl:value-of select="format-number(number(tokenize($pDate,'-')[3]),'0')"/>
+                                    <xsl:text> </xsl:text>
+                                    <xsl:call-template name="funcDateMonthNameNumber">
+                                        <xsl:with-param name="pDate" select="$pDate"/>
+                                        <xsl:with-param name="pMode" select="'name'"/>
+                                        <xsl:with-param name="pLang" select="'HIjmes'"/>
+                                    </xsl:call-template>
+                                    <xsl:text> </xsl:text>
+                                    <xsl:value-of select="tokenize($pDate,'-')[1]"/>
+                                </xsl:when>
+                            </xsl:choose>
+                        </xsl:otherwise>
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$pDate"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:element>
+        
+        <!-- this part of the template can produce a calendarDesc element for the teiHeader -->
+        <!--<xsl:choose>
+            <xsl:when test="$pCal='G'"/>
+            <xsl:otherwise>
+                <xsl:element name="tei:calendarDesc">
+                <xsl:choose>
+                    <xsl:when test="$pCal='J'">
+                        <xsl:element name="tei:calendar">
+                            <xsl:attribute name="xml:id">julian</xsl:attribute>
+                            <xsl:element name="tei:p">
+                                <xsl:text>Reformed Julian calendar beginning the Year with 1 January. In the Ottoman context usually referred to as Rūmī.</xsl:text>
+                            </xsl:element>
+                        </xsl:element>
+                    </xsl:when>
+                    <xsl:when test="$pCal='M'">
+                        <xsl:element name="tei:calendar">
+                            <xsl:attribute name="xml:id">ottomanfiscal</xsl:attribute>
+                            <xsl:element name="tei:p">
+                                <xsl:text>Ottoman fiscal calendar: an Old Julian calendar beginning the Year with 1 March. The year count is synchronised to the Islamic Hijrī calendar. In the Ottoman context usually referred to as Mālī or Rūmī.</xsl:text>
+                            </xsl:element>
+                        </xsl:element>
+                    </xsl:when>
+                    <xsl:when test="$pCal='H'">
+                        <xsl:element name="tei:calendar">
+                            <xsl:attribute name="xml:id">islamic</xsl:attribute>
+                            <xsl:element name="tei:p">
+                                <xsl:text>Islamic Hijrī calendar beginning the Year with 1 Muḥarram.</xsl:text>
+                            </xsl:element>
+                        </xsl:element>
+                    </xsl:when>
+                </xsl:choose>
+                </xsl:element>
+            </xsl:otherwise>
+        </xsl:choose>-->
+    </xsl:template>
+    
     <!-- this template increments the input date annually until a stop date. Optionally calendars can be chosen for transformation through the pCalendars parameter. This helps, for instance to compute the Gregorian date of 1 Muḥarram of the Hijrī year for a specific period.
     The output is a set of comma-separated values -->
     <xsl:template name="funcDateIncrementAnnually">
