@@ -23,6 +23,8 @@ Input and output for all templates converting dates between the various calendar
 
 "yyyy-mm-dd"
 
+The template "funcDateFormatTei" accepts the same input but produces a <tei:date> note with @when or @when, @when-custom, @calendar, and @datingMethod attributes depending on the input calendar.
+
 ##License
 
 [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/)
