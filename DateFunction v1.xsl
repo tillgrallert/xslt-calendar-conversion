@@ -697,7 +697,7 @@
         <xsl:value-of select="$vMonth"/>
     </xsl:template>
     
-    <!-- This template takes a date string as input and outputs a correctly formatted tei:date node with @when and @when-custom attributes depending on the calendar -->
+   <!-- This template takes a date string as input and outputs a correctly formatted tei:date node with @when and @when-custom attributes depending on the calendar -->
     <xsl:template name="funcDateFormatTei">
         <xsl:param name="pDate"/>
         <!-- pCal selects the input calendar: 'G', 'J', 'M', or 'H' -->
@@ -720,8 +720,8 @@
                             </xsl:variable>
                             <xsl:attribute name="when" select="$vDateG"/> 
                             <xsl:attribute name="when-custom" select="$pDate"/>
-                            <xsl:attribute name="calendar" select="'#julian'"/>
-                            <xsl:attribute name="datingMethod" select="'#julian'"/>
+                            <xsl:attribute name="calendar" select="'#cal_julian'"/>
+                            <xsl:attribute name="datingMethod" select="'#cal_julian'"/>
                         </xsl:when>
                         <xsl:when test="$pCal='M'">
                             <!--<xsl:variable name="vDateG">
@@ -731,8 +731,8 @@
                             </xsl:variable>
                             <xsl:attribute name="when" select="$vDateG"/> -->
                             <xsl:attribute name="when-custom" select="$pDate"/>
-                            <xsl:attribute name="calendar" select="'#ottomanfiscal'"/>
-                            <xsl:attribute name="datingMethod" select="'#ottomanfiscal'"/>
+                            <xsl:attribute name="calendar" select="'#cal_ottomanfiscal'"/>
+                            <xsl:attribute name="datingMethod" select="'#cal_ottomanfiscal'"/>
                         </xsl:when>
                         <xsl:when test="$pCal='H'">
                             <xsl:variable name="vDateG">
@@ -742,8 +742,8 @@
                             </xsl:variable>
                             <xsl:attribute name="when" select="$vDateG"/> 
                             <xsl:attribute name="when-custom" select="$pDate"/>
-                            <xsl:attribute name="calendar" select="'#islamic'"/>
-                            <xsl:attribute name="datingMethod" select="'#islamic'"/>
+                            <xsl:attribute name="calendar" select="'#cal_islamic'"/>
+                            <xsl:attribute name="datingMethod" select="'#cal_islamic'"/>
                         </xsl:when>
                     </xsl:choose>
                 </xsl:otherwise>
@@ -816,7 +816,7 @@
                 <xsl:choose>
                     <xsl:when test="$pCal='J'">
                         <xsl:element name="tei:calendar">
-                            <xsl:attribute name="xml:id">julian</xsl:attribute>
+                            <xsl:attribute name="xml:id">cal_julian</xsl:attribute>
                             <xsl:element name="tei:p">
                                 <xsl:text>Reformed Julian calendar beginning the Year with 1 January. In the Ottoman context usually referred to as Rūmī.</xsl:text>
                             </xsl:element>
@@ -824,7 +824,7 @@
                     </xsl:when>
                     <xsl:when test="$pCal='M'">
                         <xsl:element name="tei:calendar">
-                            <xsl:attribute name="xml:id">ottomanfiscal</xsl:attribute>
+                            <xsl:attribute name="xml:id">cal_ottomanfiscal</xsl:attribute>
                             <xsl:element name="tei:p">
                                 <xsl:text>Ottoman fiscal calendar: an Old Julian calendar beginning the Year with 1 March. The year count is synchronised to the Islamic Hijrī calendar. In the Ottoman context usually referred to as Mālī or Rūmī.</xsl:text>
                             </xsl:element>
@@ -832,7 +832,7 @@
                     </xsl:when>
                     <xsl:when test="$pCal='H'">
                         <xsl:element name="tei:calendar">
-                            <xsl:attribute name="xml:id">islamic</xsl:attribute>
+                            <xsl:attribute name="xml:id">cal_islamic</xsl:attribute>
                             <xsl:element name="tei:p">
                                 <xsl:text>Islamic Hijrī calendar beginning the Year with 1 Muḥarram.</xsl:text>
                             </xsl:element>
