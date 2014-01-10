@@ -47,9 +47,8 @@ Templates for converting Date formats
 ##Input / Output
 
 - Input and output for all templates converting dates between the various calendars is as follows: "yyyy-mm-dd"
-
- - The template "funcDateFormatTei" accepts the same input but produces a <tei:date> note with @when or @when, @when-custom, @calendar, and @datingMethod attributes depending on the input calendar.
- - The template "funcDateNormaliseInput" can be used to convert variously formatted input                 strings to the yyyy-mm-dd required by other templates. Possible input formats are                 the common English formats of 'dd(.) MNn(.) yyyy', 'MNn(.) dd(.), yyyy', i.e. '15                 Shaʿbān 1324' or 'Jan. 15, 2014'. The template requires an input string and a                 calendar-language combination as found in funcDateMonthNameNumber.
+- The template "funcDateFormatTei" accepts the same input but produces a <tei:date> note with @when or @when, @when-custom, @calendar, and @datingMethod attributes depending on the input calendar.
+- The template "funcDateNormaliseInput" can be used to convert variously formatted input                 strings to the yyyy-mm-dd required by other templates. Possible input formats are                 the common English formats of 'dd(.) MNn(.) yyyy', 'MNn(.) dd(.), yyyy', i.e. '15                 Shaʿbān 1324' or 'Jan. 15, 2014'. The template requires an input string and a                 calendar-language combination as found in funcDateMonthNameNumber.
 
 ##License
 
