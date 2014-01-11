@@ -1,7 +1,7 @@
 #xslt-calendar-conversion
 
 
-This repo contains XSLT templates for the conversion of Calendars in use in the late Ottoman Empire: Gregorian, Rumi, Mali, and Islamic Hijri.
+XSLT templates for the conversion of calendars in use in the late Ottoman Empire: Gregorian, Rumi, Mali, and Islamic Hijri.
 
 ##General description
 
