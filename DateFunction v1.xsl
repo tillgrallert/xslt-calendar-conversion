@@ -775,18 +775,20 @@
         <xsl:param name="pMonth" select="number(tokenize($pDate,'([.,&quot;\-])')[2])"/>
         <!-- pMode has value 'name' or 'number' and toggles the output format -->
         <xsl:param name="pMode" select="'name'"/>
-        <!-- pLang has value 'HIjmes', 'HBoa', 'GEn','JIjmes', 'MIjmes', 'GEnFull', 'GDeFull'-->
+        <!-- pLang has value 'HIjmes','HIjmesFull', 'HBoa', 'GEn','JIjmes', 'MIjmes', 'GEnFull', 'GDeFull', 'GTrFull', 'MTrFull' -->
         <xsl:param name="pLang"/>
         <xsl:variable name="vNHIjmes"
             select="'Muḥ,Ṣaf,Rab I,Rab II,Jum I,Jum II,Raj,Shaʿ,Ram,Shaw,Dhu I,Dhu II'"/>
         <xsl:variable name="vNHIjmesFull"
             select="'Muḥarram,Ṣafār,Rabīʿ al-awwal,Rabīʿ al-thānī,Jumāda al-ulā,Jumāda al-tāniya,Rajab,Shaʿbān,Ramaḍān,Shawwāl,Dhū al-qaʿda,Dhū al-ḥijja'"/>
         <xsl:variable name="vNHBoa" select="'M ,S ,Ra,R ,Ca,C ,B ,Ş ,N ,L ,Za,Z '"/>
+        <xsl:variable name="vNMBoa" select="'Ar,Ni,Ma,Ha,Te,Ağ,Ey,Tş,Tn,Ke,Ks, '"/>
         <xsl:variable name="vNGEn" select="'Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec'"/>
-        <xsl:variable name="vNGEnFull"
-            select="'January,February,March,April,May,June,July,August,September,October,November,December'"/>
+        <xsl:variable name="vNGEnFull" select="'January,February,March,April,May,June,July,August,September,October,November,December'"/>
         <xsl:variable name="vNGDeFull"
             select="'Januar,Februar,März,April,Mai,Juni,Juli,August,September,Oktober,November,Dezember'"/>
+        <xsl:variable name="vNGTrFull"
+            select="'Ocak,Şubat,Mart,Nisan,Mayıs,Haziran,Temmuz,Ağustos,Eylül,Ekim,Kasım,Aralık'"/>
         <xsl:variable name="vNJIjmes"
             select="'Kān II,Shub,Ādhār,Nīs,Ayyār,Ḥaz,Tam,Āb,Ayl,Tish I,Tish II,Kān I'"/>
         <xsl:variable name="vNJIjmesFull"
@@ -795,6 +797,8 @@
             select="'Mārt,Nīs,Māyis,Ḥaz,Tam,Agh,Ayl,Tish I,Tish II,Kān I,Kān II,Shub'"/>
         <xsl:variable name="vNMIjmesFull"
             select="'Mārt,Nīsān,Māyis,Ḥazīrān,Tammūz,Aghusṭūs,Aylūl,Tishrīn al-awwal,Tishrīn al-thānī,Kānūn al-awwal,Kānūn al-thānī,Shubāṭ'"/>
+        <xsl:variable name="vNMTrFull"
+            select="'Mart,Nisan,Mayıs,Haziran,Temmuz,Ağustos,Eylül,Ekim,Kasım,Aralık,Ocak,Şubat'"/>
         <xsl:variable name="vMonth">
             <xsl:if test="lower-case($pLang)='hijmes'">
                 <xsl:for-each select="tokenize($vNHIjmes,',')">
@@ -838,6 +842,20 @@
                     </xsl:if>
                 </xsl:for-each>
             </xsl:if>
+            <xsl:if test="lower-case($pLang)='mboa'">
+                <xsl:for-each select="tokenize($vNMBoa,',')">
+                    <xsl:if test="$pMode='name'">
+                        <xsl:if test="position()=$pMonth">
+                            <xsl:value-of select="."/>
+                        </xsl:if>
+                    </xsl:if>
+                    <xsl:if test="$pMode='number'">
+                        <xsl:if test="lower-case(.)=lower-case($pMonth)">
+                            <xsl:value-of select="position()"/>
+                        </xsl:if>
+                    </xsl:if>
+                </xsl:for-each>
+            </xsl:if>
             <xsl:if test="lower-case($pLang)='gen'">
                 <xsl:for-each select="tokenize($vNGEn,',')">
                     <xsl:if test="$pMode='name'">
@@ -868,6 +886,20 @@
             </xsl:if>
             <xsl:if test="lower-case($pLang)='gdefull'">
                 <xsl:for-each select="tokenize($vNGDeFull,',')">
+                    <xsl:if test="$pMode='name'">
+                        <xsl:if test="position()=$pMonth">
+                            <xsl:value-of select="."/>
+                        </xsl:if>
+                    </xsl:if>
+                    <xsl:if test="$pMode='number'">
+                        <xsl:if test="lower-case(.)=lower-case($pMonth)">
+                            <xsl:value-of select="position()"/>
+                        </xsl:if>
+                    </xsl:if>
+                </xsl:for-each>
+            </xsl:if>
+            <xsl:if test="lower-case($pLang)='gtrfull'">
+                <xsl:for-each select="tokenize($vNGTrFull,',')">
                     <xsl:if test="$pMode='name'">
                         <xsl:if test="position()=$pMonth">
                             <xsl:value-of select="."/>
@@ -936,11 +968,26 @@
                     </xsl:if>
                 </xsl:for-each>
             </xsl:if>
+            <xsl:if test="lower-case($pLang)='mtrfull'">
+                <xsl:for-each select="tokenize($vNMTrFull,',')">
+                    <xsl:if test="$pMode='name'">
+                        <xsl:if test="position()=$pMonth">
+                            <xsl:value-of select="."/>
+                        </xsl:if>
+                    </xsl:if>
+                    <xsl:if test="$pMode='number'">
+                        <xsl:if test="lower-case(.)=lower-case($pMonth)">
+                            <xsl:value-of select="position()"/>
+                        </xsl:if>
+                    </xsl:if>
+                </xsl:for-each>
+            </xsl:if>
+            
         </xsl:variable>
-
+        
         <xsl:value-of select="$vMonth"/>
     </xsl:template>
-
+    
     <!-- This template takes a date string as input and outputs a correctly formatted tei:date node with @when and @when-custom attributes depending on the calendar -->
     <xsl:template name="funcDateFormatTei">
         <xsl:param name="pDate"/>
