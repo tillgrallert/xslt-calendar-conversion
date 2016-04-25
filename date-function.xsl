@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:tss="http://www.thirdstreetsoftware.com/SenteXML-1.0"
-    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" 
+    xmlns:till="http://www.sitzextase.de"
+    xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xdt="http://www.w3.org/2005/02/xpath-datatypes"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0" version="2.0">
+    
+    <!-- last addition not documented: funcDateHY2G, funcDateMY2G -->
 
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl" scope="stylesheet" type="stylesheet">
         <desc>
@@ -20,7 +25,7 @@
                 currently supported calendars.</p>
             <p>Templates for the conversion between calendars: funcDateG2JD, funcDateJD2G,
                 funcDateJ2JD, funcDateJD2J, funcDateH2JD, funcDateJD2H, funcDateG2J, funcDateG2H,
-                funcDateJ2G, funcDateJ2H, funcDateH2J, funcDateJ2H, funcDateG2M, funcDateJ2M.</p>
+                funcDateJ2G, funcDateJ2H, funcDateH2J, funcDateJ2H, funcDateG2M, funcDateJ2M, funcDateHY2G, funcDateMY2G.</p>
             <p>Templates for converting Date formats: funcDateMonthNameNumber,
                 funcDateNormaliseInput, and funcDateFormatTei.</p>
             <p>The funcDateFormatTei template accepts the same input, but produces a tei:date node
@@ -33,14 +38,17 @@
                 calendar-language combination as found in funcDateMonthNameNumber. </p>
             <p> Abbreviavtions in the funcDateMonthNameNumber try to cut the Month names to three
                 letters, as is established practice for English. In case of Arabic letters whose
-                transcription requires two english letters, month names can be longer than three
-                english letters, i.e. Shub (for Shubāṭ), Tish (for Tishrīn), etc. </p>
+                transcription requires two Latin letters, month names can be longer than three
+                Latin letters, i.e. Shub (for Shubāṭ), Tish (for Tishrīn), etc. </p>
+            <p>Templates for incrementing dates between a start and stop date: funcDateIncrementAnnually, funcDateIncrementJD. Both produce a list of comma-separated values.</p>
+            <p>funcDateBoa ingests the date strings found in the BOA online catalogue</p>
             <p>v1a: the tokenize() function to split up input strings was improved with the regex
                 '([.,&quot;\-])' instead of just '-', which means, that the templates could deal
                 with yyyy,mm,dd in put etc.</p>
             <p>v1a: new funcDateNormaliseInput template.</p>
             <p>v1a: new funcDateM2J</p>
             <p>v1b: corrected an error in funcDateG2JD which resulted in erroneous computation of Gregorian dates in funcDateJD2G that were off by one day for March-December in leap years.</p>
+            <p>Added the function funcDateIncrementJD</p>
             <p>This software is licensed as: Distributed under a Creative Commons
                 Attribution-ShareAlike 3.0 Unported License
                 http://creativecommons.org/licenses/by-sa/3.0/ All rights reserved. Redistribution
@@ -330,7 +338,7 @@
         </xsl:variable>
         <xsl:value-of select="$vDateH"/>
     </xsl:template>
-
+    
     <!-- this template converts Hijrī to Gregorian dates -->
     <xsl:template name="funcDateH2G">
         <xsl:param name="pDateH" select="'1434-6-12'"/>
@@ -345,6 +353,40 @@
             </xsl:call-template>
         </xsl:variable>
         <xsl:value-of select="$vDateG"/>
+    </xsl:template>
+    
+    <!-- this template converts Hijrī Years to Gregorian year ranges -->
+    <xsl:template name="funcDateHY2G">
+        <xsl:param name="pYearH" select="'1434'"/>
+        <xsl:variable name="vDateH1"
+            select="concat($pYearH,'-01-01')"/>
+        <xsl:variable name="vDateG1">
+            <xsl:call-template name="funcDateH2G">
+                <xsl:with-param name="pDateH" select="$vDateH1"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="vDateH2"
+            select="concat($pYearH,'-12-29')"/>
+        <xsl:variable name="vDateG2">
+            <xsl:call-template name="funcDateH2G">
+                <xsl:with-param name="pDateH" select="$vDateH2"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:value-of select="substring($vDateG1,1,4)"/>
+        <!-- test if the Hijrī year spans more than one Gregorian year (this is not the case for 1295, 1329  -->
+        <xsl:if
+            test="substring($vDateG1,1,4)!=substring($vDateG2,1,4)">
+            <xsl:text>-</xsl:text>
+            <xsl:choose>
+                <!-- the range 1899-1900 must be accounted for -->
+                <xsl:when test="substring($vDateG2,3,2)='00'">
+                    <xsl:value-of select="substring($vDateG2,1,4)"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="substring($vDateG2,3,2)"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:if>
     </xsl:template>
 
     <!-- this template converts Gregorian to Mali dates (i.e. Julian, commencing on 1 Mar, minus 584 years from 13 March 1840 onwards)  -->
@@ -752,6 +794,30 @@
         </xsl:variable>
         <xsl:value-of select="$vDateG"/>
     </xsl:template>
+    <!-- this template converts Mali Years to Gregorian year ranges -->
+    <xsl:template name="funcDateMY2G">
+        <xsl:param name="pYearM" select="'1434'"/>
+        <xsl:variable name="vDateM1"
+            select="concat($pYearM,'-01-01')"/>
+        <xsl:variable name="vDateG1">
+            <xsl:call-template name="funcDateM2G">
+                <xsl:with-param name="pDateM" select="$vDateM1"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="vDateM2"
+            select="concat($pYearM,'-12-29')"/>
+        <xsl:variable name="vDateG2">
+            <xsl:call-template name="funcDateM2G">
+                <xsl:with-param name="pDateM" select="$vDateM2"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:value-of select="substring($vDateG1,1,4)"/>
+        <xsl:if
+            test="substring($vDateG1,1,4)!=substring($vDateG2,1,4)">
+            <xsl:text>-</xsl:text>
+            <xsl:value-of select="substring($vDateG2,3,2)"/>
+        </xsl:if>
+    </xsl:template>
     
     <!-- convert Mālī to Hjrī -->
     <xsl:template name="funcDateM2H">
@@ -984,10 +1050,10 @@
             </xsl:if>
             
         </xsl:variable>
-        
+
         <xsl:value-of select="$vMonth"/>
     </xsl:template>
-    
+
     <!-- This template takes a date string as input and outputs a correctly formatted tei:date node with @when and @when-custom attributes depending on the calendar -->
     <xsl:template name="funcDateFormatTei">
         <xsl:param name="pDate"/>
@@ -995,7 +1061,9 @@
         <xsl:param name="pCal"/>
         <!-- pOutput establishes whether the original input or a formatted date is produced as output / content of the tei:date node. Values are 'original' and 'formatted' -->
         <xsl:param name="pOutput" select="'original'"/>
-        <xsl:element name="tei:date">
+        <xsl:param name="pWeekday" select="true()"/>
+        <xsl:variable name="vDateTei1">
+            <xsl:element name="tei:date">
             <!-- attributes -->
             <xsl:choose>
                 <xsl:when test="$pCal='G'">
@@ -1015,12 +1083,12 @@
                             <xsl:attribute name="datingMethod" select="'#cal_julian'"/>
                         </xsl:when>
                         <xsl:when test="$pCal='M'">
-                            <!--<xsl:variable name="vDateG">
+                            <xsl:variable name="vDateG">
                                 <xsl:call-template name="funcDateM2G">
                                     <xsl:with-param name="pDateM" select="$pDate"/>
                                 </xsl:call-template>
                             </xsl:variable>
-                            <xsl:attribute name="when" select="$vDateG"/> -->
+                            <xsl:attribute name="when" select="$vDateG"/> 
                             <xsl:attribute name="when-custom" select="$pDate"/>
                             <xsl:attribute name="calendar" select="'#cal_ottomanfiscal'"/>
                             <xsl:attribute name="datingMethod" select="'#cal_ottomanfiscal'"/>
@@ -1102,6 +1170,25 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:element>
+        </xsl:variable>
+        <xsl:variable name="vDateTei2">
+            <xsl:for-each select="$vDateTei1/tei:date">
+                <xsl:variable name="vWeekday">
+                    <xsl:value-of select="format-date(@when,'[FNn]')"/>
+                </xsl:variable>
+                <xsl:copy>
+                    <xsl:for-each select="@*">
+                        <xsl:copy/>
+                    </xsl:for-each>
+                    <xsl:value-of select="."/>
+                    <xsl:if test="$pWeekday=true()">
+                        <xsl:value-of select="concat(', ',$vWeekday)"/>
+                    </xsl:if>
+                </xsl:copy>
+            </xsl:for-each>
+        </xsl:variable>
+        
+        <xsl:copy-of select="$vDateTei2"/>
 
         <!-- this part of the template can produce a calendarDesc element for the teiHeader -->
         <!--<xsl:choose>
@@ -1139,9 +1226,9 @@
         </xsl:choose>-->
     </xsl:template>
 
-    <!-- This template normalises a date input string mixing digits and month names -->
+    <!-- This template normalises a date input string mixing digits and month names. The output is "yyyy-mm-dd" -->
     <xsl:template name="funcDateNormaliseInput">
-        <xsl:param name="pDateString"/>
+        <xsl:param name="pDateString" select="'1000'"/>
         <!-- This parameter selects the calendar and language, i.e. 'HIjmes' -->
         <xsl:param name="pLang"/>
         <xsl:variable name="vDateNode">
@@ -1207,68 +1294,167 @@
         />
     </xsl:template>
 
-    <!-- this template increments the input date annually until a stop date. Optionally calendars can be chosen for transformation through the pCalendars parameter. This helps, for instance to compute the Gregorian date of 1 Muḥarram of the Hijrī year for a specific period.
-    The output is a set of comma-separated values -->
-    <xsl:template name="funcDateIncrementAnnually">
-        <xsl:param name="pYearStop"/>
-        <xsl:param name="pYearStart"/>
-        <!-- this param selects the date, format: '01-01' -->
+    <!-- v1e -->
+    
+    <xsl:template name="funcDateIncrement">
+        <!-- this param selects the date, format: 'yyyy-mm-dd' -->
         <xsl:param name="pDateStart"/>
+        <!-- sets the end date -->
+        <xsl:param name="pDateStop"/>
+        <xsl:param name="pIncrementBy" select="1" as="xs:integer"/>
+        <!-- select what to increment: 'y', 'm', or 'd' -->
+        <xsl:param name="pIncrementWhat" select="'y'"/>
+        
         <!-- this param selects the conversion calendars: 'H2G', 'G2H', 'G2J', 'J2G', 'H2J', 'J2H', and 'none' -->
         <xsl:param name="pCalendars"/>
-        <xsl:variable name="vDate" select="concat($pYearStart,'-',$pDateStart)"/>
-        <xsl:variable name="vDateTarget">
-            <xsl:choose>
-                <xsl:when test="$pCalendars='G2H'">
-                    <xsl:call-template name="funcDateG2H">
-                        <xsl:with-param name="pDateG" select="$vDate"/>
-                    </xsl:call-template>
-                </xsl:when>
-                <xsl:when test="$pCalendars='H2G'">
-                    <xsl:call-template name="funcDateH2G">
-                        <xsl:with-param name="pDateH" select="$vDate"/>
-                    </xsl:call-template>
-                </xsl:when>
-                <xsl:when test="$pCalendars='G2J'">
-                    <xsl:call-template name="funcDateG2J">
-                        <xsl:with-param name="pDateG" select="$vDate"/>
-                    </xsl:call-template>
-                </xsl:when>
-                <xsl:when test="$pCalendars='J2G'">
-                    <xsl:call-template name="funcDateJ2G">
-                        <xsl:with-param name="pDateJ" select="$vDate"/>
-                    </xsl:call-template>
-                </xsl:when>
-                <xsl:when test="$pCalendars='H2J'">
-                    <xsl:call-template name="funcDateH2J">
-                        <xsl:with-param name="pDateH" select="$vDate"/>
-                    </xsl:call-template>
-                </xsl:when>
-                <xsl:when test="$pCalendars='J2H'">
-                    <xsl:call-template name="funcDateJ2H">
-                        <xsl:with-param name="pDateJ" select="$vDate"/>
-                    </xsl:call-template>
-                </xsl:when>
-
-                <xsl:otherwise>
-                    <xsl:value-of select="$vDate"/>
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
-
-        <xsl:if test="$pYearStart&lt;=$pYearStop">
-            <xsl:value-of select="$vDate"/>
+        <xsl:variable name="vInputCal" select="substring($pCalendars,1,1)"/>
+        
+        <xsl:if test="xs:date($pDateStart) &lt;= xs:date($pDateStop)">
+            <xsl:variable name="vDateTarget">
+                <xsl:choose>
+                    <xsl:when test="$pCalendars='G2H'">
+                        <xsl:call-template name="funcDateG2H">
+                            <xsl:with-param name="pDateG" select="$pDateStart"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:when test="$pCalendars='H2G'">
+                        <xsl:call-template name="funcDateH2G">
+                            <xsl:with-param name="pDateH" select="$pDateStart"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:when test="$pCalendars='G2J'">
+                        <xsl:call-template name="funcDateG2J">
+                            <xsl:with-param name="pDateG" select="$pDateStart"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:when test="$pCalendars='J2G'">
+                        <xsl:call-template name="funcDateJ2G">
+                            <xsl:with-param name="pDateJ" select="$pDateStart"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:when test="$pCalendars='H2J'">
+                        <xsl:call-template name="funcDateH2J">
+                            <xsl:with-param name="pDateH" select="$pDateStart"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:when test="$pCalendars='J2H'">
+                        <xsl:call-template name="funcDateJ2H">
+                            <xsl:with-param name="pDateJ" select="$pDateStart"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$pDateStart"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:variable>
+            <xsl:variable name="vDateIncremented">
+                <xsl:choose>
+                    <xsl:when test="$pIncrementWhat = 'y'" >
+                        <xsl:value-of select="xs:date($pDateStart) + xs:yearMonthDuration(concat('P',$pIncrementBy,'Y'))"/>
+                    </xsl:when>
+                    <xsl:when test="$pIncrementWhat = 'm'" >
+                        <xsl:value-of select="xs:date($pDateStart) + xs:yearMonthDuration(concat('P0Y',$pIncrementBy,'M'))"/>
+                    </xsl:when>
+                </xsl:choose>
+            </xsl:variable>
+            <!--<xsl:value-of select="$pDateStart"/>
             <xsl:text> = </xsl:text>
             <xsl:value-of select="$vDateTarget"/>
             <xsl:text>,
-            </xsl:text>
-            <xsl:call-template name="funcDateIncrementAnnually">
-                <xsl:with-param name="pYearStart" select="$pYearStart +1"/>
-                <xsl:with-param name="pDateStart" select="$pDateStart"/>
-                <xsl:with-param name="pYearStop" select="$pYearStop"/>
+            </xsl:text>-->
+            <xsl:call-template name="funcDateFormatTei">
+                <xsl:with-param name="pDate" select="$pDateStart"/>
+                <xsl:with-param name="pCal" select="$vInputCal"/>
+                <xsl:with-param name="pOutput" select="'formatted'"/>
+                <xsl:with-param name="pWeekday" select="false()"/>
+            </xsl:call-template>
+            <xsl:call-template name="funcDateIncrement">
+                <xsl:with-param name="pDateStart" select="$vDateIncremented"/>
+                <xsl:with-param name="pDateStop" select="$pDateStop"/>
+                <xsl:with-param name="pIncrementWhat" select="$pIncrementWhat"/>
+                <xsl:with-param name="pIncrementBy" select="$pIncrementBy"/>
                 <xsl:with-param name="pCalendars" select="$pCalendars"/>
             </xsl:call-template>
         </xsl:if>
-
+    </xsl:template>
+    
+    <!-- this template increments Julian days between two dates.
+    The output is a set of comma-separarted values-->
+    <xsl:template name="funcDateIncrementJD">
+        <xsl:param name="pJDStart"/>
+        <xsl:param name="pJDStop"/>
+        <xsl:param name="pIntervalDays" select="1"/>
+        <xsl:value-of select="$pJDStart"/>
+        <xsl:if test="$pJDStart &lt; $pJDStop">
+            <xsl:text>,
+            </xsl:text>
+            <xsl:call-template name="funcDateIncrementJD">
+                <xsl:with-param name="pJDStart" select="$pJDStart + $pIntervalDays"/>
+                <xsl:with-param name="pJDStop" select="$pJDStop"/>
+            </xsl:call-template>
+        </xsl:if>
+    </xsl:template>
+    
+    <!-- this template is used to normalise and convert the date strings found in the BOA online catalogue -->
+    <xsl:template name="funcDateBoa">
+        <xsl:param name="pDateString"/>
+        <xsl:choose>
+            <xsl:when test="contains($pDateString,'Miladî')">
+                <xsl:analyze-string select="$pDateString" regex="(\d+)/(\d+)/(\d{{4}})">
+                    <xsl:matching-substring>
+                        <xsl:variable name="vDateG">
+                            <xsl:value-of select="concat(regex-group(3),'-',format-number(number(regex-group(2)),'00'),'-',format-number(number(regex-group(1)),'00'))"/>
+                        </xsl:variable>
+                        <xsl:value-of select="$vDateG"/>
+                    </xsl:matching-substring>
+                </xsl:analyze-string>
+            </xsl:when>
+            <xsl:when test="contains($pDateString,'Hicrî')">
+                <xsl:analyze-string select="$pDateString" regex="(\d+)/(.{{2}})/(\d{{4}})">
+                    <xsl:matching-substring>
+                        <xsl:variable name="vMonthH">
+                            <xsl:call-template name="funcDateMonthNameNumber">
+                                <xsl:with-param name="pMonth" select="regex-group(2)"/>
+                                <xsl:with-param name="pMode" select="'number'"/>
+                                <xsl:with-param name="pLang" select="'HBoa'"/>
+                            </xsl:call-template>
+                        </xsl:variable>
+                        <xsl:variable name="vDateH">
+                            <xsl:value-of select="concat(regex-group(3),'-',format-number(number($vMonthH),'00'),'-',format-number(number(regex-group(1)),'00'))"/>
+                        </xsl:variable>
+                        <xsl:variable name="vDateG">
+                            <xsl:call-template name="funcDateH2G">
+                                <xsl:with-param name="pDateH" select="$vDateH"/>
+                            </xsl:call-template>
+                        </xsl:variable>
+                        <xsl:value-of select="$vDateG"/>
+                    </xsl:matching-substring>
+                </xsl:analyze-string>
+            </xsl:when>
+            <xsl:otherwise>
+                <!-- Mālī, which they call Rūmī is marked by not being marked -->
+                <xsl:analyze-string select="$pDateString" regex="(\d+)/(.{{2}})/(\d{{4}})">
+                    <xsl:matching-substring>
+                        <xsl:variable name="vMonthM">
+                            <xsl:call-template name="funcDateMonthNameNumber">
+                                <xsl:with-param name="pMonth" select="regex-group(2)"/>
+                                <xsl:with-param name="pMode" select="'number'"/>
+                                <xsl:with-param name="pLang" select="'MBoa'"/>
+                            </xsl:call-template>
+                        </xsl:variable>
+                        <xsl:variable name="vDateM">
+                            <xsl:value-of select="concat(regex-group(3),'-',format-number(number($vMonthM),'00'),'-',format-number(number(regex-group(1)),'00'))"/>
+                        </xsl:variable>
+                        <xsl:variable name="vDateG">
+                            <xsl:call-template name="funcDateM2G">
+                                <xsl:with-param name="pDateM" select="$vDateM"/>
+                            </xsl:call-template>
+                        </xsl:variable>
+                        <xsl:value-of select="$vDateG"/>
+                    </xsl:matching-substring>
+                </xsl:analyze-string>
+            </xsl:otherwise>
+        </xsl:choose>
+        
     </xsl:template>
 </xsl:stylesheet>
