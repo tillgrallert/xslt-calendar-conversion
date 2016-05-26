@@ -841,7 +841,7 @@
         <xsl:param name="pMonth" select="number(tokenize($pDate,'([.,&quot;\-])')[2])"/>
         <!-- pMode has value 'name' or 'number' and toggles the output format -->
         <xsl:param name="pMode" select="'name'"/>
-        <!-- pLang has value 'HIjmes','HIjmesFull', 'HBoa', 'GEn','JIjmes', 'MIjmes', 'GEnFull', 'GDeFull', 'GTrFull', 'MTrFull' -->
+        <!-- pLang has value 'HAr' 'HIjmes','HIjmesFull', 'HBoa', 'GEn','JIjmes', 'MIjmes', 'GEnFull', 'GDeFull', 'GTrFull', 'MTrFull' -->
         <xsl:param name="pLang"/>
         <xsl:variable name="vNHIjmes"
             select="'Muḥ,Ṣaf,Rab I,Rab II,Jum I,Jum II,Raj,Shaʿ,Ram,Shaw,Dhu I,Dhu II'"/>
@@ -867,6 +867,20 @@
         <xsl:variable name="vNMTrFull"
             select="'Mart,Nisan,Mayıs,Haziran,Temmuz,Ağustos,Eylül,Ekim,Kasım,Aralık,Ocak,Şubat'"/>
         <xsl:variable name="vMonth">
+            <xsl:if test="lower-case($pLang)='har'">
+                <xsl:for-each select="tokenize($vNHAr,',')">
+                    <xsl:if test="$pMode='name'">
+                        <xsl:if test="position()=$pMonth">
+                            <xsl:value-of select="."/>
+                        </xsl:if>
+                    </xsl:if>
+                    <xsl:if test="$pMode='number'">
+                        <xsl:if test="lower-case(.)=lower-case($pMonth)">
+                            <xsl:value-of select="position()"/>
+                        </xsl:if>
+                    </xsl:if>
+                </xsl:for-each>
+            </xsl:if>
             <xsl:if test="lower-case($pLang)='hijmes'">
                 <xsl:for-each select="tokenize($vNHIjmes,',')">
                     <xsl:if test="$pMode='name'">
