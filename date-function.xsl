@@ -223,7 +223,7 @@
         </xsl:variable>-->
 
         <xsl:value-of
-            select="concat($vYearG,'-',format-number($vMonthG,'00'),'-',format-number($vDayG,'00'))"
+            select="concat(format-number($vYearG,'0000'),'-',format-number($vMonthG,'00'),'-',format-number($vDayG,'00'))"
         />
         
         <!-- function jd_to_gregorian(jd) {
@@ -308,7 +308,7 @@
         <xsl:variable name="vDayH" select="($vJD - $vDayH2JD)+1"/>
 
         <xsl:value-of
-            select="concat($vYearH,'-',format-number($vMonthH,'00'),'-',format-number($vDayH,'00'))"/>
+            select="concat(format-number($vYearH, '0000'),'-',format-number($vMonthH,'00'),'-',format-number($vDayH,'00'))"/>
 
         <!--  function jd_to_islamic(jd)
         {
@@ -425,7 +425,7 @@
             select="floor(if($vMonth gt 2) then($vC - 4716) else($vC - 4715))"/>
         <xsl:variable name="vDay" select="($vB - $vD) - floor(30.6001 * $vE)"/>
         <xsl:value-of
-            select="concat($vYear,'-',format-number($vMonth,'00'),'-',format-number($vDay,'00'))"/>
+            select="concat(format-number($vYear, '0000'),'-',format-number($vMonth,'00'),'-',format-number($vDay,'00'))"/>
 
         <!-- function jd_to_julian(td) {
     var z, a, alpha, b, c, d, e, year, month, day;
@@ -658,7 +658,7 @@
         <xsl:choose>
             <xsl:when test="$vYearM &lt; 1333">
                 <xsl:value-of
-                    select="concat($vYearM,'-',format-number($vMonthM,'00'),'-',format-number($vDayJ,'00'))"
+                    select="concat(format-number($vYearM, '0000'),'-',format-number($vMonthM,'00'),'-',format-number($vDayJ,'00'))"
                 />
             </xsl:when>
             <xsl:otherwise>
@@ -671,12 +671,12 @@
                 <xsl:choose>
                     <xsl:when test="$vYearJ &gt;= 1918">
                         <xsl:value-of
-                            select="concat($vYearJ - 584,'-',format-number(number(tokenize($vDateG,'([.,&quot;\-])')[2]),'00'),'-',format-number(number(tokenize($vDateG,'([.,&quot;\-])')[3]),'00'))"
+                            select="concat(format-number($vYearJ - 584,'0000'),'-',format-number(number(tokenize($vDateG,'([.,&quot;\-])')[2]),'00'),'-',format-number(number(tokenize($vDateG,'([.,&quot;\-])')[3]),'00'))"
                         />
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:value-of
-                            select="concat($vYearM,'-',format-number(number(tokenize($vDateG,'([.,&quot;\-])')[2])-2,'00'),'-',format-number(number(tokenize($vDateG,'([.,&quot;\-])')[3]),'00'))"
+                            select="concat(format-number($vYearM,'0000'),'-',format-number(number(tokenize($vDateG,'([.,&quot;\-])')[2])-2,'00'),'-',format-number(number(tokenize($vDateG,'([.,&quot;\-])')[3]),'00'))"
                         />
                     </xsl:otherwise>
                 </xsl:choose>
@@ -748,7 +748,7 @@
         <xsl:choose>
             <xsl:when test="$vYearM &lt; 1333">
                 <xsl:value-of
-                    select="concat($vYearJ,'-',format-number($vMonthJ,'00'),'-',format-number($vDayM,'00'))"
+                    select="concat(format-number($vYearJ,'0000'),'-',format-number($vMonthJ,'00'),'-',format-number($vDayM,'00'))"
                 />
             </xsl:when>
             <xsl:otherwise>
@@ -760,7 +760,7 @@
                             </xsl:call-template>
                         </xsl:variable>
                         <xsl:value-of
-                            select="concat($vYearM + 584,'-',format-number(number(tokenize($vDateJ,'([.,&quot;\-])')[2]),'00'),'-',format-number(number(tokenize($vDateJ,'([.,&quot;\-])')[3]),'00'))"
+                            select="concat(format-number($vYearM + 584,'0000'),'-',format-number(number(tokenize($vDateJ,'([.,&quot;\-])')[2]),'00'),'-',format-number(number(tokenize($vDateJ,'([.,&quot;\-])')[3]),'00'))"
                         />
                     </xsl:when>
                     <!-- works correctly -->
@@ -771,7 +771,7 @@
                             </xsl:call-template>
                         </xsl:variable>
                         <xsl:value-of
-                            select="concat($vYearJ,'-',format-number(number(tokenize($vDateJ,'([.,&quot;\-])')[2]),'00'),'-',format-number(number(tokenize($vDateJ,'([.,&quot;\-])')[3]),'00'))"
+                            select="concat(format-number($vYearJ,'0000'),'-',format-number(number(tokenize($vDateJ,'([.,&quot;\-])')[2]),'00'),'-',format-number(number(tokenize($vDateJ,'([.,&quot;\-])')[3]),'00'))"
                         />
                     </xsl:otherwise>
                 </xsl:choose>
