@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="3.0" xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:till="http://www.sitzextase.de"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:oape="https://openarabicpe.github.io/ns"
     xmlns:tss="http://www.thirdstreetsoftware.com/SenteXML-1.0"
     xmlns:xdt="http://www.w3.org/2005/02/xpath-datatypes"
     xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
