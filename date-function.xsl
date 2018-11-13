@@ -988,7 +988,231 @@
         </xsl:variable>
         <xsl:value-of select="$vMonth"/>
     </xsl:template>
-
+    <xsl:template name="f_date-convert-months">
+        <xsl:param name="p_input-date"/>
+        <xsl:param name="p_input-month"
+            select="number(tokenize($p_input-date, '([.,&quot;\-])')[2])"/>
+        <!-- pMode has value 'name' or 'number' and toggles the output format -->
+        <xsl:param name="p_output-mode" select="'name'"/>
+        <!-- select the input lang by means of @xml:lang -->
+        <xsl:param name="p_input-lang"/>
+        <!-- select the input lang by means of TEI's @datingMethod -->
+        <xsl:param name="p_input-calendar"/>
+        <xsl:variable name="v_month-names-and-numbers">
+            <tei:listNym corresp="#cal_islamic">
+                <tei:nym n="1">
+                    <!-- <tei:form xml:lang="tr">Mart</tei:form> -->
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Muḥarram</tei:form>
+                    <tei:form xml:lang="ar">محرم</tei:form>
+                </tei:nym>
+                <tei:nym n="2">
+                    <!-- <tei:form xml:lang="tr">Nisan</tei:form> -->
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Ṣafār</tei:form>
+                    <tei:form xml:lang="ar">صفار</tei:form>
+                </tei:nym>
+                <tei:nym n="3">
+                    <!-- <tei:form xml:lang="tr">Mayıs</tei:form> -->
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Rabīʿ al-awwal</tei:form>
+                    <tei:form xml:lang="ar">ربيع الاول</tei:form>
+                </tei:nym>
+                <tei:nym n="4">
+                    <!-- <tei:form xml:lang="tr">Haziran</tei:form> -->
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Rabīʿ al-thānī</tei:form>
+                    <tei:form xml:lang="ar">ربيع الثاني</tei:form>
+                </tei:nym>
+                <tei:nym n="5">
+                    <!-- <tei:form xml:lang="tr">Temmuz</tei:form> -->
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Jumāda al-ulā</tei:form>
+                    <tei:form xml:lang="ar">جمادى الاولى</tei:form>
+                </tei:nym>
+                <tei:nym n="6">
+                    <!-- <tei:form xml:lang="tr">Ağustos</tei:form> -->
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Jumāda al-tāniya</tei:form>
+                    <tei:form xml:lang="ar">جمادى الآخرة</tei:form>
+                </tei:nym>
+                <tei:nym n="7">
+                    <!-- <tei:form xml:lang="tr">Eylül</tei:form> -->
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Rajab</tei:form>
+                    <tei:form xml:lang="ar">رجب</tei:form>
+                </tei:nym>
+                <tei:nym n="8">
+                    <!-- <tei:form xml:lang="tr">Ekim</tei:form> -->
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Shaʿbān</tei:form>
+                    <tei:form xml:lang="ar">شعبان</tei:form>
+                </tei:nym>
+                <tei:nym n="9">
+                    <!-- <tei:form xml:lang="tr">Kasım</tei:form> -->
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Ramaḍān</tei:form>
+                    <tei:form xml:lang="ar">رمضان</tei:form>
+                </tei:nym>
+                <tei:nym n="10">
+                    <!-- <tei:form xml:lang="tr">Aralık</tei:form> -->
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Shawwāl</tei:form>
+                    <tei:form xml:lang="ar">شوال</tei:form>
+                </tei:nym>
+                <tei:nym n="11">
+                    <!-- <tei:form xml:lang="tr">Ocak</tei:form> -->
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Dhū al-qaʿda</tei:form>
+                    <tei:form xml:lang="ar">ذو القعدة</tei:form>
+                </tei:nym>
+                <tei:nym n="12">
+                    <!-- <tei:form xml:lang="tr">Şubat</tei:form> -->
+                    <tei:form xml:lang="ar-Latn-x-ijmes">ShubDhū al-ḥijjaāṭ</tei:form>
+                    <tei:form xml:lang="ar">ذو الحجة</tei:form>
+                </tei:nym>
+            </tei:listNym>
+            <tei:listNym corresp="#cal_ottomanfiscal">
+                <tei:nym n="1">
+                    <tei:form xml:lang="tr">Mart</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Mārt</tei:form>
+                    <tei:form xml:lang="ar">مارت</tei:form>
+                </tei:nym>
+                <tei:nym n="2">
+                    <tei:form xml:lang="tr">Nisan</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Nīsān</tei:form>
+                    <tei:form xml:lang="ar">نيسان</tei:form>
+                </tei:nym>
+                <tei:nym n="3">
+                    <tei:form xml:lang="tr">Mayıs</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Māyis</tei:form>
+                    <tei:form xml:lang="ar">مايس</tei:form>
+                </tei:nym>
+                <tei:nym n="4">
+                    <tei:form xml:lang="tr">Haziran</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Ḥazīrān</tei:form>
+                    <tei:form xml:lang="ar">حزيران</tei:form>
+                </tei:nym>
+                <tei:nym n="5">
+                    <tei:form xml:lang="tr">Temmuz</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Tammūz</tei:form>
+                    <tei:form xml:lang="ar">تموز</tei:form>
+                </tei:nym>
+                <tei:nym n="6">
+                    <tei:form xml:lang="tr">Ağustos</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Aghusṭūs</tei:form>
+                    <tei:form xml:lang="ar">اغسطوس</tei:form>
+                </tei:nym>
+                <tei:nym n="7">
+                    <tei:form xml:lang="tr">Eylül</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Aylūl</tei:form>
+                    <tei:form xml:lang="ar">ايلول</tei:form>
+                </tei:nym>
+                <tei:nym n="8">
+                    <tei:form xml:lang="tr">Ekim</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-awwal</tei:form>
+                    <tei:form xml:lang="ar">تسرين الاول</tei:form>
+                </tei:nym>
+                <tei:nym n="9">
+                    <tei:form xml:lang="tr">Kasım</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-thānī</tei:form>
+                    <tei:form xml:lang="ar">تسرين الثاني</tei:form>
+                </tei:nym>
+                <tei:nym n="10">
+                    <tei:form xml:lang="tr">Aralık</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-awwal</tei:form>
+                    <tei:form xml:lang="ar">كانون الاول</tei:form>
+                </tei:nym>
+                <tei:nym n="11">
+                    <tei:form xml:lang="tr">Ocak</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-thānī</tei:form>
+                    <tei:form xml:lang="ar">كانون الثاني</tei:form>
+                </tei:nym>
+                <tei:nym n="12">
+                    <tei:form xml:lang="tr">Şubat</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Shubāṭ</tei:form>
+                    <tei:form xml:lang="ar">شباط</tei:form>
+                </tei:nym>
+            </tei:listNym>
+            <tei:listNym corresp="#cal_julian">
+                <tei:nym n="1">
+                    <tei:form xml:lang="tr">Ocak</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-thānī</tei:form>
+                    <tei:form xml:lang="ar">كانون الثاني</tei:form>
+                    <tei:form xml:lang="en">January</tei:form>
+                </tei:nym>
+                <tei:nym n="2">
+                    <tei:form xml:lang="tr">Şubat</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Shubāṭ</tei:form>
+                    <tei:form xml:lang="ar">شباط</tei:form>
+                    <tei:form xml:lang="en">February</tei:form>
+                </tei:nym>
+                <tei:nym n="3">
+                    <tei:form xml:lang="tr">Mart</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Ādhār</tei:form>
+                    <tei:form xml:lang="ar">آذار</tei:form>
+                    <tei:form xml:lang="en">March</tei:form>
+                </tei:nym>
+                <tei:nym n="4">
+                    <tei:form xml:lang="tr">Nisan</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Nīsān</tei:form>
+                    <tei:form xml:lang="ar">نيسان</tei:form>
+                    <tei:form xml:lang="en">April</tei:form>
+                </tei:nym>
+                <tei:nym n="5">
+                    <tei:form xml:lang="tr">Mayıs</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Ayyār</tei:form>
+                    <tei:form xml:lang="ar">ايار</tei:form>
+                    <tei:form xml:lang="en">May</tei:form>
+                </tei:nym>
+                <tei:nym n="6">
+                    <tei:form xml:lang="tr">Haziran</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Ḥazīrān</tei:form>
+                    <tei:form xml:lang="ar">حزيران</tei:form>
+                    <tei:form xml:lang="en">June</tei:form>
+                </tei:nym>
+                <tei:nym n="7">
+                    <tei:form xml:lang="tr">Temmuz</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Tammūz</tei:form>
+                    <tei:form xml:lang="ar">تموز</tei:form>
+                    <tei:form xml:lang="en">July</tei:form>
+                </tei:nym>
+                <tei:nym n="8">
+                    <tei:form xml:lang="tr">Ağustos</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Āb</tei:form>
+                    <tei:form xml:lang="ar">آب</tei:form>
+                    <tei:form xml:lang="en">August</tei:form>
+                </tei:nym>
+                <tei:nym n="9">
+                    <tei:form xml:lang="tr">Eylül</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Aylūl</tei:form>
+                    <tei:form xml:lang="ar">ايلول</tei:form>
+                    <tei:form xml:lang="en">September</tei:form>
+                </tei:nym>
+                <tei:nym n="10">
+                    <tei:form xml:lang="tr">Ekim</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-awwal</tei:form>
+                    <tei:form xml:lang="ar">تسرين الاول</tei:form>
+                    <tei:form xml:lang="en">October</tei:form>
+                </tei:nym>
+                <tei:nym n="11">
+                    <tei:form xml:lang="tr">Kasım</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-thānī</tei:form>
+                    <tei:form xml:lang="ar">تسرين الثاني</tei:form>
+                    <tei:form xml:lang="en">November</tei:form>
+                </tei:nym>
+                <tei:nym n="12">
+                    <tei:form xml:lang="tr">Aralık</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-awwal</tei:form>
+                    <tei:form xml:lang="ar">كانون الاول</tei:form>
+                    <tei:form xml:lang="en">December</tei:form>
+                </tei:nym>
+            </tei:listNym>
+        </xsl:variable>
+        <xsl:variable name="v_month">
+            <xsl:if test="$p_output-mode = 'name' and xs:integer($p_input-month)">
+                <!-- check if the nymList for the calendar contains the month name -->
+                <xsl:value-of
+                    select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $p_input-calendar]/tei:nym[@n = $p_input-month]/tei:form[@xml:lang = $p_input-lang]"
+                />
+            </xsl:if>
+            <xsl:if test="$p_output-mode = 'number'">
+                <xsl:value-of
+                    select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $p_input-calendar]/tei:nym[tei:form = $p_input-month]/@n"
+                />
+            </xsl:if>
+        </xsl:variable>
+        <xsl:value-of select="$v_month"/>
+    </xsl:template>
     <!-- This template takes a date string as input and outputs a correctly formatted tei:date node with @when and @when-custom attributes depending on the calendar -->
     <xsl:template name="f_date-format-iso-string-to-tei">
         <xsl:param name="p_input"/>
