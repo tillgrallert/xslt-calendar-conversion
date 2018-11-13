@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:html="http://www.w3.org/1999/xhtml"
+<xsl:stylesheet version="3.0" xmlns:html="http://www.w3.org/1999/xhtml"
     xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:till="http://www.sitzextase.de"
     xmlns:tss="http://www.thirdstreetsoftware.com/SenteXML-1.0"
     xmlns:xdt="http://www.w3.org/2005/02/xpath-datatypes"
@@ -993,11 +993,33 @@
         <xsl:param name="p_input-month"
             select="number(tokenize($p_input-date, '([.,&quot;\-])')[2])"/>
         <!-- pMode has value 'name' or 'number' and toggles the output format -->
-        <xsl:param name="p_output-mode" select="'name'"/>
+        <xsl:param name="p_output-mode"/>
         <!-- select the input lang by means of @xml:lang -->
         <xsl:param name="p_input-lang"/>
         <!-- select the input lang by means of TEI's @datingMethod -->
-        <xsl:param name="p_input-calendar"/>
+        <xsl:param name="p_calendar"/>
+        <!-- check if all necessary input is provided -->
+        <xsl:if test="not($p_output-mode = ('name', 'number'))">
+            <xsl:message terminate="yes">
+                <xsl:text>The value of $p_output-mode must be either 'name' or 'number'.</xsl:text>
+            </xsl:message>
+        </xsl:if>
+        <xsl:if test="not($p_calendar = ('#cal_islamic', '#cal_julian', '#cal_ottomanfiscal', '#cal_gregorian'))">
+            <xsl:message terminate="yes">
+                <xsl:text>The value of $p_calendar muse be either '#cal_islamic', '#cal_julian', '#cal_ottomanfiscal' or '#cal_gregorian'.</xsl:text>
+            </xsl:message>
+        </xsl:if>
+        <!-- month names are similar for rūmī /sharqī / Julian and Gregorian calendars -->
+        <xsl:variable name="v_calendar">
+            <xsl:choose>
+                <xsl:when test="$p_calendar = '#cal_gregorian'">
+                    <xsl:text>#cal_julian</xsl:text>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$p_calendar"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
         <xsl:variable name="v_month-names-and-numbers">
             <tei:listNym corresp="#cal_islamic">
                 <tei:nym n="1">
@@ -1202,15 +1224,20 @@
             <xsl:if test="$p_output-mode = 'name' and xs:integer($p_input-month)">
                 <!-- check if the nymList for the calendar contains the month name -->
                 <xsl:value-of
-                    select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $p_input-calendar]/tei:nym[@n = $p_input-month]/tei:form[@xml:lang = $p_input-lang]"
+                    select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $v_calendar]/tei:nym[@n = $p_input-month]/tei:form[@xml:lang = $p_input-lang]"
                 />
             </xsl:if>
             <xsl:if test="$p_output-mode = 'number'">
                 <xsl:value-of
-                    select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $p_input-calendar]/tei:nym[tei:form = $p_input-month]/@n"
+                    select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $v_calendar]/tei:nym[tei:form = $p_input-month]/@n"
                 />
             </xsl:if>
         </xsl:variable>
+        <xsl:if test="$v_month = ''">
+            <xsl:message terminate="yes">
+                <xsl:text>There is no output data for your input of $p_input-lang="</xsl:text><xsl:value-of select="$p_input-lang"/><xsl:text>" and $p_calendar="</xsl:text><xsl:value-of select="$p_calendar"/><xsl:text>".</xsl:text>
+            </xsl:message>
+        </xsl:if>
         <xsl:value-of select="$v_month"/>
     </xsl:template>
     <!-- This template takes a date string as input and outputs a correctly formatted tei:date node with @when and @when-custom attributes depending on the calendar -->
