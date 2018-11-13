@@ -988,10 +988,8 @@
         </xsl:variable>
         <xsl:value-of select="$vMonth"/>
     </xsl:template>
-    <xsl:template name="f_date-convert-months">
-        <xsl:param name="p_input-date"/>
-        <xsl:param name="p_input-month"
-            select="number(tokenize($p_input-date, '([.,&quot;\-])')[2])"/>
+    <xsl:function name="oape:date-convert-months">
+        <xsl:param name="p_input-month"/>
         <!-- pMode has value 'name' or 'number' and toggles the output format -->
         <xsl:param name="p_output-mode"/>
         <!-- select the input lang by means of @xml:lang -->
@@ -1239,7 +1237,7 @@
             </xsl:message>
         </xsl:if>
         <xsl:value-of select="$v_month"/>
-    </xsl:template>
+    </xsl:function>
     <!-- This template takes a date string as input and outputs a correctly formatted tei:date node with @when and @when-custom attributes depending on the calendar -->
     <xsl:template name="f_date-format-iso-string-to-tei">
         <xsl:param name="p_input"/>
