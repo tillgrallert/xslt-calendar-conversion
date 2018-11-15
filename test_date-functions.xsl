@@ -19,15 +19,20 @@
             <li>Islamic date: <xsl:value-of select="$v_islamic-date"/> aH (
                 <xsl:value-of select="oape:date-convert-islamic-to-gregorian($v_islamic-date)"/> / 
                 <xsl:value-of select="oape:date-convert-islamic-to-julian($v_islamic-date)"/> R)
-            <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_islamic-date, '#cal_islamic', true(), false())"></xsl:copy-of></li>
+            <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_islamic-date, '#cal_islamic', true(), false())"/>
+            </li>
             <li>Julian date: <xsl:value-of select="$v_julian-date"/> R (
                 <xsl:value-of select="oape:date-convert-julian-to-gregorian($v_julian-date)"/> / 
                 <xsl:value-of select="oape:date-convert-julian-to-islamic($v_julian-date)"/> aH /
-                <xsl:value-of select="oape:date-convert-julian-to-ottoman-fiscal($v_julian-date)"/> M)</li>
+                <xsl:value-of select="oape:date-convert-julian-to-ottoman-fiscal($v_julian-date)"/> M)
+            <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_julian-date, '#cal_julian', true(), false())"/>
+            </li>
             <li>Ottoman fiscal date: <xsl:value-of select="$v_ottoman-fiscal-date"/> M (
                 <xsl:value-of select="oape:date-convert-ottoman-fiscal-to-gregorian($v_ottoman-fiscal-date)"/> / 
                 <xsl:value-of select="oape:date-convert-ottoman-fiscal-to-julian($v_ottoman-fiscal-date)"/> R / 
-                <xsl:value-of select="oape:date-convert-ottoman-fiscal-to-islamic($v_ottoman-fiscal-date)"/> aH)</li>
+                <xsl:value-of select="oape:date-convert-ottoman-fiscal-to-islamic($v_ottoman-fiscal-date)"/> aH)
+            <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_ottoman-fiscal-date, '#cal_ottomanfiscal', true(), false())"/>
+            </li>
         </ul>
         </div>
     </xsl:template>

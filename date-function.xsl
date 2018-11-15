@@ -1376,9 +1376,11 @@
         <!-- p_format-output establishes whether the original input or a formatted date is produced as output / content of the tei:date node. Values are 'original' and 'formatted' -->
         <xsl:param name="p_format-output"/>
         <xsl:param name="p_inluce-weekday"/>
+        <xsl:variable name="v_lang" select="'ar-Latn-x-ijmes'"/>
         <xsl:variable name="vDateTei1">
             <xsl:element name="tei:date">
                 <!-- attributes -->
+                <xsl:attribute name="xml:lang" select="$v_lang"/>
                 <xsl:choose>
                     <xsl:when test="$p_input-calendar = '#cal_gregorian'">
                         <!-- test if input string is ISO format -->
@@ -1387,35 +1389,21 @@
                     <xsl:otherwise>
                         <xsl:choose>
                             <xsl:when test="$p_input-calendar = '#cal_julian'">
-                                <xsl:variable name="v_gregorian-date" select="oape:date-convert-julian-to-gregorian($p_input)">
-                                    <!--<xsl:call-template name="f_date-convert-julian-to-gregorian">
-                                        <xsl:with-param name="p_julian-date" select="$p_input"/>
-                                    </xsl:call-template>-->
-                                </xsl:variable>
+                                <xsl:variable name="v_gregorian-date" select="oape:date-convert-julian-to-gregorian($p_input)"/>
                                 <xsl:attribute name="when" select="$v_gregorian-date"/>
                                 <xsl:attribute name="when-custom" select="$p_input"/>
                                 <xsl:attribute name="calendar" select="$p_input-calendar"/>
                                 <xsl:attribute name="datingMethod" select="$p_input-calendar"/>
                             </xsl:when>
                             <xsl:when test="$p_input-calendar = '#cal_ottomanfiscal'">
-                                <xsl:variable name="v_gregorian-date" select="oape:date-convert-ottoman-fiscal-to-gregorian($p_input)">
-                                    <!--<xsl:call-template
-                                        name="f_date-convert-ottoman-fiscal-to-gregorian">
-                                        <xsl:with-param name="p_ottoman-fiscal-date"
-                                            select="$p_input"/>
-                                    </xsl:call-template>-->
-                                </xsl:variable>
+                                <xsl:variable name="v_gregorian-date" select="oape:date-convert-ottoman-fiscal-to-gregorian($p_input)"/>
                                 <xsl:attribute name="when" select="$v_gregorian-date"/>
                                 <xsl:attribute name="when-custom" select="$p_input"/>
                                 <xsl:attribute name="calendar" select="$p_input-calendar"/>
                                 <xsl:attribute name="datingMethod" select="$p_input-calendar"/>
                             </xsl:when>
                             <xsl:when test="$p_input-calendar = '#cal_islamic'">
-                                <xsl:variable name="v_gregorian-date" select="oape:date-convert-islamic-to-gregorian($p_input)">
-                                    <!--<xsl:call-template name="f_date-convert-islamic-to-gregorian">
-                                        <xsl:with-param name="p_islamic-date" select="$p_input"/>
-                                    </xsl:call-template>-->
-                                </xsl:variable>
+                                <xsl:variable name="v_gregorian-date" select="oape:date-convert-islamic-to-gregorian($p_input)"/>
                                 <xsl:attribute name="when" select="$v_gregorian-date"/>
                                 <xsl:attribute name="when-custom" select="$p_input"/>
                                 <xsl:attribute name="calendar" select="$p_input-calendar"/>
@@ -1427,18 +1415,16 @@
                 <!-- element content -->
                 <xsl:choose>
                     <xsl:when test="$p_format-output = true()">
+                        <xsl:variable name="v_month" select="format-number(number(tokenize($p_input, '([.,&quot;\-])')[2]), '0')"/>
                         <xsl:value-of select="format-number(number(tokenize($p_input, '([.,&quot;\-])')[3]), '0')"/>
                         <xsl:text> </xsl:text>
                         <xsl:choose>
                             <xsl:when test="$p_input-calendar = '#cal_gregorian'">
-                                <xsl:call-template name="f_date-MonthNameNumber">
-                                    <xsl:with-param name="pDate" select="$p_input"/>
-                                    <xsl:with-param name="pMode" select="'name'"/>
-                                    <xsl:with-param name="p_input-lang" select="'Gen'"/>
-                                </xsl:call-template>
+                                <xsl:value-of select="oape:date-convert-months($v_month, 'name', 'en', $p_input-calendar)"/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:choose>
+                                <xsl:value-of select="oape:date-convert-months($v_month, 'name', $v_lang, $p_input-calendar)"/>
+                                <!--<xsl:choose>
                                     <xsl:when test="$p_input-calendar = '#cal_julian'">
                                         <xsl:call-template name="f_date-MonthNameNumber">
                                             <xsl:with-param name="pDate" select="$p_input"/>
@@ -1460,7 +1446,7 @@
                                             <xsl:with-param name="p_input-lang" select="'HIjmes'"/>
                                         </xsl:call-template>
                                     </xsl:when>
-                                </xsl:choose>
+                                </xsl:choose>-->
                             </xsl:otherwise>
                         </xsl:choose>
                         <xsl:text> </xsl:text>
