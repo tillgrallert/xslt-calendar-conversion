@@ -1,51 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="3.0" xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:oape="https://openarabicpe.github.io/ns"
+<xsl:stylesheet version="3.0" 
+    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns:tei="http://www.tei-c.org/ns/1.0" 
+    xmlns:oape="https://openarabicpe.github.io/ns"
     xmlns:tss="http://www.thirdstreetsoftware.com/SenteXML-1.0"
     xmlns:xdt="http://www.w3.org/2005/02/xpath-datatypes"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
     xpath-default-namespace="http://www.tei-c.org/ns/1.0">
     <!-- last addition not documented: f_date-HY2G, f_date-MY2G -->
-    <doc scope="stylesheet" type="stylesheet" xmlns="http://www.oxygenxml.com/ns/doc/xsl">
-        <desc>
-            <p>XSL stylesheet for date conversions in XML. </p>
-            <p>The stylesheet currenly supports conversions between four calendars using a
+    <xd:doc scope="stylesheet" type="stylesheet">
+        <xd:desc>
+            <xd:p>XSL stylesheet for date conversions in XML. </xd:p>
+            <xd:p>The stylesheet currenly supports conversions between four calendars using a
                 calculation of the Julian Day: Gregorian, Julian, Ottoman fiscal (Mālī), and Hijrī
                 calendars. Many of the calculations were adapted from John Walker's Calender
-                Converter JavaScript functions (http://www.fourmilab.ch/documents/calendar/). </p>
-            <p>The names of the templates reflect their function through a simple ontology: G =
+                Converter JavaScript functions (http://www.fourmilab.ch/documents/calendar/). </xd:p>
+            <xd:p>The names of the templates reflect their function through a simple ontology: G =
                 Gregorian, J = Julian and Rūmī, M = Mālī, H = Hijrī, JD = Julian day. A template
                 called f_date-convert-gregorian-to-julian-day will thus compute the Julian day (JD) for a Gregorian (G) date
-                as input string.</p>
-            <p>Input and output are formatted as yyyy-mm-dd for the conversions between the four
-                currently supported calendars.</p>
-            <p>Templates for the conversion between calendars: f_date-convert-gregorian-to-julian-day, f_date-convert-julian-day-to-gregorian,
+                as input string.</xd:p>
+            <xd:p>Input and output are formatted as yyyy-mm-dd for the conversions between the four
+                currently supported calendars.</xd:p>
+            <xd:p>Templates for the conversion between calendars: f_date-convert-gregorian-to-julian-day, f_date-convert-julian-day-to-gregorian,
                 f_date-convert-julian-to-julian-day, f_date-convert-julian-day-to-julian, f_date-convert-islamic-to-julian-day, f_date-convert-julian-day-to-islamic, f_date-convert-gregorian-to-julian, f_date-convert-gregorian-to-islamic,
-                f_date-convert-julian-to-gregorian, f_date-convert-julian-to-islamic, f_date-convert-islamic-to-julian, f_date-convert-julian-to-islamic, f_date-convert-gregorian-to-ottoman-fiscal, f_date-convert-julian-to-ottoman-fiscal, f_date-HY2G, f_date-MY2G.</p>
-            <p>Templates for converting Date formats: f_date-MonthNameNumber,
-                f_date-NormaliseInput, and f_date-format-iso-string-to-tei.</p>
-            <p>The f_date-format-iso-string-to-tei template accepts the same input, but produces a tei:date node
+                f_date-convert-julian-to-gregorian, f_date-convert-julian-to-islamic, f_date-convert-islamic-to-julian, f_date-convert-julian-to-islamic, f_date-convert-gregorian-to-ottoman-fiscal, f_date-convert-julian-to-ottoman-fiscal, f_date-HY2G, f_date-MY2G.</xd:p>
+            <xd:p>Templates for converting Date formats: f_date-MonthNameNumber,
+                f_date-NormaliseInput, and f_date-format-iso-string-to-tei.</xd:p>
+            <xd:p>The f_date-format-iso-string-to-tei template accepts the same input, but produces a tei:date node
                 as output with the relevant @when or @when, @when-custom, @calendar, and
-                @datingMethod attributes.</p>
-            <p>The f_date-NormaliseInput template can be used to convert variously formatted input
+                @datingMethod attributes.</xd:p>
+            <xd:p>The f_date-NormaliseInput template can be used to convert variously formatted input
                 strings to the yyyy-mm-dd required by other templates. Possible input formats are
                 the common English formats of 'dd(.) MNn(.) yyyy', 'MNn(.) dd(.), yyyy', i.e. '15
                 Shaʿbān 1324' or 'Jan. 15, 2014'. The template requires an input string and a
-                calendar-language combination as found in f_date-MonthNameNumber. </p>
-            <p>Abbreviavtions in the f_date-MonthNameNumber try to cut the Month names to three
+                calendar-language combination as found in f_date-MonthNameNumber. </xd:p>
+            <xd:p>Abbreviavtions in the f_date-MonthNameNumber try to cut the Month names to three
                 letters, as is established practice for English. In case of Arabic letters whose
                 transcription requires two Latin letters, month names can be longer than three
-                Latin letters, i.e. Shub (for Shubāṭ), Tish (for Tishrīn), etc. </p>
-            <p>Templates for incrementing dates between a start and stop date: f_date-incrementAnnually, f_date-incrementJD. Both produce a list of comma-separated values.</p>
-            <p>f_date-Boa ingests the date strings found in the BOA online catalogue</p>
-            <p>v1a: the tokenize() function to split up input strings was improved with the regex
+                Latin letters, i.e. Shub (for Shubāṭ), Tish (for Tishrīn), etc. </xd:p>
+            <xd:p>Templates for incrementing dates between a start and stop date: f_date-incrementAnnually, f_date-incrementJD. Both produce a list of comma-separated values.</xd:p>
+            <xd:p>f_date-Boa ingests the date strings found in the BOA online catalogue</xd:p>
+            <xd:p>v1a: the tokenize() function to split up input strings was improved with the regex
                 '([.,&quot;\-])' instead of just '-', which means, that the templates could deal
-                with yyyy,mm,dd in put etc.</p>
-            <p>v1a: new f_date-NormaliseInput template.</p>
-            <p>v1a: new f_date-convert-ottoman-fiscal-to-julian</p>
-            <p>v1b: corrected an error in f_date-convert-gregorian-to-julian-day which resulted in erroneous computation of Gregorian dates in f_date-convert-julian-day-to-gregorian that were off by one day for March-December in leap years.</p>
-            <p>Added the function f_date-incrementJD</p>
-            <p>This software is licensed as: Distributed under a Creative Commons
+                with yyyy,mm,dd in put etc.</xd:p>
+            <xd:p>v1a: new f_date-NormaliseInput template.</xd:p>
+            <xd:p>v1a: new f_date-convert-ottoman-fiscal-to-julian</xd:p>
+            <xd:p>v1b: corrected an error in f_date-convert-gregorian-to-julian-day which resulted in erroneous computation of Gregorian dates in f_date-convert-julian-day-to-gregorian that were off by one day for March-December in leap years.</xd:p>
+            <xd:p>Added the function f_date-incrementJD</xd:p>
+            <xd:p>This software is licensed as: Distributed under a Creative Commons
                 Attribution-ShareAlike 3.0 Unported License
                 http://creativecommons.org/licenses/by-sa/3.0/ All rights reserved. Redistribution
                 and use in source and binary forms, with or without modification, are permitted
@@ -62,16 +66,20 @@
                 substitute goods or services; loss of use, data, or profits; or business
                 interruption) however caused and on any theory of liability, whether in contract,
                 strict liability, or tort (including negligence or otherwise) arising in any way out
-                of the use of this software, even if advised of the possibility of such damage. </p>
-            <p>Author: Till Grallert</p>
-        </desc>
-    </doc>
+                of the use of this software, even if advised of the possibility of such damage. </xd:p>
+            <xd:p>Author: Till Grallert</xd:p>
+        </xd:desc>
+    </xd:doc>
     <!-- v1b: Julian day was one too few! -->
     <!-- Julian day for Gregorian 0001-01-01 -->
     <xsl:param name="p_julian-day-for-gregorian-base" select="1721425.5"/>
     <!-- Julian day for Hijri 0001-01-01 -->
     <xsl:param name="p_julian-day-for-islamic-base" select="1948439.5"/>
-    <!-- This template determines whether Gregorian years are leap years. Returns y or n -->
+    
+    <xd:doc>
+        <xd:desc> This template determines whether Gregorian years are leap years. Returns 'true()' or 'false()'.</xd:desc>
+        <xd:param name="p_gregorian-date"/>
+    </xd:doc>
     <xsl:template name="f_date-is-gregorian-leap-year">
         <xsl:param name="p_gregorian-date"/>
         <xsl:variable name="v_gregorian-year"
@@ -85,7 +93,11 @@
                     ('false()')"
         />
     </xsl:template>
-    <!-- This template converts Gregorian to Julian Day -->
+    
+    <xd:doc>
+        <xd:desc> This template converts Gregorian to Julian Day </xd:desc>
+        <xd:param name="p_gregorian-date"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-gregorian-to-julian-day">
         <xsl:param name="p_gregorian-date"/>
         <xsl:variable name="v_gregorian-year"
@@ -140,7 +152,11 @@
         day);
         } -->
     </xsl:template>
-    <!-- This template converts Julian Day to Gregorian -->
+    
+    <xd:doc scope="component">
+        <xd:desc> This template converts Julian day to Gregorian date.</xd:desc>
+        <xd:param name="p_julian-day"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-julian-day-to-gregorian">
         <xsl:param name="p_julian-day"/>
         <xsl:variable name="vWjd" select="floor($p_julian-day - 0.5) + 0.5"/>
@@ -234,7 +250,11 @@
     return new Array(year, month, day);
 } -->
     </xsl:template>
-    <!-- This template converts Hijrī to Julian Day -->
+    
+    <xd:doc>
+        <xd:desc> This template converts Hijrī to Julian Day </xd:desc>
+        <xd:param name="p_islamic-date"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-islamic-to-julian-day">
         <xsl:param name="p_islamic-date"/>
         <xsl:variable name="v_islamic-year"
@@ -254,7 +274,11 @@
         ISLAMIC_EPOCH) - 1;
         } -->
     </xsl:template>
-    <!-- This template converts Julian Day to Hijrī -->
+    
+    <xd:doc>
+        <xd:desc> This template converts Julian Day to Hijrī </xd:desc>
+        <xd:param name="p_julian-day"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-julian-day-to-islamic">
         <xsl:param name="p_julian-day"/>
         <xsl:variable name="v_julian-day" select="floor($p_julian-day) + 0.5"/>
@@ -291,7 +315,11 @@
         return new Array(year, month, day);
         } -->
     </xsl:template>
-    <!-- this template converts Hijrī Years to Gregorian year ranges -->
+    
+    <xd:doc>
+        <xd:desc> this template converts Hijrī Years to Gregorian year ranges </xd:desc>
+        <xd:param name="pYearH"/>
+    </xd:doc>
     <xsl:template name="f_date-HY2G">
         <xsl:param name="pYearH" select="'1434'"/>
         <xsl:variable name="v_islamic-date1" select="concat($pYearH, '-01-01')"/>
@@ -322,7 +350,11 @@
         </xsl:if>
     </xsl:template>
     <!-- this template converts Gregorian to Mali dates (i.e. Julian, commencing on 1 Mar, minus 584 years from 13 March 1840 onwards)  -->
-    <!-- this conversion employs a chain of conversions from Gregorian to Julian to Mālī -->
+    
+    <xd:doc>
+        <xd:desc> this conversion employs a chain of conversions from Gregorian to Julian to Mālī </xd:desc>
+        <xd:param name="p_gregorian-date"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-gregorian-to-ottoman-fiscal">
         <xsl:param name="p_gregorian-date"/>
         <xsl:variable name="v_julian-day-of-input">
@@ -343,7 +375,11 @@
         <xsl:value-of select="$v_ottoman-fiscal-date"/>
     </xsl:template>
     <!-- v2e -->
-    <!-- convert Julian Day to Julian / Rūmī. Everything works correctly -->
+    
+    <xd:doc>
+        <xd:desc> convert Julian Day to Julian / Rūmī. Everything works correctly </xd:desc>
+        <xd:param name="p_julian-day"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-julian-day-to-julian">
         <xsl:param name="p_julian-day"/>
         <xsl:variable name="vZ" select="floor($p_julian-day + 0.5)"/>
@@ -386,7 +422,11 @@
     return new Array(year, month, day);
 } -->
     </xsl:template>
-    <!-- convert Julian / Rūmī to Julian Day -->
+    
+    <xd:doc>
+        <xd:desc> convert Julian / Rūmī to Julian Day </xd:desc>
+        <xd:param name="p_julian-date"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-julian-to-julian-day">
         <xsl:param name="p_julian-date"/>
         <xsl:variable name="v_julian-year"
@@ -431,7 +471,11 @@
             day) - 1524.5);
 } -->
     </xsl:template>
-    <!-- This template converts Gregorian to Hijrī -->
+    
+    <xd:doc>
+        <xd:desc> This template converts Gregorian to Hijrī </xd:desc>
+        <xd:param name="p_gregorian-date"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-gregorian-to-islamic">
         <xsl:param name="p_gregorian-date"/>
         <xsl:call-template name="f_date-convert-julian-day-to-islamic">
@@ -442,7 +486,11 @@
             </xsl:with-param>
         </xsl:call-template>
     </xsl:template>
-    <!-- this template converts Hijrī to Gregorian dates -->
+    
+    <xd:doc>
+        <xd:desc> this template converts Hijrī to Gregorian dates </xd:desc>
+        <xd:param name="p_islamic-date"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-islamic-to-gregorian">
         <xsl:param name="p_islamic-date"/>
         <xsl:call-template name="f_date-convert-julian-day-to-gregorian">
@@ -453,7 +501,11 @@
             </xsl:with-param>
         </xsl:call-template>
     </xsl:template>
-    <!-- convert Gregorian to Julian / Rūmī dates -->
+    
+    <xd:doc>
+        <xd:desc> convert Gregorian to Julian / Rūmī dates </xd:desc>
+        <xd:param name="p_gregorian-date"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-gregorian-to-julian">
         <xsl:param name="p_gregorian-date"/>
         <!-- at the moment the julian day is wrong! Leap years are correctly computed -->
@@ -465,7 +517,11 @@
             </xsl:with-param>
         </xsl:call-template>
     </xsl:template>
-    <!-- convert Hijri to Julian / Rūmī dates -->
+    
+    <xd:doc>
+        <xd:desc> convert Hijri to Julian / Rūmī dates </xd:desc>
+        <xd:param name="p_islamic-date"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-islamic-to-julian">
         <xsl:param name="p_islamic-date"/>
         <xsl:call-template name="f_date-convert-julian-day-to-julian">
@@ -476,7 +532,11 @@
             </xsl:with-param>
         </xsl:call-template>
     </xsl:template>
-    <!-- convert Julian / Rūmī to Hijrī dates -->
+    
+    <xd:doc>
+        <xd:desc> convert Julian / Rūmī to Hijrī dates </xd:desc>
+        <xd:param name="p_julian-date"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-julian-to-islamic">
         <xsl:param name="p_julian-date"/>
         <xsl:call-template name="f_date-convert-julian-day-to-islamic">
@@ -487,7 +547,11 @@
             </xsl:with-param>
         </xsl:call-template>
     </xsl:template>
-    <!-- convert Julian / Rūmī dates to Gregorian dates -->
+    
+    <xd:doc>
+        <xd:desc> convert Julian / Rūmī dates to Gregorian dates </xd:desc>
+        <xd:param name="p_julian-date"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-julian-to-gregorian">
         <xsl:param name="p_julian-date"/>
         <xsl:call-template name="f_date-convert-julian-day-to-gregorian">
@@ -498,7 +562,11 @@
             </xsl:with-param>
         </xsl:call-template>
     </xsl:template>
-    <!-- convert Julian/ Rūmī dates to Mālī dates -->
+    
+    <xd:doc>
+        <xd:desc> convert Julian/ Rūmī dates to Mālī dates </xd:desc>
+        <xd:param name="p_julian-date"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-julian-to-ottoman-fiscal">
         <!-- Mālī is an old Julian calendar that begins on 1 March of the Julian year introduced in 1676. The year count was synchronised with the Hijri calendar until 1872 G -->
         <xsl:param name="p_julian-date"/>
@@ -602,7 +670,11 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <!-- convert Mālī dates to Julian/ Rūmī dates -->
+    
+    <xd:doc>
+        <xd:desc> convert Mālī dates to Julian/ Rūmī dates </xd:desc>
+        <xd:param name="p_ottoman-fiscal-date"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-ottoman-fiscal-to-julian">
         <!-- Mālī is an old Julian calendar that begins on 1 March of the Julian year introduced in 1676. The year count was synchronised with the Hijri calendar until 1872 G -->
         <xsl:param name="p_ottoman-fiscal-date"/>
@@ -708,7 +780,11 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    <!-- convert Mālī to Gregorian -->
+    
+    <xd:doc>
+        <xd:desc> convert Mālī to Gregorian </xd:desc>
+        <xd:param name="p_ottoman-fiscal-date"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-ottoman-fiscal-to-gregorian">
         <xsl:param name="p_ottoman-fiscal-date"/>
         <xsl:variable name="v_julian-date">
@@ -723,7 +799,11 @@
         </xsl:variable>
         <xsl:value-of select="$v_gregorian-date"/>
     </xsl:template>
-    <!-- this template converts Mali Years to Gregorian year ranges -->
+    
+    <xd:doc>
+        <xd:desc> this template converts Mali Years to Gregorian year ranges </xd:desc>
+        <xd:param name="pYearM"/>
+    </xd:doc>
     <xsl:template name="f_date-MY2G">
         <xsl:param name="pYearM" select="'1434'"/>
         <xsl:variable name="v_ottoman-fiscal-date1" select="concat($pYearM, '-01-01')"/>
@@ -744,7 +824,11 @@
             <xsl:value-of select="substring($v_gregorian-date2, 3, 2)"/>
         </xsl:if>
     </xsl:template>
-    <!-- convert Mālī to Hjrī in 2 steps: 1) Mālī to Rūmī; 2) Rūmī to Hijrī -->
+    
+    <xd:doc>
+        <xd:desc> convert Mālī to Hjrī in 2 steps: 1) Mālī to Rūmī; 2) Rūmī to Hijrī </xd:desc>
+        <xd:param name="p_ottoman-fiscal-date"/>
+    </xd:doc>
     <xsl:template name="f_date-convert-ottoman-fiscal-to-islamic">
         <xsl:param name="p_ottoman-fiscal-date"/>
         <xsl:call-template name="f_date-convert-julian-to-islamic">
@@ -755,7 +839,14 @@
             </xsl:with-param>
         </xsl:call-template>
     </xsl:template>
-    <!-- v2b: this template provides abbreviation for month names in International Journal of Middle East Studies (IJMES) transscription, Başbakanlik Osmanlu Arşivi (BOA) accronyms, and English abbreviations. As there is no functional difference between calendars, I made the choice of calendars implicit as based on the language selector -->
+    
+    <xd:doc>
+        <xd:desc> v2b: this template provides abbreviation for month names in International Journal of Middle East Studies (IJMES) transscription, Başbakanlik Osmanlu Arşivi (BOA) accronyms, and English abbreviations. As there is no functional difference between calendars, I made the choice of calendars implicit as based on the language selector </xd:desc>
+        <xd:param name="pDate"/>
+        <xd:param name="pMonth"/>
+        <xd:param name="pMode"/>
+        <xd:param name="p_input-lang"/>
+    </xd:doc>
     <xsl:template name="f_date-MonthNameNumber">
         <xsl:param name="pDate"/>
         <xsl:param name="pMonth" select="number(tokenize($pDate, '([.,&quot;\-])')[2])"/>
@@ -988,6 +1079,13 @@
         </xsl:variable>
         <xsl:value-of select="$vMonth"/>
     </xsl:template>
+    <xd:doc>
+        <xd:desc>This function converts between month names and numbers according to various calendars.</xd:desc>
+        <xd:param name="p_input-month">Input month name or number.</xd:param>
+        <xd:param name="p_output-mode">Toggles between 'name' or 'number'.</xd:param>
+        <xd:param name="p_input-lang">Takes valid values of @xml:id as input.</xd:param>
+        <xd:param name="p_calendar">Toggles between calendars. Uses references to @xml:ids as input: '#cal_islamic', '#cal_julian', '#cal_ottomanfiscal' or '#cal_gregorian'</xd:param>
+    </xd:doc>
     <xsl:function name="oape:date-convert-months">
         <xsl:param name="p_input-month"/>
         <!-- pMode has value 'name' or 'number' and toggles the output format -->
@@ -1238,7 +1336,14 @@
         </xsl:if>
         <xsl:value-of select="$v_month"/>
     </xsl:function>
-    <!-- This template takes a date string as input and outputs a correctly formatted tei:date node with @when and @when-custom attributes depending on the calendar -->
+    
+    <xd:doc>
+        <xd:desc> This template takes a date string as input and outputs a correctly formatted tei:date node with @when and @when-custom attributes depending on the calendar </xd:desc>
+        <xd:param name="p_input"/>
+        <xd:param name="p_input-calendar"/>
+        <xd:param name="p_format-output"/>
+        <xd:param name="p_inluce-weekday"/>
+    </xd:doc>
     <xsl:template name="f_date-format-iso-string-to-tei">
         <xsl:param name="p_input"/>
         <!-- pCal selects the input calendar: '#cal_gregorian', '#cal_julian', '#cal_ottomanfiscal', or '#cal_islamic' -->
@@ -1379,7 +1484,13 @@
         <!-- this part of the template can produce a calendarDesc element for the teiHeader -->
         <!--<xsl:choose><xsl:when test="$pCal='G'"/><xsl:otherwise><xsl:element name="tei:calendarDesc"><xsl:choose><xsl:when test="$pCal='J'"><xsl:element name="tei:calendar"><xsl:attribute name="xml:id">cal_julian</xsl:attribute><xsl:element name="tei:p"><xsl:text>Reformed Julian calendar beginning the Year with 1 January. In the Ottoman context usually referred to as Rūmī.</xsl:text></xsl:element></xsl:element></xsl:when><xsl:when test="$pCal='M'"><xsl:element name="tei:calendar"><xsl:attribute name="xml:id">cal_ottomanfiscal</xsl:attribute><xsl:element name="tei:p"><xsl:text>Ottoman fiscal calendar: an Old Julian calendar beginning the Year with 1 March. The year count is synchronised to the Islamic Hijrī calendar. In the Ottoman context usually referred to as Mālī or Rūmī.</xsl:text></xsl:element></xsl:element></xsl:when><xsl:when test="$pCal='H'"><xsl:element name="tei:calendar"><xsl:attribute name="xml:id">cal_islamic</xsl:attribute><xsl:element name="tei:p"><xsl:text>Islamic Hijrī calendar beginning the Year with 1 Muḥarram.</xsl:text></xsl:element></xsl:element></xsl:when></xsl:choose></xsl:element></xsl:otherwise></xsl:choose>-->
     </xsl:template>
-    <!-- This template normalises a date input string mixing digits and month names. The output is "yyyy-mm-dd" -->
+    
+    <xd:doc>
+        <xd:desc> This template normalises a date input string mixing digits and month names. The output is "yyyy-mm-dd" </xd:desc>
+        <xd:param name="p_input"/>
+        <xd:param name="p_input-lang"/>
+        <xd:param name="p_input-calendar"/>
+    </xd:doc>
     <xsl:template name="f_date-NormaliseInput">
         <xsl:param name="p_input" select="'1000'"/>
         <!-- This parameter selects the input language according to @xml:lang -->
@@ -1450,9 +1561,18 @@
         />
     </xsl:template>
     <!-- v1e -->
-    <!-- this template generates a list of incremented dates in any calendar with a transformation into another calendar
-        it might be used for computing the gregorian dates of the first day of Ramadan, anniversary of the Sultan's 
-        accession to the throne etc. -->
+    
+    <xd:doc>
+        <xd:desc> this template generates a list of incremented dates in any calendar with a transformation into another calendar
+            it might be used for computing the gregorian dates of the first day of Ramadan, anniversary of the Sultan's 
+            accession to the throne etc. </xd:desc>
+        <xd:param name="p_onset"/>
+        <xd:param name="p_terminus"/>
+        <xd:param name="p_increment-period"/>
+        <xd:param name="p_increment-by"/>
+        <xd:param name="p_input-calendar"/>
+        <xd:param name="p_output-calendar"/>
+    </xd:doc>
     <xsl:template name="f_date-increment">
         <!-- this param selects the date, format: 'yyyy-mm-dd' -->
         <xsl:param name="p_onset"/>
@@ -1544,8 +1664,14 @@
             </xsl:call-template>
         </xsl:if>
     </xsl:template>
-    <!-- this template increments Julian days between two dates.
-    The output is a set of comma-separarted values-->
+    
+    <xd:doc>
+        <xd:desc> this template increments Julian days between two dates.
+            The output is a set of comma-separarted values</xd:desc>
+        <xd:param name="p_julian-dayStart"/>
+        <xd:param name="p_julian-dayStop"/>
+        <xd:param name="pIntervalDays"/>
+    </xd:doc>
     <xsl:template name="f_date-incrementJD">
         <xsl:param name="p_julian-dayStart"/>
         <xsl:param name="p_julian-dayStop"/>
@@ -1561,7 +1687,11 @@
             </xsl:call-template>
         </xsl:if>
     </xsl:template>
-    <!-- this template is used to normalise and convert the date strings found in the BOA online catalogue -->
+    
+    <xd:doc>
+        <xd:desc> this template is used to normalise and convert the date strings found in the BOA online catalogue </xd:desc>
+        <xd:param name="pDateString"/>
+    </xd:doc>
     <xsl:template name="f_date-Boa">
         <xsl:param name="pDateString"/>
         <xsl:choose>
