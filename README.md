@@ -1,20 +1,34 @@
+---
+title: "Read me: XSLT calendar conversion"
+author: Till Grallert
+date: 2018-11-15 12:40:29 +0200
+---
+
 # xslt-calendar-conversion
 
-XSLT templates for the conversion of calendars in use in the late Ottoman Empire: Gregorian, Rumi, Mali, and Islamic Hijri.
+XSLT functions and templates for the conversion of calendars in use in the late Ottoman Empire: Gregorian, Rumi, Mali, and Islamic Hijri.
+
+## Installation and use
+
+The functions and templates can be loaded into other XSLT stylesheets or XQuery. For XSLT use the `<xsl:include>` or `<xsl:import>` methods. Note that the functions make use of the `oape` namespace, which is mapped to `xmlns:oape="https://openarabicpe.github.io/ns"`. You can either download a copy of this repository or link to the online version of the stylesheet which is hosted on the gh-pages branch of this repository. To include the latest version of the functions use
+
+```xml
+<xsl:include href="https://tillgrallert.github.io/xslt-calendar-conversion/functions/date-functions.xsl"/>
+```
 
 ## General description
 
-The single stylesheet in this repo was conceived as a remedy for the bugs in the XPath specification that prevent the computation of Islamic (Hijrī) dates. As I was, at the same time, working on the transcription of Arabic and Ottoman Turkish sources from the nineteenth century, which made use of Gregorian, Hijrī, Rūmī, and Mālī calendars, into XML files, I also wanted to reliably compute conversions between the various calendars.
+The single stylesheet in this repo was conceived as a remedy for the bugs in the XPath specification that prevent the computation of Islamic (Hijrī) dates. As I was, at the same time, working on the transcription of Arabic and Ottoman Turkish sources from the nineteenth century into XML files, which made use of Gregorian, Hijrī, Rūmī, and Mālī calendars, I also wanted to reliably compute conversions between the various calendars.
 
-In addition to numerical dates, the stylesheet provides a function that returns the common month names.
+In addition to numerical dates, the stylesheet provides a function that returns the common month names in various languages and scripts.
 
 Detailed descriptions of the functions and their parameters can be found inside the stylesheet.
 
 ## Characteristics of the non-Gregorian calendars
 
-- **Hijrī** reckoning relies on the observation of the lunar year. Year counts began with Muhammad's exodus (hijrā) from Mecca to Medina. Hijrī dates cannot really be computed as observations of the new moon varied between locations. The stylesheet uses common astronomical computations of the lunar calendar.
+- Islamic **Hijrī** reckoning relies on the observation of the lunar year. Year counts began with Muhammad's exodus (hijrā) from Mecca to Medina. Hijrī dates cannot really be computed as observations of the new moon varied between locations. The stylesheet uses common astronomical computations of the lunar calendar.
 - **Rūmī** reckoning is a Julian calendar that adopted 1 January as the beginning of the year. As the rules for leap years are slightly different between Julian and Gregorian calendars, the difference between these two is slowly increasing (currently 13 days).
-- **Mālī** reckoning is a combination of the old Julian calendar beginning on 1 March and a Hijrī year count, that was introduced as the fiscal calendar of the Ottoman Empire in 1676. Every 33 lunar years, the year counts between Mālī and Hijrī calendars are synchronised by dropping a year.
+- Ottoman fiscal **Mālī** reckoning is a combination of the old Julian calendar beginning on 1 March and a Hijrī year count, that was introduced as the fiscal calendar of the Ottoman Empire in 1676. Every 33 lunar years, the year counts between Mālī and Hijrī calendars are synchronised by dropping a year.
 
 ## Templates
 
