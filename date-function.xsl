@@ -1357,7 +1357,7 @@
                     <xsl:when test="$p_input-calendar = '#cal_gregorian'">
                         <!-- test if input string is ISO format -->
                         <xsl:attribute name="when" select="$p_input"/>
-                        <xsl:attribute name="xml:lang" select="'en  '"/>
+                        <xsl:attribute name="xml:lang" select="'en'"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:attribute name="xml:lang" select="$v_lang"/>
