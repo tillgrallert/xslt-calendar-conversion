@@ -1352,13 +1352,15 @@
         <xsl:variable name="vDateTei1">
             <xsl:element name="tei:date">
                 <!-- attributes -->
-                <xsl:attribute name="xml:lang" select="$v_lang"/>
+                
                 <xsl:choose>
                     <xsl:when test="$p_input-calendar = '#cal_gregorian'">
                         <!-- test if input string is ISO format -->
                         <xsl:attribute name="when" select="$p_input"/>
+                        <xsl:attribute name="xml:lang" select="'en  '"/>
                     </xsl:when>
                     <xsl:otherwise>
+                        <xsl:attribute name="xml:lang" select="$v_lang"/>
                         <xsl:choose>
                             <xsl:when test="$p_input-calendar = '#cal_julian'">
                                 <xsl:variable name="v_gregorian-date" select="oape:date-convert-julian-to-gregorian($p_input)"/>
