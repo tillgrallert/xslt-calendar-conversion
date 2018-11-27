@@ -283,38 +283,30 @@
     </xsl:function>
     
     <xd:doc>
-        <xd:desc> this template converts Hijrī Years to Gregorian year ranges </xd:desc>
-        <xd:param name="pYearH"/>
+        <xd:desc>This function converts Hijrī Years to Gregorian year ranges </xd:desc>
+        <xd:param name="p_islamic-year"/>
     </xd:doc>
-    <xsl:template name="f_date-HY2G">
-        <xsl:param name="pYearH" select="'1434'"/>
-        <xsl:variable name="v_islamic-date1" select="concat($pYearH, '-01-01')"/>
-        <xsl:variable name="v_gregorian-date1" select="oape:date-convert-islamic-to-gregorian($v_islamic-date1)">
-            <!--<xsl:call-template name="f_date-convert-islamic-to-gregorian">
-                <xsl:with-param name="p_islamic-date" select="$v_islamic-date1"/>
-            </xsl:call-template>-->
-        </xsl:variable>
-        <xsl:variable name="v_islamic-date2" select="concat($pYearH, '-12-29')"/>
-        <xsl:variable name="v_gregorian-date2" select="oape:date-convert-islamic-to-gregorian($v_islamic-date2)">
-            <!--<xsl:call-template name="f_date-convert-islamic-to-gregorian">
-                <xsl:with-param name="p_islamic-date" select="$v_islamic-date2"/>
-            </xsl:call-template>-->
-        </xsl:variable>
-        <xsl:value-of select="substring($v_gregorian-date1, 1, 4)"/>
+    <xsl:function name="oape:date-convert-islamic-year-to-gregorian">
+        <xsl:param name="p_islamic-year"/>
+        <xsl:variable name="v_islamic-date-onset" select="concat($p_islamic-year, '-01-01')"/>
+        <xsl:variable name="v_gregorian-date-onset" select="oape:date-convert-islamic-to-gregorian($v_islamic-date-onset)"/>
+        <xsl:variable name="v_islamic-date-terminus" select="concat($p_islamic-year, '-12-29')"/>
+        <xsl:variable name="v_gregorian-date-terminus" select="oape:date-convert-islamic-to-gregorian($v_islamic-date-terminus)"/>
+        <xsl:value-of select="substring($v_gregorian-date-onset, 1, 4)"/>
         <!-- test if the Hijrī year spans more than one Gregorian year (this is not the case for 1295, 1329  -->
-        <xsl:if test="substring($v_gregorian-date1, 1, 4) != substring($v_gregorian-date2, 1, 4)">
+        <xsl:if test="substring($v_gregorian-date-onset, 1, 4) != substring($v_gregorian-date-terminus, 1, 4)">
             <xsl:text>-</xsl:text>
             <xsl:choose>
                 <!-- the range 1899-1900 must be accounted for -->
-                <xsl:when test="substring($v_gregorian-date2, 3, 2) = '00'">
-                    <xsl:value-of select="substring($v_gregorian-date2, 1, 4)"/>
+                <xsl:when test="substring($v_gregorian-date-terminus, 3, 2) = '00'">
+                    <xsl:value-of select="substring($v_gregorian-date-terminus, 1, 4)"/>
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:value-of select="substring($v_gregorian-date2, 3, 2)"/>
+                    <xsl:value-of select="substring($v_gregorian-date-terminus, 3, 2)"/>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:if>
-    </xsl:template>
+    </xsl:function>
     <!-- this template converts Gregorian to Mali dates (i.e. Julian, commencing on 1 Mar, minus 584 years from 13 March 1840 onwards)  -->
     
     <xd:doc>
@@ -323,21 +315,6 @@
     </xd:doc>
     <xsl:function name="oape:date-convert-gregorian-to-ottoman-fiscal">
         <xsl:param name="p_gregorian-date"/>
-        <!--<xsl:variable name="v_julian-day-of-input">
-            <xsl:call-template name="f_date-convert-gregorian-to-julian-day">
-                <xsl:with-param name="p_gregorian-date" select="$p_gregorian-date"/>
-            </xsl:call-template>
-        </xsl:variable>-->
-        <!--<xsl:variable name="v_julian-date" select="oape:date-convert-gregorian-to-julian($p_gregorian-date)">
-           <!-\- <xsl:call-template name="f_date-convert-gregorian-to-julian">
-                <xsl:with-param name="p_gregorian-date" select="$p_gregorian-date"/>
-            </xsl:call-template>-\->
-        </xsl:variable>
-        <xsl:variable name="v_ottoman-fiscal-date" select="oape:date-convert-julian-to-ottoman-fiscal($v_julian-date)">
-            <!-\-<xsl:call-template name="f_date-convert-julian-to-ottoman-fiscal">
-                <xsl:with-param name="p_julian-date" select="$v_julian-date"/>
-            </xsl:call-template>
--\->        </xsl:variable>-->
         <xsl:value-of select="oape:date-convert-julian-to-ottoman-fiscal(oape:date-convert-gregorian-to-julian($p_gregorian-date))"/>
     </xsl:function>
     <!-- v2e -->
@@ -611,7 +588,7 @@
             </xsl:choose>
         </xsl:variable>
         <!-- this variable computes the Hijrī date for the 1 Mar of $v_julian-year. As the lunar year is 354.37 solar days long, it is 11 to 12 days short than the solar year. If 1 Muḥ falls between 1 Mar J and 12 Mar J, the years should be synchronised. But computation is more complicated than empirically established differences between the calendars -->
-        <!--<xsl:variable name="v_ottoman-fiscal-year2"><!-\- Julian day for the 1 Mar of the current Mālī year ( -\-><xsl:variable name="v_julian-day-of-inputJ1March"><xsl:call-template name="f_date-convert-julian-to-julian-day"><xsl:with-param name="p_julian-date" select="concat($v_julian-year,'-03-01')"/></xsl:call-template></xsl:variable><!-\- calculate the Hijrī date for 1 Mar of current Mālī year -\-><xsl:variable name="v_islamic-date1March"><xsl:call-template name="f_date-convert-julian-day-to-islamic"><xsl:with-param name="p_julian-day" select="$v_julian-day-of-inputJ1March"/></xsl:call-template></xsl:variable><xsl:variable name="v_islamic-year1March" select="number(tokenize($v_islamic-date1March,'([.,&quot;\-])')[1])"/><!-\- Julian day for the 1 Muḥarram of the year beginning after 1 Mar of the current Mālī year. -\-><xsl:variable name="v_julian-day-of-inputH1Muharram"><xsl:call-template name="f_date-convert-islamic-to-julian-day"><xsl:with-param name="p_islamic-date" select="concat($v_islamic-year1March +1,'-01-01')"/></xsl:call-template></xsl:variable><!-\- check whether the difference between the Julian days is less than 12 days -\-><xsl:choose><xsl:when test="$v_julian-day-of-inputH1Muharram - $v_julian-day-of-inputJ1March &lt; 12"><xsl:value-of select="1"/></xsl:when><xsl:otherwise><xsl:value-of select="$v_islamic-year1March"/></xsl:otherwise></xsl:choose></xsl:variable><xsl:variable name="v_ottoman-fiscal-year" select="if($v_julian-month &lt;=2) then($v_ottoman-fiscal-year2 -1) else($v_ottoman-fiscal-year2)"/>-->
+        <!--<xsl:variable name="v_ottoman-fiscal-year2"><!-\- Julian day for the 1 Mar of the current Mālī year ( -\-><xsl:variable name="v_julian-day-of-inputJ1March"><xsl:call-template name="f_date-convert-julian-to-julian-day"><xsl:with-param name="p_julian-date" select="concat($v_julian-year,'-03-01')"/></xsl:call-template></xsl:variable><!-\- calculate the Hijrī date for 1 Mar of current Mālī year -\-><xsl:variable name="v_islamic-date-onsetMarch"><xsl:call-template name="f_date-convert-julian-day-to-islamic"><xsl:with-param name="p_julian-day" select="$v_julian-day-of-inputJ1March"/></xsl:call-template></xsl:variable><xsl:variable name="v_islamic-year1March" select="number(tokenize($v_islamic-date-onsetMarch,'([.,&quot;\-])')[1])"/><!-\- Julian day for the 1 Muḥarram of the year beginning after 1 Mar of the current Mālī year. -\-><xsl:variable name="v_julian-day-of-inputH1Muharram"><xsl:call-template name="f_date-convert-islamic-to-julian-day"><xsl:with-param name="p_islamic-date" select="concat($v_islamic-year1March +1,'-01-01')"/></xsl:call-template></xsl:variable><!-\- check whether the difference between the Julian days is less than 12 days -\-><xsl:choose><xsl:when test="$v_julian-day-of-inputH1Muharram - $v_julian-day-of-inputJ1March &lt; 12"><xsl:value-of select="1"/></xsl:when><xsl:otherwise><xsl:value-of select="$v_islamic-year1March"/></xsl:otherwise></xsl:choose></xsl:variable><xsl:variable name="v_ottoman-fiscal-year" select="if($v_julian-month &lt;=2) then($v_ottoman-fiscal-year2 -1) else($v_ottoman-fiscal-year2)"/>-->
         <!-- in 1917 Mālī was synchronised to the Gregorian calendar in two steps: 1333-01-01 M was established as 1917-03-01 and 1334-01-01 was synchronised to 1918-01-01. Yet, despite the alignement of numerical values, the month names, of course, remained untouched: 1334-01-01 was 1 Kan I 1334 and not 1 Mārt 1334 -->
         <!-- the current iteration is not correct for the first 13 days of 1333 / last 13 days of 1332 -->
         <xsl:choose>
@@ -779,22 +756,22 @@
     </xd:doc>
     <xsl:template name="f_date-MY2G">
         <xsl:param name="pYearM" select="'1434'"/>
-        <xsl:variable name="v_ottoman-fiscal-date1" select="concat($pYearM, '-01-01')"/>
-        <xsl:variable name="v_gregorian-date1" select="oape:date-convert-ottoman-fiscal-to-gregorian($v_ottoman-fiscal-date1)">
+        <xsl:variable name="v_ottoman-fiscal-date-onset" select="concat($pYearM, '-01-01')"/>
+        <xsl:variable name="v_gregorian-date-onset" select="oape:date-convert-ottoman-fiscal-to-gregorian($v_ottoman-fiscal-date-onset)">
            <!-- <xsl:call-template name="f_date-convert-ottoman-fiscal-to-gregorian">
-                <xsl:with-param name="p_ottoman-fiscal-date" select="$v_ottoman-fiscal-date1"/>
+                <xsl:with-param name="p_ottoman-fiscal-date" select="$v_ottoman-fiscal-date-onset"/>
             </xsl:call-template>-->
         </xsl:variable>
-        <xsl:variable name="v_ottoman-fiscal-date2" select="concat($pYearM, '-12-29')"/>
-        <xsl:variable name="v_gregorian-date2" select="oape:date-convert-ottoman-fiscal-to-gregorian($v_ottoman-fiscal-date2)">
+        <xsl:variable name="v_ottoman-fiscal-date-terminus" select="concat($pYearM, '-12-29')"/>
+        <xsl:variable name="v_gregorian-date-terminus" select="oape:date-convert-ottoman-fiscal-to-gregorian($v_ottoman-fiscal-date-terminus)">
             <!--<xsl:call-template name="f_date-convert-ottoman-fiscal-to-gregorian">
-                <xsl:with-param name="p_ottoman-fiscal-date" select="$v_ottoman-fiscal-date2"/>
+                <xsl:with-param name="p_ottoman-fiscal-date" select="$v_ottoman-fiscal-date-terminus"/>
             </xsl:call-template>-->
         </xsl:variable>
-        <xsl:value-of select="substring($v_gregorian-date1, 1, 4)"/>
-        <xsl:if test="substring($v_gregorian-date1, 1, 4) != substring($v_gregorian-date2, 1, 4)">
+        <xsl:value-of select="substring($v_gregorian-date-onset, 1, 4)"/>
+        <xsl:if test="substring($v_gregorian-date-onset, 1, 4) != substring($v_gregorian-date-terminus, 1, 4)">
             <xsl:text>-</xsl:text>
-            <xsl:value-of select="substring($v_gregorian-date2, 3, 2)"/>
+            <xsl:value-of select="substring($v_gregorian-date-terminus, 3, 2)"/>
         </xsl:if>
     </xsl:template>
     
