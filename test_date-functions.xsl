@@ -7,8 +7,10 @@
     version="3.0">
     <xsl:output method="html" indent="yes"/>
     <xsl:include href="https://tillgrallert.github.io/xslt-calendar-conversion/functions/date-functions.xsl"/>
+    <!-- <xsl:include href="date-function.xsl"/> -->
     <xsl:template match="/">
-        <xsl:variable name="v_gregorian-date" select="'1900-01-01'"/>
+        <xsl:variable name="v_input" select="'Sep 20, 1900'"/>
+        <xsl:variable name="v_gregorian-date" select="oape:date-normalise-input($v_input,'en', '#cal_gregorian')"/>
         <xsl:variable name="v_islamic-date" select="oape:date-convert-gregorian-to-islamic($v_gregorian-date)"/>
         <xsl:variable name="v_julian-date" select="oape:date-convert-gregorian-to-julian($v_gregorian-date)"/>
         <xsl:variable name="v_ottoman-fiscal-date" select="oape:date-convert-gregorian-to-ottoman-fiscal($v_gregorian-date)"/>

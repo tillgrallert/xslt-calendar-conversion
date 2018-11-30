@@ -1061,6 +1061,7 @@
                 <tei:nym n="2">
                     <tei:form xml:lang="tr">Nisan</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Nīsān</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Nīs</tei:form>
                     <tei:form xml:lang="ar">نيسان</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ni</tei:form>
                 </tei:nym>
@@ -1073,54 +1074,63 @@
                 <tei:nym n="4">
                     <tei:form xml:lang="tr">Haziran</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ḥazīrān</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Ḥaz</tei:form>
                     <tei:form xml:lang="ar">حزيران</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ha</tei:form>
                 </tei:nym>
                 <tei:nym n="5">
                     <tei:form xml:lang="tr">Temmuz</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tammūz</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Tam</tei:form>
                     <tei:form xml:lang="ar">تموز</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Te</tei:form>
                 </tei:nym>
                 <tei:nym n="6">
                     <tei:form xml:lang="tr">Ağustos</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Aghusṭūs</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Agh</tei:form>
                     <tei:form xml:lang="ar">اغسطوس</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ağ</tei:form>
                 </tei:nym>
                 <tei:nym n="7">
                     <tei:form xml:lang="tr">Eylül</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Aylūl</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Ayl</tei:form>
                     <tei:form xml:lang="ar">ايلول</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ey</tei:form>
                 </tei:nym>
                 <tei:nym n="8">
                     <tei:form xml:lang="tr">Ekim</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-awwal</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Tish I</tei:form>
                     <tei:form xml:lang="ar">تسرين الاول</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Tş</tei:form>
                 </tei:nym>
                 <tei:nym n="9">
                     <tei:form xml:lang="tr">Kasım</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-thānī</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Tish II</tei:form>
                     <tei:form xml:lang="ar">تسرين الثاني</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Tn</tei:form>
                 </tei:nym>
                 <tei:nym n="10">
                     <tei:form xml:lang="tr">Aralık</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-awwal</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Kān I</tei:form>
                     <tei:form xml:lang="ar">كانون الاول</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ke</tei:form>
                 </tei:nym>
                 <tei:nym n="11">
                     <tei:form xml:lang="tr">Ocak</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-thānī</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Kān II</tei:form>
                     <tei:form xml:lang="ar">كانون الثاني</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ks</tei:form>
                 </tei:nym>
                 <tei:nym n="12">
                     <tei:form xml:lang="tr">Şubat</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Shubāṭ</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Shub</tei:form>
                     <tei:form xml:lang="ar">شباط</tei:form>
                 </tei:nym>
             </tei:listNym>
@@ -1128,26 +1138,33 @@
                 <tei:nym n="1">
                     <tei:form xml:lang="tr">Ocak</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-thānī</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Kān II</tei:form>
                     <tei:form xml:lang="ar">كانون الثاني</tei:form>
                     <tei:form xml:lang="en">January</tei:form>
+                    <tei:form xml:lang="en">Jan</tei:form>
                 </tei:nym>
                 <tei:nym n="2">
                     <tei:form xml:lang="tr">Şubat</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Shubāṭ</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Shub</tei:form>
                     <tei:form xml:lang="ar">شباط</tei:form>
                     <tei:form xml:lang="en">February</tei:form>
+                    <tei:form xml:lang="en">Feb</tei:form>
                 </tei:nym>
                 <tei:nym n="3">
                     <tei:form xml:lang="tr">Mart</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ādhār</tei:form>
                     <tei:form xml:lang="ar">آذار</tei:form>
                     <tei:form xml:lang="en">March</tei:form>
+                    <tei:form xml:lang="en">Mar</tei:form>
                 </tei:nym>
                 <tei:nym n="4">
                     <tei:form xml:lang="tr">Nisan</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Nīsān</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Nīs</tei:form>
                     <tei:form xml:lang="ar">نيسان</tei:form>
                     <tei:form xml:lang="en">April</tei:form>
+                    <tei:form xml:lang="en">Apr</tei:form>
                 </tei:nym>
                 <tei:nym n="5">
                     <tei:form xml:lang="tr">Mayıs</tei:form>
@@ -1158,44 +1175,57 @@
                 <tei:nym n="6">
                     <tei:form xml:lang="tr">Haziran</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ḥazīrān</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Ḥaz</tei:form>
                     <tei:form xml:lang="ar">حزيران</tei:form>
                     <tei:form xml:lang="en">June</tei:form>
+                    <tei:form xml:lang="en">Jun</tei:form>
                 </tei:nym>
                 <tei:nym n="7">
                     <tei:form xml:lang="tr">Temmuz</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tammūz</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Tam</tei:form>
                     <tei:form xml:lang="ar">تموز</tei:form>
                     <tei:form xml:lang="en">July</tei:form>
+                    <tei:form xml:lang="en">Jul</tei:form>
                 </tei:nym>
                 <tei:nym n="8">
                     <tei:form xml:lang="tr">Ağustos</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Āb</tei:form>
                     <tei:form xml:lang="ar">آب</tei:form>
                     <tei:form xml:lang="en">August</tei:form>
+                    <tei:form xml:lang="en">Aug</tei:form>
                 </tei:nym>
                 <tei:nym n="9">
                     <tei:form xml:lang="tr">Eylül</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Aylūl</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Ayl</tei:form>
                     <tei:form xml:lang="ar">ايلول</tei:form>
                     <tei:form xml:lang="en">September</tei:form>
+                    <tei:form xml:lang="en">Sep</tei:form>
                 </tei:nym>
                 <tei:nym n="10">
                     <tei:form xml:lang="tr">Ekim</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-awwal</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Tish I</tei:form>
                     <tei:form xml:lang="ar">تسرين الاول</tei:form>
                     <tei:form xml:lang="en">October</tei:form>
+                    <tei:form xml:lang="en">Oct</tei:form>
                 </tei:nym>
                 <tei:nym n="11">
                     <tei:form xml:lang="tr">Kasım</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-thānī</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Tish II</tei:form>
                     <tei:form xml:lang="ar">تسرين الثاني</tei:form>
                     <tei:form xml:lang="en">November</tei:form>
+                    <tei:form xml:lang="en">Nov</tei:form>
                 </tei:nym>
                 <tei:nym n="12">
                     <tei:form xml:lang="tr">Aralık</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-awwal</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Kān II</tei:form>
                     <tei:form xml:lang="ar">كانون الاول</tei:form>
                     <tei:form xml:lang="en">December</tei:form>
+                    <tei:form xml:lang="en">Dec</tei:form>
                 </tei:nym>
             </tei:listNym>
         </xsl:variable>
@@ -1203,7 +1233,7 @@
             <xsl:if test="$p_output-mode = 'name' and xs:integer($p_input-month)">
                 <!-- check if the nymList for the calendar contains the month name -->
                 <xsl:value-of
-                    select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $v_calendar]/tei:nym[@n = $p_input-month]/tei:form[@xml:lang = $p_input-lang]"
+                    select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $v_calendar]/tei:nym[@n = $p_input-month]/tei:form[@xml:lang = $p_input-lang][1]"
                 />
             </xsl:if>
             <xsl:if test="$p_output-mode = 'number'">
@@ -1213,7 +1243,7 @@
             </xsl:if>
         </xsl:variable>
         <xsl:if test="$v_month = ''">
-            <xsl:message terminate="yes">
+s            <xsl:message terminate="yes">
                 <xsl:text>There is no output data for your input of $p_input-lang="</xsl:text><xsl:value-of select="$p_input-lang"/><xsl:text>" and $p_calendar="</xsl:text><xsl:value-of select="$p_calendar"/><xsl:text>".</xsl:text>
             </xsl:message>
         </xsl:if>
@@ -1338,80 +1368,61 @@
     </xsl:function>
     
     <xd:doc>
-        <xd:desc> This template normalises a date input string mixing digits and month names. The output is "yyyy-mm-dd" </xd:desc>
+        <xd:desc>This funtion normalises a date input string mixing digits and month names. The output is "yyyy-mm-dd" </xd:desc>
         <xd:param name="p_input"/>
         <xd:param name="p_input-lang"/>
         <xd:param name="p_input-calendar"/>
     </xd:doc>
-    <xsl:template name="f_date-NormaliseInput">
-        <xsl:param name="p_input" select="'1000'"/>
+    <xsl:function name="oape:date-normalise-input">
+        <xsl:param name="p_input"/>
         <!-- This parameter selects the input language according to @xml:lang -->
         <xsl:param name="p_input-lang"/>
         <!-- this parameter selects the input calendar using the TEI's @datingMethod -->
         <xsl:param name="p_input-calendar"/>
         <xsl:variable name="vDateNode">
-            <!-- 1) match yyyy-mm-dd -->
-            <xsl:analyze-string regex="\s*(\d{{4}})\-(\d{{2}})\-(\d{{2}})\s*" select="$p_input">
+            <xsl:analyze-string regex="\s*(\d{{4}})\-(\d{{1,2}})\-(\d{{1,2}})\s*|\s*(\d+)\s+(.*)\s+(\d{{4}})\s*|\s*(.*)\s+(\d+),\s+(\d{{4}})\s*" select="normalize-space($p_input)">
                 <xsl:matching-substring>
-                    <xsl:element name="tss:date">
-                        <xsl:attribute name="day"
-                            select="format-number(number(regex-group(3)), '00')"/>
-                        <xsl:attribute name="month" select="regex-group(2)"/>
-                        <xsl:attribute name="year" select="regex-group(1)"/>
-                    </xsl:element>
+                    <xsl:choose>
+                        <!-- 1) match yyyy-mm-dd: this works as expected -->
+                        <xsl:when test="matches(normalize-space($p_input),'\s*(\d{4})\-(\d{1,2})\-(\d{1,2})\s*')">
+                            <!-- output -->
+                            <xsl:value-of select="regex-group(1)"/>
+                            <xsl:text>-</xsl:text>
+                            <xsl:value-of select="format-number(number(regex-group(2)), '00')"/>
+                            <xsl:text>-</xsl:text>
+                            <xsl:value-of select="format-number(number(regex-group(3)), '00')"/>
+                        </xsl:when>
+                        <!-- 2) match dd MNn yyyy -->
+                        <xsl:when test="matches(normalize-space($p_input),'\s*(\d+)\s+(.*)\s+(\d{4})\s*')">
+                            <xsl:variable name="v_month-name" select="translate(regex-group(5), '.', '')"/>
+                            <xsl:variable name="v_month-number" select="oape:date-convert-months($v_month-name, 'number', $p_input-lang, $p_input-calendar)"/>
+                            <!-- output -->
+                            <xsl:value-of select="regex-group(6)"/>
+                            <xsl:text>-</xsl:text>
+                            <xsl:value-of select="format-number(number($v_month-number), '00')"/>
+                            <xsl:text>-</xsl:text>
+                            <xsl:value-of select="format-number(number(regex-group(4)), '00')"/>
+                        </xsl:when>
+                        <!-- 3) match MNn dd, yyyy -->
+                        <xsl:when test="matches(normalize-space($p_input),'\s*(.*)\s+(\d+),\s+(\d{4})\s*')">
+                            <xsl:variable name="v_month-name" select="translate(regex-group(7), '.', '')"/>
+                            <xsl:variable name="v_month-number" select="oape:date-convert-months($v_month-name, 'number', $p_input-lang, $p_input-calendar)"/>
+                            <!-- output -->
+                            <xsl:value-of select="regex-group(9)"/>
+                            <xsl:text>-</xsl:text>
+                            <xsl:value-of select="format-number(number($v_month-number), '00')"/>
+                            <xsl:text>-</xsl:text>
+                            <xsl:value-of select="format-number(number(regex-group(8)), '00')"/>
+                        </xsl:when>
+                    </xsl:choose>
                 </xsl:matching-substring>
                 <xsl:non-matching-substring>
-                    <!-- 2) match dd MNn yyyy -->
-                    <xsl:analyze-string regex="\s*(\d+)\s+(.*)\s+(\d{{4}})\s*" select="$p_input">
-                        <xsl:matching-substring>
-                            <xsl:variable name="vMonth">
-                                <xsl:call-template name="f_date-MonthNameNumber">
-                                    <xsl:with-param name="pMode" select="'number'"/>
-                                    <xsl:with-param name="pMonth"
-                                        select="translate(regex-group(2), '.', '')"/>
-                                    <xsl:with-param name="p_input-lang" select="$p_input-lang"/>
-                                </xsl:call-template>
-                            </xsl:variable>
-                            <xsl:element name="tss:date">
-                                <xsl:attribute name="day"
-                                    select="format-number(number(regex-group(1)), '00')"/>
-                                <xsl:attribute name="month"
-                                    select="format-number(number($vMonth), '00')"/>
-                                <xsl:attribute name="year" select="regex-group(3)"/>
-                            </xsl:element>
-                        </xsl:matching-substring>
-                        <xsl:non-matching-substring>
-                            <!-- 3) match MNn dd, yyyy -->
-                            <xsl:analyze-string regex="\s*(.*)\s+(\d+),\s+(\d{{4}})\s*"
-                                select="$p_input">
-                                <xsl:matching-substring>
-                                    <xsl:variable name="vMonth">
-                                        <xsl:call-template name="f_date-MonthNameNumber">
-                                            <xsl:with-param name="pMode" select="'number'"/>
-                                            <xsl:with-param name="pMonth"
-                                                select="translate(regex-group(1), '.', '')"/>
-                                            <xsl:with-param name="p_input-lang"
-                                                select="$p_input-lang"/>
-                                        </xsl:call-template>
-                                    </xsl:variable>
-                                    <xsl:element name="tss:date">
-                                        <xsl:attribute name="day"
-                                            select="format-number(number(regex-group(2)), '00')"/>
-                                        <xsl:attribute name="month"
-                                            select="format-number(number($vMonth), '00')"/>
-                                        <xsl:attribute name="year" select="regex-group(3)"/>
-                                    </xsl:element>
-                                </xsl:matching-substring>
-                            </xsl:analyze-string>
-                        </xsl:non-matching-substring>
-                    </xsl:analyze-string>
+                    <xsl:value-of select="$p_input"/>
                 </xsl:non-matching-substring>
             </xsl:analyze-string>
         </xsl:variable>
-        <xsl:value-of
-            select="concat($vDateNode/tss:date/@year, '-', $vDateNode/tss:date/@month, '-', $vDateNode/tss:date/@day)"
-        />
-    </xsl:template>
+        <xsl:value-of select="normalize-space($vDateNode)"/>
+    </xsl:function>
     <!-- v1e -->
     
     <xd:doc>
