@@ -1338,69 +1338,56 @@
     </xsl:function>
     
     <xd:doc>
-        <xd:desc> This template normalises a date input string mixing digits and month names. The output is "yyyy-mm-dd" </xd:desc>
+        <xd:desc>This funtion normalises a date input string mixing digits and month names. The output is "yyyy-mm-dd" </xd:desc>
         <xd:param name="p_input"/>
         <xd:param name="p_input-lang"/>
         <xd:param name="p_input-calendar"/>
     </xd:doc>
-    <xsl:template name="f_date-NormaliseInput">
-        <xsl:param name="p_input" select="'1000'"/>
+    <xsl:function name="oape:date-normalise-input">
+        <xsl:param name="p_input"/>
         <!-- This parameter selects the input language according to @xml:lang -->
         <xsl:param name="p_input-lang"/>
         <!-- this parameter selects the input calendar using the TEI's @datingMethod -->
         <xsl:param name="p_input-calendar"/>
         <xsl:variable name="vDateNode">
-            <!-- 1) match yyyy-mm-dd -->
-            <xsl:analyze-string regex="\s*(\d{{4}})\-(\d{{2}})\-(\d{{2}})\s*" select="$p_input">
+            <!-- 1) match yyyy-mm-dd: this works as expected -->
+            <xsl:analyze-string regex="\s*(\d{{4}})\-(\d{{1,2}})\-(\d{{1,2}})\s*" select="$p_input">
                 <xsl:matching-substring>
-                    <xsl:element name="tss:date">
-                        <xsl:attribute name="day"
-                            select="format-number(number(regex-group(3)), '00')"/>
-                        <xsl:attribute name="month" select="regex-group(2)"/>
-                        <xsl:attribute name="year" select="regex-group(1)"/>
-                    </xsl:element>
+                    <!-- output -->
+                    <xsl:value-of select="regex-group(1)"/>
+                    <xsl:text>-</xsl:text>
+                    <xsl:value-of select="format-number(number(regex-group(2)), '00')"/>
+                    <xsl:text>-</xsl:text>
+                    <xsl:value-of select="format-number(number(regex-group(3)), '00')"/>
                 </xsl:matching-substring>
                 <xsl:non-matching-substring>
                     <!-- 2) match dd MNn yyyy -->
                     <xsl:analyze-string regex="\s*(\d+)\s+(.*)\s+(\d{{4}})\s*" select="$p_input">
                         <xsl:matching-substring>
-                            <xsl:variable name="vMonth">
-                                <xsl:call-template name="f_date-MonthNameNumber">
-                                    <xsl:with-param name="pMode" select="'number'"/>
-                                    <xsl:with-param name="pMonth"
-                                        select="translate(regex-group(2), '.', '')"/>
-                                    <xsl:with-param name="p_input-lang" select="$p_input-lang"/>
-                                </xsl:call-template>
-                            </xsl:variable>
-                            <xsl:element name="tss:date">
-                                <xsl:attribute name="day"
-                                    select="format-number(number(regex-group(1)), '00')"/>
-                                <xsl:attribute name="month"
-                                    select="format-number(number($vMonth), '00')"/>
-                                <xsl:attribute name="year" select="regex-group(3)"/>
-                            </xsl:element>
+                            <xsl:variable name="v_month-name" select="translate(regex-group(2), '.', '')"/>
+                            <xsl:variable name="v_month-number" select="oape:date-convert-months($v_month-name, 'number', $p_input-lang, $p_input-calendar)"/>
+                            <xsl:message>
+                                <xsl:text>Month: </xsl:text><xsl:value-of select="$v_month-name"/><xsl:text> = </xsl:text><xsl:value-of select="$v_month-number"/>
+                            </xsl:message>
+                            <!-- output -->
+                            <xsl:value-of select="regex-group(3)"/>
+                            <xsl:text>-</xsl:text>
+                            <xsl:value-of select="format-number(number($v_month-number), '00')"/>
+                            <xsl:text>-</xsl:text>
+                            <xsl:value-of select="format-number(number(regex-group(1)), '00')"/>
                         </xsl:matching-substring>
                         <xsl:non-matching-substring>
                             <!-- 3) match MNn dd, yyyy -->
-                            <xsl:analyze-string regex="\s*(.*)\s+(\d+),\s+(\d{{4}})\s*"
-                                select="$p_input">
+                            <xsl:analyze-string regex="\s*(.*)\s+(\d+),\s+(\d{{4}})\s*" select="$p_input">
                                 <xsl:matching-substring>
-                                    <xsl:variable name="vMonth">
-                                        <xsl:call-template name="f_date-MonthNameNumber">
-                                            <xsl:with-param name="pMode" select="'number'"/>
-                                            <xsl:with-param name="pMonth"
-                                                select="translate(regex-group(1), '.', '')"/>
-                                            <xsl:with-param name="p_input-lang"
-                                                select="$p_input-lang"/>
-                                        </xsl:call-template>
-                                    </xsl:variable>
-                                    <xsl:element name="tss:date">
-                                        <xsl:attribute name="day"
-                                            select="format-number(number(regex-group(2)), '00')"/>
-                                        <xsl:attribute name="month"
-                                            select="format-number(number($vMonth), '00')"/>
-                                        <xsl:attribute name="year" select="regex-group(3)"/>
-                                    </xsl:element>
+                                    <xsl:variable name="v_month-name" select="translate(regex-group(1), '.', '')"/>
+                                    <xsl:variable name="v_month-number" select="oape:date-convert-months($v_month-name, 'number', $p_input-lang, $p_input-calendar)"/>
+                                    <!-- output -->
+                                    <xsl:value-of select="regex-group(3)"/>
+                                    <xsl:text>-</xsl:text>
+                                    <xsl:value-of select="format-number(number($v_month-number), '00')"/>
+                                    <xsl:text>-</xsl:text>
+                                    <xsl:value-of select="format-number(number(regex-group(2)), '00')"/>
                                 </xsl:matching-substring>
                             </xsl:analyze-string>
                         </xsl:non-matching-substring>
@@ -1408,10 +1395,8 @@
                 </xsl:non-matching-substring>
             </xsl:analyze-string>
         </xsl:variable>
-        <xsl:value-of
-            select="concat($vDateNode/tss:date/@year, '-', $vDateNode/tss:date/@month, '-', $vDateNode/tss:date/@day)"
-        />
-    </xsl:template>
+        <xsl:value-of select="normalize-space($vDateNode)"/>
+    </xsl:function>
     <!-- v1e -->
     
     <xd:doc>
