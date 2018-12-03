@@ -11,9 +11,9 @@
     <xsl:template match="/">
         <xsl:variable name="v_input" select="'Sep 20, 1900'"/>
         <xsl:variable name="v_gregorian-date" select="oape:date-normalise-input($v_input,'en', '#cal_gregorian')"/>
-        <xsl:variable name="v_islamic-date" select="oape:date-convert-gregorian-to-islamic($v_gregorian-date)"/>
-        <xsl:variable name="v_julian-date" select="oape:date-convert-gregorian-to-julian($v_gregorian-date)"/>
-        <xsl:variable name="v_ottoman-fiscal-date" select="oape:date-convert-gregorian-to-ottoman-fiscal($v_gregorian-date)"/>
+        <xsl:variable name="v_islamic-date" select="oape:date-convert-calendars($v_gregorian-date, '#cal_gregorian', '#cal_islamic')"/>
+        <xsl:variable name="v_julian-date" select="oape:date-convert-calendars($v_gregorian-date, '#cal_gregorian', '#cal_julian')"/>
+        <xsl:variable name="v_ottoman-fiscal-date" select="oape:date-convert-calendars($v_gregorian-date, '#cal_gregorian', '#cal_ottomanfiscal')"/>
         <!-- output -->
         <div>
         <h1>Input: <xsl:value-of select="$v_gregorian-date"/></h1>
