@@ -1678,7 +1678,7 @@ s            <xsl:message terminate="yes">
                         <xsl:value-of select="oape:date-convert-julian-day-to-julian($v_julian-day-of-input)"/>
                     </xsl:when>
                     <xsl:when test="$p_output-calendar = '#cal_ottomanfiscal'">
-                        <xsl:value-of select="oape:date-convert-julian-day-to-islamic($v_julian-day-of-input)"/>
+                        <xsl:value-of select="oape:date-convert-julian-to-ottoman-fiscal(oape:date-convert-julian-day-to-julian($v_julian-day-of-input))"/>
                     </xsl:when>
                     <!-- fallback -->
                     <xsl:otherwise>
