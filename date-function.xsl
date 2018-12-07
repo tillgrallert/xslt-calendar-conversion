@@ -77,6 +77,10 @@
     <xsl:param name="p_julian-day-for-islamic-base" select="1948439.5"/>
     <xsl:param name="p_debug" select="true()"/>
     
+   <!-- translate strings -->
+    <xsl:variable name="v_string-digits-latn" select="'0123456789'"/>
+    <xsl:variable name="v_string-digits-ar" select="'٠١٢٣٤٥٦٧٨٩'"/>
+    
     <xd:doc>
         <xd:desc>This function determines whether Gregorian years are leap years. Returns 'true()' or 'false()'.</xd:desc>
         <xd:param name="p_gregorian-date"/>
@@ -944,7 +948,7 @@
         <xd:desc>This function converts between month names and numbers according to various calendars.</xd:desc>
         <xd:param name="p_input-month">Input month name or number.</xd:param>
         <xd:param name="p_output-mode">Toggles between 'name' or 'number'.</xd:param>
-        <xd:param name="p_input-lang">Takes valid values of @xml:id as input.</xd:param>
+        <xd:param name="p_input-lang">Takes valid values of @xml:lang as input.</xd:param>
         <xd:param name="p_calendar">Toggles between calendars. Uses references to @xml:ids as input: '#cal_islamic', '#cal_julian', '#cal_ottomanfiscal' or '#cal_gregorian'</xd:param>
     </xd:doc>
     <xsl:function name="oape:date-convert-months">
@@ -1257,6 +1261,7 @@ s            <xsl:message terminate="yes">
         <xd:param name="p_input-calendar">Specify the input calendar with '#cal_islamic', '#cal_julian', '#cal_ottomanfiscal' or '#cal_gregorian'</xd:param>
         <xd:param name="p_format-output">Bolean toggles between input string and formatted output string.</xd:param>
         <xd:param name="p_inluce-weekday">Bolean toggle whether or not to include the weekday in the formatted output.</xd:param>
+        <xd:param name="p_lang"/>
     </xd:doc>
     <xsl:function name="oape:date-format-iso-string-to-tei">
         <xsl:param name="p_input"/>
@@ -1265,7 +1270,7 @@ s            <xsl:message terminate="yes">
         <!-- p_format-output establishes whether the original input or a formatted date is produced as output / content of the tei:date node. Values are 'original' and 'formatted' -->
         <xsl:param name="p_format-output"/>
         <xsl:param name="p_inluce-weekday"/>
-        <xsl:variable name="v_lang" select="'ar-Latn-x-ijmes'"/>
+        <xsl:param name="p_lang"/>
         <xsl:variable name="vDateTei1">
             <xsl:element name="tei:date">
                 <!-- attributes -->
@@ -1278,76 +1283,45 @@ s            <xsl:message terminate="yes">
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:variable name="v_gregorian-date" select="oape:date-convert-calendars($p_input,$p_input-calendar, '#cal_gregorian')"/>
-                        <xsl:attribute name="xml:lang" select="$v_lang"/>
+                        <xsl:attribute name="xml:lang" select="$p_lang"/>
                         <xsl:attribute name="when" select="$v_gregorian-date"/>
                         <xsl:attribute name="when-custom" select="$p_input"/>
                         <xsl:attribute name="calendar" select="$p_input-calendar"/>
                         <xsl:attribute name="datingMethod" select="$p_input-calendar"/>
-                        <!--<xsl:choose>
-                            <xsl:when test="$p_input-calendar = '#cal_julian'">
-                                <xsl:variable name="v_gregorian-date" select="oape:date-convert-julian-to-gregorian($p_input)"/>
-                                <xsl:attribute name="when" select="$v_gregorian-date"/>
-                                <xsl:attribute name="when-custom" select="$p_input"/>
-                                <xsl:attribute name="calendar" select="$p_input-calendar"/>
-                                <xsl:attribute name="datingMethod" select="$p_input-calendar"/>
-                            </xsl:when>
-                            <xsl:when test="$p_input-calendar = '#cal_ottomanfiscal'">
-                                <xsl:variable name="v_gregorian-date" select="oape:date-convert-ottoman-fiscal-to-gregorian($p_input)"/>
-                                <xsl:attribute name="when" select="$v_gregorian-date"/>
-                                <xsl:attribute name="when-custom" select="$p_input"/>
-                                <xsl:attribute name="calendar" select="$p_input-calendar"/>
-                                <xsl:attribute name="datingMethod" select="$p_input-calendar"/>
-                            </xsl:when>
-                            <xsl:when test="$p_input-calendar = '#cal_islamic'">
-                                <xsl:variable name="v_gregorian-date" select="oape:date-convert-islamic-to-gregorian($p_input)"/>
-                                <xsl:attribute name="when" select="$v_gregorian-date"/>
-                                <xsl:attribute name="when-custom" select="$p_input"/>
-                                <xsl:attribute name="calendar" select="$p_input-calendar"/>
-                                <xsl:attribute name="datingMethod" select="$p_input-calendar"/>
-                            </xsl:when>
-                        </xsl:choose>-->
                     </xsl:otherwise>
                 </xsl:choose>
                 <!-- element content -->
                 <xsl:choose>
+                    <!-- format date -->
                     <xsl:when test="$p_format-output = true()">
+                        <xsl:variable name="v_day" select="format-number(number(tokenize($p_input, '([.,&quot;\-])')[3]), '0')"/>
                         <xsl:variable name="v_month" select="format-number(number(tokenize($p_input, '([.,&quot;\-])')[2]), '0')"/>
-                        <xsl:value-of select="format-number(number(tokenize($p_input, '([.,&quot;\-])')[3]), '0')"/>
-                        <xsl:text> </xsl:text>
+                        <xsl:variable name="v_year" select="tokenize($p_input, '([.,&quot;\-])')[1]"/>
+                        <!-- day -->
                         <xsl:choose>
-                            <xsl:when test="$p_input-calendar = '#cal_gregorian'">
-                                <xsl:value-of select="oape:date-convert-months($v_month, 'name', 'en', $p_input-calendar)"/>
+                            <xsl:when test="$p_lang = 'ar'">
+                                <xsl:value-of select="translate($v_day, $v_string-digits-latn, $v_string-digits-ar)"/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:value-of select="oape:date-convert-months($v_month, 'name', $v_lang, $p_input-calendar)"/>
-                                <!--<xsl:choose>
-                                    <xsl:when test="$p_input-calendar = '#cal_julian'">
-                                        <xsl:call-template name="f_date-MonthNameNumber">
-                                            <xsl:with-param name="pDate" select="$p_input"/>
-                                            <xsl:with-param name="pMode" select="'name'"/>
-                                            <xsl:with-param name="p_input-lang" select="'JIjmes'"/>
-                                        </xsl:call-template>
-                                    </xsl:when>
-                                    <xsl:when test="$p_input-calendar = '#cal_ottomanfiscal'">
-                                        <xsl:call-template name="f_date-MonthNameNumber">
-                                            <xsl:with-param name="pDate" select="$p_input"/>
-                                            <xsl:with-param name="pMode" select="'name'"/>
-                                            <xsl:with-param name="p_input-lang" select="'MIjmes'"/>
-                                        </xsl:call-template>
-                                    </xsl:when>
-                                    <xsl:when test="$p_input-calendar = '#cal_islamic'">
-                                        <xsl:call-template name="f_date-MonthNameNumber">
-                                            <xsl:with-param name="pDate" select="$p_input"/>
-                                            <xsl:with-param name="pMode" select="'name'"/>
-                                            <xsl:with-param name="p_input-lang" select="'HIjmes'"/>
-                                        </xsl:call-template>
-                                    </xsl:when>
-                                </xsl:choose>-->
+                                <xsl:value-of select="$v_day"/>
                             </xsl:otherwise>
                         </xsl:choose>
                         <xsl:text> </xsl:text>
-                        <xsl:value-of select="tokenize($p_input, '([.,&quot;\-])')[1]"/>
+                        <!-- month -->
+                        <xsl:value-of select="oape:date-convert-months($v_month, 'name', $p_lang, $p_input-calendar)"/>
+                        <xsl:text> </xsl:text>
+                        <!-- year -->
+                        <xsl:choose>
+                            <xsl:when test="$p_lang = 'ar'">
+                                <xsl:text>سنة </xsl:text>
+                                <xsl:value-of select="translate($v_year, $v_string-digits-latn, $v_string-digits-ar)"/>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="$v_year"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:when>
+                    <!-- fallback: replicate input -->
                     <xsl:otherwise>
                         <xsl:value-of select="$p_input"/>
                     </xsl:otherwise>
@@ -1441,6 +1415,7 @@ s            <xsl:message terminate="yes">
         <xd:param name="p_increment-by"/>
         <xd:param name="p_input-calendar"/>
         <xd:param name="p_output-calendar"/>
+        <xd:param name="p_lang"/>
     </xd:doc>
     <xsl:template name="f_date-increment">
         <!-- this param selects the date, format: 'yyyy-mm-dd' -->
@@ -1455,58 +1430,12 @@ s            <xsl:message terminate="yes">
         <xsl:param name="p_input-calendar"/>
         <!-- select output calendar by means of the tei @datingMethod attribute -->
         <xsl:param name="p_output-calendar"/>
+        <xsl:param name="p_lang"/>
         <!-- this param selects the conversion calendars: 'H2G', 'G2H', 'G2J', 'J2G', 'H2J', 'J2H', and 'none' -->
         <!--<xsl:param name="pCalendars"/><xsl:variable name="vInputCal" select="substring($pCalendars,1,1)"/>-->
         <xsl:if test="xs:date($p_onset) &lt;= xs:date($p_terminus)">
             <xsl:variable name="v_onset-converted-to-output-calendar">
                 <xsl:value-of select="oape:date-convert-calendars($p_onset, $p_input-calendar, $p_output-calendar)"/>
-                <!--<xsl:choose>
-                    <xsl:when
-                        test="$p_input-calendar = '#cal_gregorian' and $p_output-calendar = '#cal_islamic'">
-                        <xsl:value-of select="oape:date-convert-gregorian-to-islamic($p_onset)"/>
-                        <!-\-<xsl:call-template name="f_date-convert-gregorian-to-islamic">
-                            <xsl:with-param name="p_gregorian-date" select="$p_onset"/>
-                        </xsl:call-template>-\->
-                    </xsl:when>
-                    <xsl:when
-                        test="$p_input-calendar = '#cal_islamic' and $p_output-calendar = '#cal_gregorian'">
-                        <xsl:value-of select="oape:date-convert-islamic-to-gregorian($p_onset)"/>
-                        <!-\-<xsl:call-template name="f_date-convert-islamic-to-gregorian">
-                            <xsl:with-param name="p_islamic-date" select="$p_onset"/>
-                        </xsl:call-template>-\->
-                    </xsl:when>
-                    <xsl:when
-                        test="$p_input-calendar = '#cal_gregorian' and $p_output-calendar = '#cal_julian'">
-                        <xsl:value-of select="oape:date-convert-gregorian-to-julian($p_onset)"/>
-                       <!-\- <xsl:call-template name="f_date-convert-gregorian-to-julian">
-                            <xsl:with-param name="p_gregorian-date" select="$p_onset"/>
-                        </xsl:call-template>-\->
-                    </xsl:when>
-                    <xsl:when
-                        test="$p_input-calendar = '#cal_julian' and $p_output-calendar = '#cal_gregorian'">
-                        <xsl:value-of select="oape:date-convert-julian-to-gregorian($p_onset)"/>
-                        <!-\-<xsl:call-template name="f_date-convert-julian-to-gregorian">
-                            <xsl:with-param name="p_julian-date" select="$p_onset"/>
-                        </xsl:call-template>-\->
-                    </xsl:when>
-                    <xsl:when
-                        test="$p_input-calendar = '#cal_islamic' and $p_output-calendar = '#cal_julian'">
-                        <xsl:value-of select="oape:date-convert-islamic-to-julian($p_onset)"/>
-                       <!-\- <xsl:call-template name="f_date-convert-islamic-to-julian">
-                            <xsl:with-param name="p_islamic-date" select="$p_onset"/>
-                        </xsl:call-template>-\->
-                    </xsl:when>
-                    <xsl:when
-                        test="$p_input-calendar = '#cal_julian' and $p_output-calendar = '#cal_islamic'">
-                        <xsl:value-of select="oape:date-convert-julian-to-islamic($p_onset)"/>
-                        <!-\-<xsl:call-template name="f_date-convert-julian-to-islamic">
-                            <xsl:with-param name="p_julian-date" select="$p_onset"/>
-                        </xsl:call-template>-\->
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:value-of select="$p_onset"/>
-                    </xsl:otherwise>
-                </xsl:choose>-->
             </xsl:variable>
             <xsl:variable name="v_incremented-date">
                 <xsl:choose>
@@ -1522,15 +1451,7 @@ s            <xsl:message terminate="yes">
                     </xsl:when>
                 </xsl:choose>
             </xsl:variable>
-            <!--<xsl:value-of select="$p_onset"/><xsl:text>= </xsl:text><xsl:value-of select="$v_onset-converted-to-output-calendar"/><xsl:text>,
-            </xsl:text>-->
-            <!--<xsl:call-template name="f_date-format-iso-string-to-tei">
-                <xsl:with-param name="p_input" select="$p_onset"/>
-                <xsl:with-param name="p_input-calendar" select="$p_input-calendar"/>
-                <xsl:with-param name="p_format-output" select="true()"/>
-                <xsl:with-param name="p_inluce-weekday" select="false()"/>
-            </xsl:call-template>-->
-            <xsl:copy-of select="oape:date-format-iso-string-to-tei($p_onset, $p_input-calendar, true(), false())"/>
+            <xsl:copy-of select="oape:date-format-iso-string-to-tei($p_onset, $p_input-calendar, true(), false(), $p_lang)"/>
             <xsl:call-template name="f_date-increment">
                 <xsl:with-param name="p_onset" select="$v_incremented-date"/>
                 <xsl:with-param name="p_terminus" select="$p_terminus"/>
@@ -1538,6 +1459,7 @@ s            <xsl:message terminate="yes">
                 <xsl:with-param name="p_increment-by" select="$p_increment-by"/>
                 <xsl:with-param name="p_input-calendar" select="$p_input-calendar"/>
                 <xsl:with-param name="p_output-calendar" select="$p_output-calendar"/>
+                <xsl:with-param name="p_lang" select="$p_lang"/>
             </xsl:call-template>
         </xsl:if>
     </xsl:template>
