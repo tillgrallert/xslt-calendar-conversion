@@ -22,19 +22,19 @@
                 <xsl:value-of select="oape:date-convert-calendars($v_islamic-date, '#cal_islamic', '#cal_gregorian')"/> / 
                 <xsl:value-of select="oape:date-convert-calendars($v_islamic-date, '#cal_islamic', '#cal_julian')"/> R /
                 <xsl:value-of select="oape:date-convert-calendars($v_islamic-date, '#cal_islamic', '#cal_ottomanfiscal')"/> M)
-            <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_islamic-date, '#cal_islamic', true(), true())"/>
+            <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_islamic-date, '#cal_islamic', true(), true(),'ar-Latn-x-ijmes')"/>
             </li>
             <li>Julian date: <xsl:value-of select="$v_julian-date"/> R (
                 <xsl:value-of select="oape:date-convert-calendars($v_julian-date, '#cal_julian', '#cal_gregorian')"/> / 
                 <xsl:value-of select="oape:date-convert-calendars($v_julian-date, '#cal_julian', '#cal_islamic')"/> aH /
                 <xsl:value-of select="oape:date-convert-calendars($v_julian-date, '#cal_julian', '#cal_ottomanfiscal')"/> M)
-            <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_julian-date, '#cal_julian', true(), true())"/>
+            <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_julian-date, '#cal_julian', true(), true(),'ar')"/>
             </li>
             <li>Ottoman fiscal date: <xsl:value-of select="$v_ottoman-fiscal-date"/> M (
                 <xsl:value-of select="oape:date-convert-calendars($v_ottoman-fiscal-date, '#cal_ottomanfiscal', '#cal_gregorian')"/> / 
                 <xsl:value-of select="oape:date-convert-calendars($v_ottoman-fiscal-date, '#cal_ottomanfiscal', '#cal_julian')"/> R / 
                 <xsl:value-of select="oape:date-convert-calendars($v_ottoman-fiscal-date, '#cal_ottomanfiscal', '#cal_islamic')"/> aH)
-            <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_ottoman-fiscal-date, '#cal_ottomanfiscal', true(), true())"/>
+            <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_ottoman-fiscal-date, '#cal_ottomanfiscal', true(), true(),'ar')"/>
             </li>
         </ul>
         </div>
