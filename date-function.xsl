@@ -1261,7 +1261,7 @@ s            <xsl:message terminate="yes">
         <xd:param name="p_input-calendar">Specify the input calendar with '#cal_islamic', '#cal_julian', '#cal_ottomanfiscal' or '#cal_gregorian'</xd:param>
         <xd:param name="p_format-output">Bolean toggles between input string and formatted output string.</xd:param>
         <xd:param name="p_inluce-weekday">Bolean toggle whether or not to include the weekday in the formatted output.</xd:param>
-        <xd:param name="p_lang"/>
+        <xd:param name="p_lang">Accepts values of @xml:lang</xd:param>
     </xd:doc>
     <xsl:function name="oape:date-format-iso-string-to-tei">
         <xsl:param name="p_input"/>
