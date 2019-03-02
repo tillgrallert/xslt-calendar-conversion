@@ -1129,7 +1129,7 @@
                 <tei:nym n="9">
                     <tei:form xml:lang="tr">Kasım</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-thānī</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Tish II</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Tish II</tei:form>
                     <tei:form xml:lang="ar">تسرين الثاني</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Tn</tei:form>
                 </tei:nym>
