@@ -988,72 +988,84 @@
                     <tei:form xml:lang="ar-Latn-x-ijmes">Muḥarram</tei:form>
                     <tei:form xml:lang="ar">محرم</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">M</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Muḥ</tei:form>
                 </tei:nym>
                 <tei:nym n="2">
                     <!-- <tei:form xml:lang="tr">Nisan</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ṣafār</tei:form>
                     <tei:form xml:lang="ar">صفار</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">S</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Ṣaf</tei:form>
                 </tei:nym>
                 <tei:nym n="3">
                     <!-- <tei:form xml:lang="tr">Mayıs</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Rabīʿ al-awwal</tei:form>
                     <tei:form xml:lang="ar">ربيع الاول</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ra</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Rab I</tei:form>
                 </tei:nym>
                 <tei:nym n="4">
                     <!-- <tei:form xml:lang="tr">Haziran</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Rabīʿ al-thānī</tei:form>
                     <tei:form xml:lang="ar">ربيع الثاني</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">R</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Rab II</tei:form>
                 </tei:nym>
                 <tei:nym n="5">
                     <!-- <tei:form xml:lang="tr">Temmuz</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Jumāda al-ulā</tei:form>
                     <tei:form xml:lang="ar">جمادى الاولى</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ca</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Jum I</tei:form>
                 </tei:nym>
                 <tei:nym n="6">
                     <!-- <tei:form xml:lang="tr">Ağustos</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Jumāda al-tāniya</tei:form>
                     <tei:form xml:lang="ar">جمادى الآخرة</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">C</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Jum II</tei:form>
                 </tei:nym>
                 <tei:nym n="7">
                     <!-- <tei:form xml:lang="tr">Eylül</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Rajab</tei:form>
                     <tei:form xml:lang="ar">رجب</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">B</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Raj</tei:form>
                 </tei:nym>
                 <tei:nym n="8">
                     <!-- <tei:form xml:lang="tr">Ekim</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Shaʿbān</tei:form>
                     <tei:form xml:lang="ar">شعبان</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ş</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Shaʿ</tei:form>
                 </tei:nym>
                 <tei:nym n="9">
                     <!-- <tei:form xml:lang="tr">Kasım</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ramaḍān</tei:form>
                     <tei:form xml:lang="ar">رمضان</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">N</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Ram</tei:form>
                 </tei:nym>
                 <tei:nym n="10">
                     <!-- <tei:form xml:lang="tr">Aralık</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Shawwāl</tei:form>
                     <tei:form xml:lang="ar">شوال</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">L</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Shaw</tei:form>
                 </tei:nym>
                 <tei:nym n="11">
                     <!-- <tei:form xml:lang="tr">Ocak</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Dhū al-qaʿda</tei:form>
                     <tei:form xml:lang="ar">ذو القعدة</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Za</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Dhu I</tei:form>
                 </tei:nym>
                 <tei:nym n="12">
                     <!-- <tei:form xml:lang="tr">Şubat</tei:form> -->
-                    <tei:form xml:lang="ar-Latn-x-ijmes">ShubDhū al-ḥijjaāṭ</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Dhū al-ḥijja</tei:form>
                     <tei:form xml:lang="ar">ذو الحجة</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Z</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Dhu II</tei:form>
                 </tei:nym>
             </tei:listNym>
             <tei:listNym corresp="#cal_ottomanfiscal">
@@ -1062,6 +1074,7 @@
                     <tei:form xml:lang="ar-Latn-x-ijmes">Mārt</tei:form>
                     <tei:form xml:lang="ar">مارت</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ar</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Mārt</tei:form>
                 </tei:nym>
                 <tei:nym n="2">
                     <tei:form xml:lang="tr">Nisan</tei:form>
@@ -1069,45 +1082,47 @@
                     <tei:form xml:lang="ar-Latn-x-ijmes">Nīs</tei:form>
                     <tei:form xml:lang="ar">نيسان</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ni</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Nīs</tei:form>
                 </tei:nym>
                 <tei:nym n="3">
                     <tei:form xml:lang="tr">Mayıs</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Māyis</tei:form>
                     <tei:form xml:lang="ar">مايس</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ma</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Māy</tei:form>
                 </tei:nym>
                 <tei:nym n="4">
                     <tei:form xml:lang="tr">Haziran</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ḥazīrān</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Ḥaz</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Ḥaz</tei:form>
                     <tei:form xml:lang="ar">حزيران</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ha</tei:form>
                 </tei:nym>
                 <tei:nym n="5">
                     <tei:form xml:lang="tr">Temmuz</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tammūz</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Tam</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Tam</tei:form>
                     <tei:form xml:lang="ar">تموز</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Te</tei:form>
                 </tei:nym>
                 <tei:nym n="6">
                     <tei:form xml:lang="tr">Ağustos</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Aghusṭūs</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Agh</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Agh</tei:form>
                     <tei:form xml:lang="ar">اغسطوس</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ağ</tei:form>
                 </tei:nym>
                 <tei:nym n="7">
                     <tei:form xml:lang="tr">Eylül</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Aylūl</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Ayl</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Ayl</tei:form>
                     <tei:form xml:lang="ar">ايلول</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ey</tei:form>
                 </tei:nym>
                 <tei:nym n="8">
                     <tei:form xml:lang="tr">Ekim</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-awwal</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Tish I</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Tish I</tei:form>
                     <tei:form xml:lang="ar">تسرين الاول</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Tş</tei:form>
                 </tei:nym>
@@ -1121,21 +1136,21 @@
                 <tei:nym n="10">
                     <tei:form xml:lang="tr">Aralık</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-awwal</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Kān I</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Kān I</tei:form>
                     <tei:form xml:lang="ar">كانون الاول</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ke</tei:form>
                 </tei:nym>
                 <tei:nym n="11">
                     <tei:form xml:lang="tr">Ocak</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-thānī</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Kān II</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Kān II</tei:form>
                     <tei:form xml:lang="ar">كانون الثاني</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ks</tei:form>
                 </tei:nym>
                 <tei:nym n="12">
                     <tei:form xml:lang="tr">Şubat</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Shubāṭ</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Shub</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Shub</tei:form>
                     <tei:form xml:lang="ar">شباط</tei:form>
                 </tei:nym>
             </tei:listNym>
@@ -1143,7 +1158,7 @@
                 <tei:nym n="1">
                     <tei:form xml:lang="tr">Ocak</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-thānī</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Kān II</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Kān II</tei:form>
                     <tei:form xml:lang="ar">كانون الثاني</tei:form>
                     <tei:form xml:lang="en">January</tei:form>
                     <tei:form xml:lang="en">Jan</tei:form>
@@ -1151,7 +1166,7 @@
                 <tei:nym n="2">
                     <tei:form xml:lang="tr">Şubat</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Shubāṭ</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Shub</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Shub</tei:form>
                     <tei:form xml:lang="ar">شباط</tei:form>
                     <tei:form xml:lang="en">February</tei:form>
                     <tei:form xml:lang="en">Feb</tei:form>
@@ -1159,6 +1174,7 @@
                 <tei:nym n="3">
                     <tei:form xml:lang="tr">Mart</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ādhār</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Ādhār</tei:form>
                     <tei:form xml:lang="ar">آذار</tei:form>
                     <tei:form xml:lang="en">March</tei:form>
                     <tei:form xml:lang="en">Mar</tei:form>
@@ -1166,7 +1182,7 @@
                 <tei:nym n="4">
                     <tei:form xml:lang="tr">Nisan</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Nīsān</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Nīs</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Nīs</tei:form>
                     <tei:form xml:lang="ar">نيسان</tei:form>
                     <tei:form xml:lang="en">April</tei:form>
                     <tei:form xml:lang="en">Apr</tei:form>
@@ -1174,13 +1190,14 @@
                 <tei:nym n="5">
                     <tei:form xml:lang="tr">Mayıs</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ayyār</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Ayyār</tei:form>
                     <tei:form xml:lang="ar">ايار</tei:form>
                     <tei:form xml:lang="en">May</tei:form>
                 </tei:nym>
                 <tei:nym n="6">
                     <tei:form xml:lang="tr">Haziran</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ḥazīrān</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Ḥaz</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Ḥaz</tei:form>
                     <tei:form xml:lang="ar">حزيران</tei:form>
                     <tei:form xml:lang="en">June</tei:form>
                     <tei:form xml:lang="en">Jun</tei:form>
@@ -1188,7 +1205,7 @@
                 <tei:nym n="7">
                     <tei:form xml:lang="tr">Temmuz</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tammūz</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Tam</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Tam</tei:form>
                     <tei:form xml:lang="ar">تموز</tei:form>
                     <tei:form xml:lang="en">July</tei:form>
                     <tei:form xml:lang="en">Jul</tei:form>
@@ -1196,6 +1213,7 @@
                 <tei:nym n="8">
                     <tei:form xml:lang="tr">Ağustos</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Āb</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Āb</tei:form>
                     <tei:form xml:lang="ar">آب</tei:form>
                     <tei:form xml:lang="en">August</tei:form>
                     <tei:form xml:lang="en">Aug</tei:form>
@@ -1203,7 +1221,7 @@
                 <tei:nym n="9">
                     <tei:form xml:lang="tr">Eylül</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Aylūl</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Ayl</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Ayl</tei:form>
                     <tei:form xml:lang="ar">ايلول</tei:form>
                     <tei:form xml:lang="en">September</tei:form>
                     <tei:form xml:lang="en">Sep</tei:form>
@@ -1211,7 +1229,7 @@
                 <tei:nym n="10">
                     <tei:form xml:lang="tr">Ekim</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-awwal</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Tish I</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Tish I</tei:form>
                     <tei:form xml:lang="ar">تسرين الاول</tei:form>
                     <tei:form xml:lang="en">October</tei:form>
                     <tei:form xml:lang="en">Oct</tei:form>
@@ -1219,7 +1237,7 @@
                 <tei:nym n="11">
                     <tei:form xml:lang="tr">Kasım</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-thānī</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Tish II</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Tish II</tei:form>
                     <tei:form xml:lang="ar">تسرين الثاني</tei:form>
                     <tei:form xml:lang="en">November</tei:form>
                     <tei:form xml:lang="en">Nov</tei:form>
@@ -1227,7 +1245,7 @@
                 <tei:nym n="12">
                     <tei:form xml:lang="tr">Aralık</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-awwal</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Kān II</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Kān II</tei:form>
                     <tei:form xml:lang="ar">كانون الاول</tei:form>
                     <tei:form xml:lang="en">December</tei:form>
                     <tei:form xml:lang="en">Dec</tei:form>
