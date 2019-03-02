@@ -18,11 +18,13 @@
         <div>
         <h1>Input: <xsl:value-of select="$v_gregorian-date"/></h1>
         <ul>
+            <li>Gregorian date: <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_gregorian-date, '#cal_gregorian', true(), true(),'ar')"/>
+            </li>
             <li>Islamic date: <xsl:value-of select="$v_islamic-date"/> aH (
                 <xsl:value-of select="oape:date-convert-calendars($v_islamic-date, '#cal_islamic', '#cal_gregorian')"/> / 
                 <xsl:value-of select="oape:date-convert-calendars($v_islamic-date, '#cal_islamic', '#cal_julian')"/> R /
                 <xsl:value-of select="oape:date-convert-calendars($v_islamic-date, '#cal_islamic', '#cal_ottomanfiscal')"/> M)
-            <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_islamic-date, '#cal_islamic', true(), true(),'ar-Latn-x-ijmes')"/>
+            <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_islamic-date, '#cal_islamic', true(), true(),'ar')"/>
             </li>
             <li>Julian date: <xsl:value-of select="$v_julian-date"/> R (
                 <xsl:value-of select="oape:date-convert-calendars($v_julian-date, '#cal_julian', '#cal_gregorian')"/> / 
