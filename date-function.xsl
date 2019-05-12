@@ -80,6 +80,8 @@
    <!-- translate strings -->
     <xsl:variable name="v_string-digits-latn" select="'0123456789'"/>
     <xsl:variable name="v_string-digits-ar" select="'٠١٢٣٤٥٦٧٨٩'"/>
+    <xsl:variable name="v_string-ar" select="'إأئؤ'"/>
+    <xsl:variable name="v_string-ar-normalised" select="'اايو'"/>
     
     <xd:doc>
         <xd:desc>This function determines whether Gregorian years are leap years. Returns 'true()' or 'false()'.</xd:desc>
@@ -987,13 +989,15 @@
                     <!-- <tei:form xml:lang="tr">Mart</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Muḥarram</tei:form>
                     <tei:form xml:lang="ar">محرم</tei:form>
+                    <tei:form xml:lang="ar">المحرم</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">M</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Muḥ</tei:form>
                 </tei:nym>
                 <tei:nym n="2">
                     <!-- <tei:form xml:lang="tr">Nisan</tei:form> -->
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Ṣafār</tei:form>
-                    <tei:form xml:lang="ar">صفار</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Ṣafar</tei:form>
+                    <tei:form xml:lang="ar">صفر</tei:form>
+<!--                    <tei:form xml:lang="ar">صفار</tei:form>-->
                     <tei:form xml:lang="ota-Latn-x-boa">S</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Ṣaf</tei:form>
                 </tei:nym>
@@ -1008,6 +1012,7 @@
                     <!-- <tei:form xml:lang="tr">Haziran</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Rabīʿ al-thānī</tei:form>
                     <tei:form xml:lang="ar">ربيع الثاني</tei:form>
+                    <tei:form xml:lang="ar">ربيع الآخر</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">R</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Rab II</tei:form>
                 </tei:nym>
@@ -1020,7 +1025,8 @@
                 </tei:nym>
                 <tei:nym n="6">
                     <!-- <tei:form xml:lang="tr">Ağustos</tei:form> -->
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Jumāda al-tāniya</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Jumāda al-thāniya</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Jumāda al-ākhira</tei:form>
                     <tei:form xml:lang="ar">جمادى الآخرة</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">C</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Jum II</tei:form>
@@ -1260,14 +1266,16 @@
                 />
             </xsl:if>
             <xsl:if test="$p_output-mode = 'number'">
+                <!-- normalise the input month for arabic -->
+                <xsl:variable name="v_input-month" select="translate($p_input-month, $v_string-ar, $v_string-ar-normalised)"/>
                 <xsl:value-of
-                    select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $v_calendar]/tei:nym[tei:form = $p_input-month]/@n"
+                    select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $v_calendar]/tei:nym[tei:form = $v_input-month]/@n"
                 />
             </xsl:if>
         </xsl:variable>
         <xsl:if test="$v_month = ''">
-s            <xsl:message terminate="yes">
-                <xsl:text>There is no output data for your input of $p_input-lang="</xsl:text><xsl:value-of select="$p_input-lang"/><xsl:text>" and $p_calendar="</xsl:text><xsl:value-of select="$p_calendar"/><xsl:text>".</xsl:text>
+            <xsl:message terminate="yes">
+                <xsl:text>There is no output data for your input of "</xsl:text><xsl:value-of select="$p_input-month"/><xsl:text>" using $p_input-lang="</xsl:text><xsl:value-of select="$p_input-lang"/><xsl:text>" and $p_calendar="</xsl:text><xsl:value-of select="$p_calendar"/><xsl:text>".</xsl:text>
             </xsl:message>
         </xsl:if>
         <xsl:value-of select="$v_month"/>
@@ -1377,12 +1385,14 @@ s            <xsl:message terminate="yes">
         <xsl:param name="p_input-lang"/>
         <!-- this parameter selects the input calendar using the TEI's @datingMethod -->
         <xsl:param name="p_input-calendar"/>
+        <!-- if the input language is Arabic, numericals must be first normalised. Otherwise they are read as characters -->
+        <xsl:variable name="v_input-normalised" select="normalize-space(translate($p_input, $v_string-digits-ar, $v_string-digits-latn))"/>
         <xsl:variable name="vDateNode">
-            <xsl:analyze-string regex="\s*(\d{{4}})\-(\d{{1,2}})\-(\d{{1,2}})\s*|\s*(\d+)\s+(.*)\s+(\d{{4}})\s*|\s*(.*)\s+(\d+),\s+(\d{{4}})\s*" select="normalize-space($p_input)">
+            <xsl:analyze-string regex="\s*(\d{{4}})\-(\d{{1,2}})\-(\d{{1,2}})\s*|\s*(\d+)\s+(.*)\s+(\d{{4}})\s*|\s*(.*)\s+(\d+),\s+(\d{{4}})\s*" select="normalize-space($v_input-normalised)">
                 <xsl:matching-substring>
                     <xsl:choose>
                         <!-- 1) match yyyy-mm-dd: this works as expected -->
-                        <xsl:when test="matches(normalize-space($p_input),'\s*(\d{4})\-(\d{1,2})\-(\d{1,2})\s*')">
+                        <xsl:when test="matches($v_input-normalised,'\s*(\d{4})\-(\d{1,2})\-(\d{1,2})\s*')">
                             <!-- output -->
                             <xsl:value-of select="regex-group(1)"/>
                             <xsl:text>-</xsl:text>
@@ -1391,7 +1401,7 @@ s            <xsl:message terminate="yes">
                             <xsl:value-of select="format-number(number(regex-group(3)), '00')"/>
                         </xsl:when>
                         <!-- 2) match dd MNn yyyy -->
-                        <xsl:when test="matches(normalize-space($p_input),'\s*(\d+)\s+(.*)\s+(\d{4})\s*')">
+                        <xsl:when test="matches($v_input-normalised,'\s*(\d+)\s+(.*)\s+(\d{4})\s*')">
                             <xsl:variable name="v_month-name" select="translate(regex-group(5), '.', '')"/>
                             <xsl:variable name="v_month-number" select="oape:date-convert-months($v_month-name, 'number', $p_input-lang, $p_input-calendar)"/>
                             <!-- output -->
@@ -1402,7 +1412,7 @@ s            <xsl:message terminate="yes">
                             <xsl:value-of select="format-number(number(regex-group(4)), '00')"/>
                         </xsl:when>
                         <!-- 3) match MNn dd, yyyy -->
-                        <xsl:when test="matches(normalize-space($p_input),'\s*(.*)\s+(\d+),\s+(\d{4})\s*')">
+                        <xsl:when test="matches($v_input-normalised,'\s*(.*)\s+(\d+),\s+(\d{4})\s*')">
                             <xsl:variable name="v_month-name" select="translate(regex-group(7), '.', '')"/>
                             <xsl:variable name="v_month-number" select="oape:date-convert-months($v_month-name, 'number', $p_input-lang, $p_input-calendar)"/>
                             <!-- output -->
