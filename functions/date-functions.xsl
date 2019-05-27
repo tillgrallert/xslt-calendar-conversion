@@ -75,11 +75,15 @@
     <xsl:param name="p_julian-day-for-gregorian-base" select="1721425.5"/>
     <!-- Julian day for Hijri 0001-01-01 -->
     <xsl:param name="p_julian-day-for-islamic-base" select="1948439.5"/>
+    <!-- Julian day for Coptic 0001-01-01 -->
+    <xsl:param name="p_julian-day-for-coptic-base" select="1825029"/>
     <xsl:param name="p_debug" select="true()"/>
     
    <!-- translate strings -->
     <xsl:variable name="v_string-digits-latn" select="'0123456789'"/>
     <xsl:variable name="v_string-digits-ar" select="'٠١٢٣٤٥٦٧٨٩'"/>
+    <xsl:variable name="v_string-ar" select="'إأئؤ'"/>
+    <xsl:variable name="v_string-ar-normalised" select="'اايو'"/>
     
     <xd:doc>
         <xd:desc>This function determines whether Gregorian years are leap years. Returns 'true()' or 'false()'.</xd:desc>
@@ -382,6 +386,7 @@
             select="number(tokenize($p_julian-date, '([.,&quot;\-])')[2])"/>
         <xsl:variable name="v_julian-day"
             select="number(tokenize($p_julian-date, '([.,&quot;\-])')[3])"/>
+        <!-- Algorithm as given in Meeus, Astronomical Algorithms, Chapter 7, page 61 -->
         <xsl:variable name="v_julian-year-adjustment"
             select="
                 if ($v_julian-month &lt;= 2) then
@@ -418,60 +423,46 @@
             day) - 1524.5);
 } -->
     </xsl:function>
-    
-    <!--<xd:doc>
-        <xd:desc>This function converts Gregorian to Hijrī dates. Input and output are ISO-conformant date strings.</xd:desc>
-        <xd:param name="p_gregorian-date"/>
+    <xd:doc>
+        <xd:desc>This function converts Coptic dates to Julian Day </xd:desc>
+        <xd:param name="p_coptic-date"/>
     </xd:doc>
-    <xsl:function name="oape:date-convert-gregorian-to-islamic">
-        <xsl:param name="p_gregorian-date"/>
-        <xsl:value-of select="oape:date-convert-julian-day-to-islamic(oape:date-convert-gregorian-to-julian-day($p_gregorian-date))"/>
-    </xsl:function>-->
+    <xsl:function name="oape:date-convert-coptic-to-julian-day">
+        <xsl:param name="p_coptic-date"/>
+        <xsl:variable name="v_coptic-year"
+            select="number(tokenize($p_coptic-date, '([.,&quot;\-])')[1])"/>
+        <xsl:variable name="v_coptic-month"
+            select="number(tokenize($p_coptic-date, '([.,&quot;\-])')[2])"/>
+        <xsl:variable name="v_coptic-day"
+            select="number(tokenize($p_coptic-date, '([.,&quot;\-])')[3])"/>
+        <!-- each month of the coptic year has 12 days, save for the 13th, which has only 5 or 6, depending on the leap year -->
+        <xsl:variable name="v_julian-day-of-input">
+            <!-- days of past years -->
+            <xsl:variable name="v_y" select="floor(365.25 * ($v_coptic-year -1) +0.30)"/>
+            <!-- days of previous months in the current year -->
+            <xsl:variable name="v_m" select="30 * ($v_coptic-month -1)"/>
+            <!-- days of the current month -->
+            <xsl:variable name="v_d" select="$v_coptic-day"/>
+            <xsl:value-of select="$v_y + $v_m + $v_d + $p_julian-day-for-coptic-base"/>
+        </xsl:variable>
+        <xsl:value-of select="$v_julian-day-of-input"/>
+    </xsl:function>
     
-    <!--<xd:doc>
-        <xd:desc>This function converts Hijrī to Gregorian dates. Input and output are ISO-conformant date strings.</xd:desc>
-        <xd:param name="p_islamic-date"/>
-    </xd:doc>
-    <xsl:function name="oape:date-convert-islamic-to-gregorian">
-        <xsl:param name="p_islamic-date"/>
-        <xsl:value-of select="oape:date-convert-julian-day-to-gregorian(oape:date-convert-islamic-to-julian-day($p_islamic-date))"/>
-    </xsl:function>-->
-    
-    <!--<xd:doc>
-        <xd:desc>This function converts Gregorian to Julian / Rūmī dates. Input and output are ISO-conformant date strings.</xd:desc>
-        <xd:param name="p_gregorian-date"/>
-    </xd:doc>
-    <xsl:function name="oape:date-convert-gregorian-to-julian">
-        <xsl:param name="p_gregorian-date"/>
-        <xsl:value-of select="oape:date-convert-julian-day-to-julian(oape:date-convert-gregorian-to-julian-day($p_gregorian-date))"/>
-    </xsl:function>-->
-    
-    <!--<xd:doc>
-        <xd:desc>This function converts Islamic Hijri to Julian / Rūmī dates. Input and output are ISO-conformant date strings.</xd:desc>
-        <xd:param name="p_islamic-date"/>
-    </xd:doc>
-    <xsl:function name="oape:date-convert-islamic-to-julian">
-        <xsl:param name="p_islamic-date"/>
-        <xsl:value-of select="oape:date-convert-julian-day-to-julian(oape:date-convert-islamic-to-julian-day($p_islamic-date))"/>
-    </xsl:function>-->
-    
-    <!--<xd:doc>
-        <xd:desc>This function converts Julian / Rūmī to Islamic Hijrī dates. Input and output are ISO-conformant date strings.</xd:desc>
-        <xd:param name="p_julian-date"/>
-    </xd:doc>
-    <xsl:function name="oape:date-convert-julian-to-islamic">
-        <xsl:param name="p_julian-date"/>
-        <xsl:value-of select="oape:date-convert-julian-day-to-islamic(oape:date-convert-julian-to-julian-day($p_julian-date))"/>
-    </xsl:function>-->
-    
-   <!-- <xd:doc>
-        <xd:desc>This function converts Julian / Rūmī to Gregorian dates. Input and output are ISO-conformant date strings.</xd:desc>
-        <xd:param name="p_julian-date"/>
-    </xd:doc>
-    <xsl:function name="oape:date-convert-julian-to-gregorian">
-        <xsl:param name="p_julian-date"/>
-        <xsl:value-of select="oape:date-convert-julian-day-to-gregorian(oape:date-convert-julian-to-julian-day($p_julian-date))"/>
-    </xsl:function>-->
+    <xsl:function name="oape:date-convert-julian-day-to-coptic">
+        <xsl:param name="p_julian-day"/>
+        <!-- substract the coptic epoch -->
+        <xsl:variable name="v_base-day" select="$p_julian-day - $p_julian-day-for-coptic-base"/>
+        <!-- year: divide by 365.25 -->
+        <xsl:variable name="v_coptic-year" select="ceiling($v_base-day div 365.25)"/>
+        <!-- remaining days of the current year -->
+        <xsl:variable name="v_a" select="$v_base-day - (($v_coptic-year -1) * 365.25)"/>
+        <!-- divide by length of months -->
+        <xsl:variable name="v_coptic-month" select="ceiling($v_a div 30)"/>
+        <!--  -->
+        <xsl:variable name="v_c" select="($v_a div 30) - floor($v_a div 30)"/>
+        <xsl:variable name="v_coptic-day" select="ceiling($v_c * 30)"/>
+        <xsl:value-of select="concat(format-number($v_coptic-year,'0000'),'-',format-number($v_coptic-month,'00'),'-',format-number($v_coptic-day,'00'))"/>
+    </xsl:function>
     
     <xd:doc>
         <xd:desc>This function converts Julian/ Rūmī to Ottoman fiscal / Mālī dates. Input and output are ISO-conformant date strings.</xd:desc>
@@ -965,7 +956,7 @@
                 <xsl:text>The value of $p_output-mode must be either 'name' or 'number'.</xsl:text>
             </xsl:message>
         </xsl:if>
-        <xsl:if test="not($p_calendar = ('#cal_islamic', '#cal_julian', '#cal_ottomanfiscal', '#cal_gregorian'))">
+        <xsl:if test="not($p_calendar = ('#cal_islamic', '#cal_julian', '#cal_ottomanfiscal', '#cal_gregorian', '#cal_coptic'))">
             <xsl:message terminate="yes">
                 <xsl:text>The value of $p_calendar muse be either '#cal_islamic', '#cal_julian', '#cal_ottomanfiscal' or '#cal_gregorian'.</xsl:text>
             </xsl:message>
@@ -987,13 +978,15 @@
                     <!-- <tei:form xml:lang="tr">Mart</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Muḥarram</tei:form>
                     <tei:form xml:lang="ar">محرم</tei:form>
+                    <tei:form xml:lang="ar">المحرم</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">M</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Muḥ</tei:form>
                 </tei:nym>
                 <tei:nym n="2">
                     <!-- <tei:form xml:lang="tr">Nisan</tei:form> -->
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Ṣafār</tei:form>
-                    <tei:form xml:lang="ar">صفار</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Ṣafar</tei:form>
+                    <tei:form xml:lang="ar">صفر</tei:form>
+<!--                    <tei:form xml:lang="ar">صفار</tei:form>-->
                     <tei:form xml:lang="ota-Latn-x-boa">S</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Ṣaf</tei:form>
                 </tei:nym>
@@ -1008,6 +1001,7 @@
                     <!-- <tei:form xml:lang="tr">Haziran</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Rabīʿ al-thānī</tei:form>
                     <tei:form xml:lang="ar">ربيع الثاني</tei:form>
+                    <tei:form xml:lang="ar">ربيع الآخر</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">R</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Rab II</tei:form>
                 </tei:nym>
@@ -1020,7 +1014,8 @@
                 </tei:nym>
                 <tei:nym n="6">
                     <!-- <tei:form xml:lang="tr">Ağustos</tei:form> -->
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Jumāda al-tāniya</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Jumāda al-thāniya</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Jumāda al-ākhira</tei:form>
                     <tei:form xml:lang="ar">جمادى الآخرة</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">C</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Jum II</tei:form>
@@ -1251,6 +1246,60 @@
                     <tei:form xml:lang="en">Dec</tei:form>
                 </tei:nym>
             </tei:listNym>
+            <tei:listNym corresp="#cal_coptic">
+                <tei:nym n="1">
+                    <tei:form xml:lang="ar">توت</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Tūt</tei:form>
+                </tei:nym>
+                <tei:nym n="2">
+                    <tei:form xml:lang="ar">بابة</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Bāba</tei:form>
+                </tei:nym>
+                <tei:nym n="3">
+                    <tei:form xml:lang="ar">هاتور</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Hātūr</tei:form>
+                </tei:nym>
+                <tei:nym n="4">
+                    <tei:form xml:lang="ar">كيهك</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Kiyahk</tei:form>
+                </tei:nym>
+                <tei:nym n="5">
+                    <tei:form xml:lang="ar">طوبة</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Ṭūba</tei:form>
+                </tei:nym>
+                <tei:nym n="6">
+                    <tei:form xml:lang="ar">امشير</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Amshīr</tei:form>
+                </tei:nym>
+                <tei:nym n="7">
+                    <tei:form xml:lang="ar">برمهاة</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Baramhāt</tei:form>
+                </tei:nym>
+                <tei:nym n="8">
+                    <tei:form xml:lang="ar">برمودة</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Baramūda</tei:form>
+                </tei:nym>
+                <tei:nym n="9">
+                    <tei:form xml:lang="ar">بشنس</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Bashans</tei:form>
+                </tei:nym>
+                <tei:nym n="10">
+                    <tei:form xml:lang="ar">بؤونة</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Baʾūna</tei:form>
+                </tei:nym>
+                <tei:nym n="11">
+                    <tei:form xml:lang="ar">أبيب</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Abīb</tei:form>
+                </tei:nym>
+                <tei:nym n="12">
+                    <tei:form xml:lang="ar">مسرى</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Masrā</tei:form>
+                </tei:nym>
+                <tei:nym n="13">
+                    <tei:form xml:lang="ar">نسيء</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Nasīʾ</tei:form>
+                </tei:nym>
+            </tei:listNym>
         </xsl:variable>
         <xsl:variable name="v_month">
             <xsl:if test="$p_output-mode = 'name' and xs:integer($p_input-month)">
@@ -1260,14 +1309,16 @@
                 />
             </xsl:if>
             <xsl:if test="$p_output-mode = 'number'">
+                <!-- normalise the input month for arabic -->
+                <xsl:variable name="v_input-month" select="translate($p_input-month, $v_string-ar, $v_string-ar-normalised)"/>
                 <xsl:value-of
-                    select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $v_calendar]/tei:nym[tei:form = $p_input-month]/@n"
+                    select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $v_calendar]/tei:nym[tei:form = $v_input-month]/@n"
                 />
             </xsl:if>
         </xsl:variable>
         <xsl:if test="$v_month = ''">
-s            <xsl:message terminate="yes">
-                <xsl:text>There is no output data for your input of $p_input-lang="</xsl:text><xsl:value-of select="$p_input-lang"/><xsl:text>" and $p_calendar="</xsl:text><xsl:value-of select="$p_calendar"/><xsl:text>".</xsl:text>
+            <xsl:message terminate="yes">
+                <xsl:text>There is no output data for your input of "</xsl:text><xsl:value-of select="$p_input-month"/><xsl:text>" using $p_input-lang="</xsl:text><xsl:value-of select="$p_input-lang"/><xsl:text>" and $p_calendar="</xsl:text><xsl:value-of select="$p_calendar"/><xsl:text>".</xsl:text>
             </xsl:message>
         </xsl:if>
         <xsl:value-of select="$v_month"/>
@@ -1276,7 +1327,7 @@ s            <xsl:message terminate="yes">
     <xd:doc>
         <xd:desc>This function takes a date string as input and outputs a correctly formatted tei:date node with @when and @when-custom attributes depending on the calendar </xd:desc>
         <xd:param name="p_input">Input date: string following the ISO standard of 'yyyy-mm-dd'.</xd:param>
-        <xd:param name="p_input-calendar">Specify the input calendar with '#cal_islamic', '#cal_julian', '#cal_ottomanfiscal' or '#cal_gregorian'</xd:param>
+        <xd:param name="p_input-calendar">Specify the input calendar with '#cal_islamic', '#cal_julian', '#cal_ottomanfiscal', '#cal_gregorian', or '#cal_coptic'</xd:param>
         <xd:param name="p_format-output">Bolean toggles between input string and formatted output string.</xd:param>
         <xd:param name="p_inluce-weekday">Bolean toggle whether or not to include the weekday in the formatted output.</xd:param>
         <xd:param name="p_lang">Accepts values of @xml:lang</xd:param>
@@ -1285,26 +1336,24 @@ s            <xsl:message terminate="yes">
         <xsl:param name="p_input"/>
         <!-- pCal selects the input calendar: '#cal_gregorian', '#cal_julian', '#cal_ottomanfiscal', or '#cal_islamic' -->
         <xsl:param name="p_input-calendar"/>
-        <!-- p_format-output establishes whether the original input or a formatted date is produced as output / content of the tei:date node. Values are 'original' and 'formatted' -->
+        <!-- p_format-output establishes whether the original input or a formatted date is produced as output / content of the tei:date node. Values are 'false()' and 'true()' -->
         <xsl:param name="p_format-output"/>
         <xsl:param name="p_inluce-weekday"/>
         <xsl:param name="p_lang"/>
         <xsl:variable name="vDateTei1">
             <xsl:element name="tei:date">
                 <!-- attributes -->
-                
+                <xsl:attribute name="calendar" select="$p_input-calendar"/>
+                <xsl:attribute name="xml:lang" select="$p_lang"/>
                 <xsl:choose>
                     <xsl:when test="$p_input-calendar = '#cal_gregorian'">
                         <!-- test if input string is ISO format -->
                         <xsl:attribute name="when" select="$p_input"/>
-                        <xsl:attribute name="xml:lang" select="'en'"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:variable name="v_gregorian-date" select="oape:date-convert-calendars($p_input,$p_input-calendar, '#cal_gregorian')"/>
-                        <xsl:attribute name="xml:lang" select="$p_lang"/>
                         <xsl:attribute name="when" select="$v_gregorian-date"/>
                         <xsl:attribute name="when-custom" select="$p_input"/>
-                        <xsl:attribute name="calendar" select="$p_input-calendar"/>
                         <xsl:attribute name="datingMethod" select="$p_input-calendar"/>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -1377,12 +1426,14 @@ s            <xsl:message terminate="yes">
         <xsl:param name="p_input-lang"/>
         <!-- this parameter selects the input calendar using the TEI's @datingMethod -->
         <xsl:param name="p_input-calendar"/>
+        <!-- if the input language is Arabic, numericals must be first normalised. Otherwise they are read as characters -->
+        <xsl:variable name="v_input-normalised" select="normalize-space(translate($p_input, $v_string-digits-ar, $v_string-digits-latn))"/>
         <xsl:variable name="vDateNode">
-            <xsl:analyze-string regex="\s*(\d{{4}})\-(\d{{1,2}})\-(\d{{1,2}})\s*|\s*(\d+)\s+(.*)\s+(\d{{4}})\s*|\s*(.*)\s+(\d+),\s+(\d{{4}})\s*" select="normalize-space($p_input)">
+            <xsl:analyze-string regex="\s*(\d{{4}})\-(\d{{1,2}})\-(\d{{1,2}})\s*|\s*(\d+)\s+(.*)\s+(\d{{4}})\s*|\s*(.*)\s+(\d+),\s+(\d{{4}})\s*" select="normalize-space($v_input-normalised)">
                 <xsl:matching-substring>
                     <xsl:choose>
                         <!-- 1) match yyyy-mm-dd: this works as expected -->
-                        <xsl:when test="matches(normalize-space($p_input),'\s*(\d{4})\-(\d{1,2})\-(\d{1,2})\s*')">
+                        <xsl:when test="matches($v_input-normalised,'\s*(\d{4})\-(\d{1,2})\-(\d{1,2})\s*')">
                             <!-- output -->
                             <xsl:value-of select="regex-group(1)"/>
                             <xsl:text>-</xsl:text>
@@ -1391,7 +1442,7 @@ s            <xsl:message terminate="yes">
                             <xsl:value-of select="format-number(number(regex-group(3)), '00')"/>
                         </xsl:when>
                         <!-- 2) match dd MNn yyyy -->
-                        <xsl:when test="matches(normalize-space($p_input),'\s*(\d+)\s+(.*)\s+(\d{4})\s*')">
+                        <xsl:when test="matches($v_input-normalised,'\s*(\d+)\s+(.*)\s+(\d{4})\s*')">
                             <xsl:variable name="v_month-name" select="translate(regex-group(5), '.', '')"/>
                             <xsl:variable name="v_month-number" select="oape:date-convert-months($v_month-name, 'number', $p_input-lang, $p_input-calendar)"/>
                             <!-- output -->
@@ -1402,7 +1453,7 @@ s            <xsl:message terminate="yes">
                             <xsl:value-of select="format-number(number(regex-group(4)), '00')"/>
                         </xsl:when>
                         <!-- 3) match MNn dd, yyyy -->
-                        <xsl:when test="matches(normalize-space($p_input),'\s*(.*)\s+(\d+),\s+(\d{4})\s*')">
+                        <xsl:when test="matches($v_input-normalised,'\s*(.*)\s+(\d+),\s+(\d{4})\s*')">
                             <xsl:variable name="v_month-name" select="translate(regex-group(7), '.', '')"/>
                             <xsl:variable name="v_month-number" select="oape:date-convert-months($v_month-name, 'number', $p_input-lang, $p_input-calendar)"/>
                             <!-- output -->
@@ -1591,6 +1642,9 @@ s            <xsl:message terminate="yes">
                     <xsl:when test="$p_output-calendar = '#cal_ottomanfiscal'">
                         <xsl:value-of select="oape:date-convert-julian-to-ottoman-fiscal(oape:date-convert-julian-day-to-julian($v_julian-day-of-input))"/>
                     </xsl:when>
+                    <xsl:when test="$p_output-calendar = '#cal_coptic'">
+                        <xsl:value-of select="oape:date-convert-julian-day-to-coptic($v_julian-day-of-input)"/>
+                    </xsl:when>
                     <!-- fallback -->
                     <xsl:otherwise>
                         <xsl:message>
@@ -1611,6 +1665,9 @@ s            <xsl:message terminate="yes">
                     </xsl:when>
                     <xsl:when test="$p_output-calendar = '#cal_ottomanfiscal'">
                         <xsl:value-of select="oape:date-convert-julian-to-ottoman-fiscal(oape:date-convert-julian-day-to-julian($v_julian-day-of-input))"/>
+                    </xsl:when>
+                    <xsl:when test="$p_output-calendar = '#cal_coptic'">
+                        <xsl:value-of select="oape:date-convert-julian-day-to-coptic($v_julian-day-of-input)"/>
                     </xsl:when>
                     <!-- fallback -->
                     <xsl:otherwise>
@@ -1633,6 +1690,9 @@ s            <xsl:message terminate="yes">
                     <xsl:when test="$p_output-calendar = '#cal_ottomanfiscal'">
                         <xsl:value-of select="oape:date-convert-julian-to-ottoman-fiscal($p_input)"/>
                     </xsl:when>
+                    <xsl:when test="$p_output-calendar = '#cal_coptic'">
+                        <xsl:value-of select="oape:date-convert-julian-day-to-coptic($v_julian-day-of-input)"/>
+                    </xsl:when>
                     <!-- fallback -->
                     <xsl:otherwise>
                         <xsl:message>
@@ -1653,6 +1713,33 @@ s            <xsl:message terminate="yes">
                     </xsl:when>
                     <xsl:when test="$p_output-calendar = '#cal_julian'">
                         <xsl:value-of select="oape:date-convert-julian-day-to-julian($v_julian-day-of-input)"/>
+                    </xsl:when>
+                    <xsl:when test="$p_output-calendar = '#cal_coptic'">
+                        <xsl:value-of select="oape:date-convert-julian-day-to-coptic($v_julian-day-of-input)"/>
+                    </xsl:when>
+                    <!-- fallback -->
+                    <xsl:otherwise>
+                        <xsl:message>
+                            <xsl:text>Output calendar has not been recognised.</xsl:text>
+                        </xsl:message>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <!-- input: Coptic -->
+             <xsl:when test="$p_input-calendar = '#cal_coptic'">
+                <xsl:variable name="v_julian-day-of-input" select="oape:date-convert-coptic-to-julian-day($p_input)"/>
+                <xsl:choose>
+                    <xsl:when test="$p_output-calendar = '#cal_gregorian'">
+                        <xsl:value-of select="oape:date-convert-julian-day-to-gregorian($v_julian-day-of-input)"/>
+                    </xsl:when>
+                    <xsl:when test="$p_output-calendar = '#cal_islamic'">
+                        <xsl:value-of select="oape:date-convert-julian-day-to-islamic($v_julian-day-of-input)"/>
+                    </xsl:when>
+                    <xsl:when test="$p_output-calendar = '#cal_julian'">
+                        <xsl:value-of select="oape:date-convert-julian-day-to-julian($v_julian-day-of-input)"/>
+                    </xsl:when>
+                    <xsl:when test="$p_output-calendar = '#cal_ottomanfiscal'">
+                        <xsl:value-of select="oape:date-convert-julian-to-ottoman-fiscal(oape:date-convert-julian-day-to-julian($v_julian-day-of-input))"/>
                     </xsl:when>
                     <!-- fallback -->
                     <xsl:otherwise>
