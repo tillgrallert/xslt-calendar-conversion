@@ -1293,26 +1293,24 @@
         <xsl:param name="p_input"/>
         <!-- pCal selects the input calendar: '#cal_gregorian', '#cal_julian', '#cal_ottomanfiscal', or '#cal_islamic' -->
         <xsl:param name="p_input-calendar"/>
-        <!-- p_format-output establishes whether the original input or a formatted date is produced as output / content of the tei:date node. Values are 'original' and 'formatted' -->
+        <!-- p_format-output establishes whether the original input or a formatted date is produced as output / content of the tei:date node. Values are 'false()' and 'true()' -->
         <xsl:param name="p_format-output"/>
         <xsl:param name="p_inluce-weekday"/>
         <xsl:param name="p_lang"/>
         <xsl:variable name="vDateTei1">
             <xsl:element name="tei:date">
                 <!-- attributes -->
-                
+                <xsl:attribute name="calendar" select="$p_input-calendar"/>
+                <xsl:attribute name="xml:lang" select="$p_lang"/>
                 <xsl:choose>
                     <xsl:when test="$p_input-calendar = '#cal_gregorian'">
                         <!-- test if input string is ISO format -->
                         <xsl:attribute name="when" select="$p_input"/>
-                        <xsl:attribute name="xml:lang" select="'en'"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:variable name="v_gregorian-date" select="oape:date-convert-calendars($p_input,$p_input-calendar, '#cal_gregorian')"/>
-                        <xsl:attribute name="xml:lang" select="$p_lang"/>
                         <xsl:attribute name="when" select="$v_gregorian-date"/>
                         <xsl:attribute name="when-custom" select="$p_input"/>
-                        <xsl:attribute name="calendar" select="$p_input-calendar"/>
                         <xsl:attribute name="datingMethod" select="$p_input-calendar"/>
                     </xsl:otherwise>
                 </xsl:choose>
