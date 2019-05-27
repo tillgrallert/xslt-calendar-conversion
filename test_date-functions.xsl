@@ -9,11 +9,13 @@
 <!--    <xsl:include href="https://tillgrallert.github.io/xslt-calendar-conversion/functions/date-functions.xsl"/>-->
     <xsl:include href="date-function.xsl"/>
     <xsl:template match="/">
-        <xsl:variable name="v_input" select="'Sep 20, 1900'"/>
+        <xsl:variable name="v_input" select="'13 June 1893'"/>
         <xsl:variable name="v_gregorian-date" select="oape:date-normalise-input($v_input,'en', '#cal_gregorian')"/>
+<!--        <xsl:variable name="v_gregorian-date" select="oape:date-convert-julian-day-to-gregorian(oape:date-convert-coptic-to-julian-day('1609-10-07'))"/>-->
         <xsl:variable name="v_islamic-date" select="oape:date-convert-calendars($v_gregorian-date, '#cal_gregorian', '#cal_islamic')"/>
         <xsl:variable name="v_julian-date" select="oape:date-convert-calendars($v_gregorian-date, '#cal_gregorian', '#cal_julian')"/>
         <xsl:variable name="v_ottoman-fiscal-date" select="oape:date-convert-calendars($v_gregorian-date, '#cal_gregorian', '#cal_ottomanfiscal')"/>
+        <xsl:variable name="v_coptic-date" select="oape:date-convert-calendars($v_gregorian-date,'#cal_gregorian', '#cal_coptic')"/>
         <!-- output -->
         <div>
         <h1>Input: <xsl:value-of select="$v_gregorian-date"/></h1>
@@ -37,6 +39,10 @@
                 <xsl:value-of select="oape:date-convert-calendars($v_ottoman-fiscal-date, '#cal_ottomanfiscal', '#cal_julian')"/> R / 
                 <xsl:value-of select="oape:date-convert-calendars($v_ottoman-fiscal-date, '#cal_ottomanfiscal', '#cal_islamic')"/> aH)
             <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_ottoman-fiscal-date, '#cal_ottomanfiscal', true(), true(),'ar')"/>
+            </li>
+            <li>Coptic date: <xsl:value-of select="$v_coptic-date"/> C (
+                )
+                <xsl:copy-of select="oape:date-format-iso-string-to-tei($v_coptic-date, '#cal_coptic', true(), true(),'ar')"/>
             </li>
         </ul>
         </div>
