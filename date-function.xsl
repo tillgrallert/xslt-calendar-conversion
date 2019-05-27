@@ -75,6 +75,8 @@
     <xsl:param name="p_julian-day-for-gregorian-base" select="1721425.5"/>
     <!-- Julian day for Hijri 0001-01-01 -->
     <xsl:param name="p_julian-day-for-islamic-base" select="1948439.5"/>
+    <!-- Julian day for Coptic 0001-01-01 -->
+    <xsl:param name="p_julian-day-for-coptic-base" select="1825029"/>
     <xsl:param name="p_debug" select="true()"/>
     
    <!-- translate strings -->
@@ -384,6 +386,7 @@
             select="number(tokenize($p_julian-date, '([.,&quot;\-])')[2])"/>
         <xsl:variable name="v_julian-day"
             select="number(tokenize($p_julian-date, '([.,&quot;\-])')[3])"/>
+        <!-- Algorithm as given in Meeus, Astronomical Algorithms, Chapter 7, page 61 -->
         <xsl:variable name="v_julian-year-adjustment"
             select="
                 if ($v_julian-month &lt;= 2) then
@@ -420,60 +423,30 @@
             day) - 1524.5);
 } -->
     </xsl:function>
-    
-    <!--<xd:doc>
-        <xd:desc>This function converts Gregorian to Hijrī dates. Input and output are ISO-conformant date strings.</xd:desc>
-        <xd:param name="p_gregorian-date"/>
+    <xd:doc>
+        <xd:desc>This function converts Coptic dates to Julian Day </xd:desc>
+        <xd:param name="p_coptic-date"/>
     </xd:doc>
-    <xsl:function name="oape:date-convert-gregorian-to-islamic">
-        <xsl:param name="p_gregorian-date"/>
-        <xsl:value-of select="oape:date-convert-julian-day-to-islamic(oape:date-convert-gregorian-to-julian-day($p_gregorian-date))"/>
-    </xsl:function>-->
-    
-    <!--<xd:doc>
-        <xd:desc>This function converts Hijrī to Gregorian dates. Input and output are ISO-conformant date strings.</xd:desc>
-        <xd:param name="p_islamic-date"/>
-    </xd:doc>
-    <xsl:function name="oape:date-convert-islamic-to-gregorian">
-        <xsl:param name="p_islamic-date"/>
-        <xsl:value-of select="oape:date-convert-julian-day-to-gregorian(oape:date-convert-islamic-to-julian-day($p_islamic-date))"/>
-    </xsl:function>-->
-    
-    <!--<xd:doc>
-        <xd:desc>This function converts Gregorian to Julian / Rūmī dates. Input and output are ISO-conformant date strings.</xd:desc>
-        <xd:param name="p_gregorian-date"/>
-    </xd:doc>
-    <xsl:function name="oape:date-convert-gregorian-to-julian">
-        <xsl:param name="p_gregorian-date"/>
-        <xsl:value-of select="oape:date-convert-julian-day-to-julian(oape:date-convert-gregorian-to-julian-day($p_gregorian-date))"/>
-    </xsl:function>-->
-    
-    <!--<xd:doc>
-        <xd:desc>This function converts Islamic Hijri to Julian / Rūmī dates. Input and output are ISO-conformant date strings.</xd:desc>
-        <xd:param name="p_islamic-date"/>
-    </xd:doc>
-    <xsl:function name="oape:date-convert-islamic-to-julian">
-        <xsl:param name="p_islamic-date"/>
-        <xsl:value-of select="oape:date-convert-julian-day-to-julian(oape:date-convert-islamic-to-julian-day($p_islamic-date))"/>
-    </xsl:function>-->
-    
-    <!--<xd:doc>
-        <xd:desc>This function converts Julian / Rūmī to Islamic Hijrī dates. Input and output are ISO-conformant date strings.</xd:desc>
-        <xd:param name="p_julian-date"/>
-    </xd:doc>
-    <xsl:function name="oape:date-convert-julian-to-islamic">
-        <xsl:param name="p_julian-date"/>
-        <xsl:value-of select="oape:date-convert-julian-day-to-islamic(oape:date-convert-julian-to-julian-day($p_julian-date))"/>
-    </xsl:function>-->
-    
-   <!-- <xd:doc>
-        <xd:desc>This function converts Julian / Rūmī to Gregorian dates. Input and output are ISO-conformant date strings.</xd:desc>
-        <xd:param name="p_julian-date"/>
-    </xd:doc>
-    <xsl:function name="oape:date-convert-julian-to-gregorian">
-        <xsl:param name="p_julian-date"/>
-        <xsl:value-of select="oape:date-convert-julian-day-to-gregorian(oape:date-convert-julian-to-julian-day($p_julian-date))"/>
-    </xsl:function>-->
+    <xsl:function name="oape:date-convert-coptic-to-julian-day">
+        <xsl:param name="p_coptic-date"/>
+        <xsl:variable name="v_coptic-year"
+            select="number(tokenize($p_coptic-date, '([.,&quot;\-])')[1])"/>
+        <xsl:variable name="v_coptic-month"
+            select="number(tokenize($p_coptic-date, '([.,&quot;\-])')[2])"/>
+        <xsl:variable name="v_coptic-day"
+            select="number(tokenize($p_coptic-date, '([.,&quot;\-])')[3])"/>
+        <!-- each month of the coptic year has 12 days, save for the 13th, which has only 5 or 6, depending on the leap year -->
+        <xsl:variable name="v_julian-day-of-input">
+            <!-- days of past years -->
+            <xsl:variable name="v_y" select="floor(365.25 * ($v_coptic-year -1) +0.30)"/>
+            <!-- days of previous months in the current year -->
+            <xsl:variable name="v_m" select="30 * ($v_coptic-month -1)"/>
+            <!-- days of the current month -->
+            <xsl:variable name="v_d" select="$v_coptic-day"/>
+            <xsl:value-of select="$v_y + $v_m + $v_d + $p_julian-day-for-coptic-base"/>
+        </xsl:variable>
+        <xsl:value-of select="$v_julian-day-of-input"/>
+    </xsl:function>
     
     <xd:doc>
         <xd:desc>This function converts Julian/ Rūmī to Ottoman fiscal / Mālī dates. Input and output are ISO-conformant date strings.</xd:desc>
@@ -1255,6 +1228,60 @@
                     <tei:form xml:lang="ar">كانون الاول</tei:form>
                     <tei:form xml:lang="en">December</tei:form>
                     <tei:form xml:lang="en">Dec</tei:form>
+                </tei:nym>
+            </tei:listNym>
+            <tei:listNym corresp="#cal_coptic">
+                <tei:nym n="1">
+                    <tei:form xml:lang="ar"></tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Tūt</tei:form>
+                </tei:nym>
+                <tei:nym n="2">
+                    <tei:form xml:lang="ar"></tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Bābah</tei:form>
+                </tei:nym>
+                <tei:nym n="3">
+                    <tei:form xml:lang="ar"></tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Hātūr</tei:form>
+                </tei:nym>
+                <tei:nym n="4">
+                    <tei:form xml:lang="ar"></tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Kiyahk</tei:form>
+                </tei:nym>
+                <tei:nym n="5">
+                    <tei:form xml:lang="ar"></tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Ṭūba</tei:form>
+                </tei:nym>
+                <tei:nym n="6">
+                    <tei:form xml:lang="ar"></tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Amshīr</tei:form>
+                </tei:nym>
+                <tei:nym n="7">
+                    <tei:form xml:lang="ar"></tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Baramhāt</tei:form>
+                </tei:nym>
+                <tei:nym n="8">
+                    <tei:form xml:lang="ar"></tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Baramūda</tei:form>
+                </tei:nym>
+                <tei:nym n="9">
+                    <tei:form xml:lang="ar"></tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Bashans</tei:form>
+                </tei:nym>
+                <tei:nym n="10">
+                    <tei:form xml:lang="ar"></tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Baʾūna</tei:form>
+                </tei:nym>
+                <tei:nym n="11">
+                    <tei:form xml:lang="ar"></tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Abīb</tei:form>
+                </tei:nym>
+                <tei:nym n="12">
+                    <tei:form xml:lang="ar"></tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Masrā</tei:form>
+                </tei:nym>
+                <tei:nym n="13">
+                    <tei:form xml:lang="ar"></tei:form>
+                    <tei:form xml:lang="ar-Latn-x-ijmes">Nasīʾ</tei:form>
                 </tei:nym>
             </tei:listNym>
         </xsl:variable>
