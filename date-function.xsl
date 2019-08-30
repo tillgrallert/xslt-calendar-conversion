@@ -1284,7 +1284,7 @@
                     <tei:form xml:lang="ar-Latn-x-ijmes">Amshīr</tei:form>
                 </tei:nym>
                 <tei:nym n="7">
-                    <tei:form xml:lang="ar">برمهاة</tei:form>
+                    <tei:form xml:lang="ar">برمهات</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Baramhāt</tei:form>
                 </tei:nym>
                 <tei:nym n="8">
