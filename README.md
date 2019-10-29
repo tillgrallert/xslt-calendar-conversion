@@ -18,7 +18,7 @@ The functions and templates can be loaded into other XSLT stylesheets or XQuery.
 
 ## General description
 
-The single stylesheet in this repo was conceived as a remedy for the bugs in the XPath specification that prevent the computation of Islamic (Hijrī) dates. As I was, at the same time, working on the transcription of Arabic and Ottoman Turkish sources from the nineteenth century into XML files, which made use of Gregorian, Hijrī, Rūmī, and Mālī calendars, I also wanted to reliably compute conversions between the various calendars.
+The single stylesheet in this repo was conceived as a remedy for the bugs in the XPath implementation that prevent the computation of Islamic (Hijrī) dates.[^1] As I was, at the same time, working on the transcription of Arabic and Ottoman Turkish sources from the nineteenth century into XML files, which made use of Gregorian, Hijrī, Rūmī, and Mālī calendars, I also wanted to reliably compute conversions between the various calendars.
 
 In addition to numerical dates, the stylesheet provides a function that returns the common month names in various languages and scripts.
 
@@ -32,7 +32,7 @@ Detailed descriptions of the functions and their parameters can be found inside 
 
 ## Templates
 
-Templates for the conversion between calendars: 
+Templates for the conversion between calendars:
 
 - funcDateG2H
 - funcDateG2J
@@ -67,3 +67,6 @@ Templates for converting Date formats
 ## License
 
 [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/)
+
+
+[^1]: According to the XPath specifications, the [`format-date()`](https://www.w3.org/TR/xpath-functions-30/#func-format-date) function supports a number calendars beyond the Gregorian standard since version 2.0. However, the actual support for calendars and languages is implementation-dependent and the main XSLT, XPath and XQuery processor, Saxon, has not implemented any of these alternative calendars; [documentation for `format-dateTime()`](https://www.saxonica.com/html/documentation/functions/fn/format-dateTime.html).
