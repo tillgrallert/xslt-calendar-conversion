@@ -1164,7 +1164,7 @@
                     <tei:form xml:lang="ar-Latn-x-ijmes">Shubāṭ</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Shub</tei:form>
                     <tei:form xml:lang="ar">شباط</tei:form>
-                    <tei:form xml:lang="ar-EG">فباير</tei:form>
+                    <tei:form xml:lang="ar-EG">فبراير</tei:form>
                     <tei:form xml:lang="en">February</tei:form>
                     <tei:form xml:lang="en">Feb</tei:form>
                 </tei:nym>
@@ -1200,6 +1200,7 @@
                     <tei:form xml:lang="ar-Latn-x-sente">Ḥaz</tei:form>
                     <tei:form xml:lang="ar">حزيران</tei:form>
                     <tei:form xml:lang="ar-EG">يونيو</tei:form>
+                    <tei:form xml:lang="ar-EG">يونيه</tei:form>
                     <tei:form xml:lang="en">June</tei:form>
                     <tei:form xml:lang="en">Jun</tei:form>
                 </tei:nym>
@@ -1244,6 +1245,7 @@
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-thānī</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Tish II</tei:form>
                     <tei:form xml:lang="ar">تسرين الثاني</tei:form>
+                    <tei:form xml:lang="ar-EG">نوفمبر</tei:form>
                     <tei:form xml:lang="ar-EG">نوڤمبر</tei:form>
                     <tei:form xml:lang="en">November</tei:form>
                     <tei:form xml:lang="en">Nov</tei:form>
@@ -1254,6 +1256,7 @@
                     <tei:form xml:lang="ar-Latn-x-sente">Kān II</tei:form>
                     <tei:form xml:lang="ar">كانون الاول</tei:form>
                     <tei:form xml:lang="ar-EG">دسمبر</tei:form>
+                    <tei:form xml:lang="ar-EG">ديسمبر</tei:form>
                     <tei:form xml:lang="en">December</tei:form>
                     <tei:form xml:lang="en">Dec</tei:form>
                 </tei:nym>
