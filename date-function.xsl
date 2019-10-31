@@ -1080,10 +1080,11 @@
                 <tei:nym n="2">
                     <tei:form xml:lang="tr">Nisan</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Nīsān</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Nīs</tei:form>
+<!--                    <tei:form xml:lang="ar-Latn-x-ijmes">Nīs</tei:form>-->
                     <tei:form xml:lang="ar">نيسان</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ni</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Nīs</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Nis</tei:form>
                 </tei:nym>
                 <tei:nym n="3">
                     <tei:form xml:lang="tr">Mayıs</tei:form>
@@ -1091,6 +1092,7 @@
                     <tei:form xml:lang="ar">مايس</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ma</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Māy</tei:form>
+                    
                 </tei:nym>
                 <tei:nym n="4">
                     <tei:form xml:lang="tr">Haziran</tei:form>
@@ -1138,6 +1140,7 @@
                     <tei:form xml:lang="tr">Aralık</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-awwal</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Kān I</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Kan I</tei:form>
                     <tei:form xml:lang="ar">كانون الاول</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ke</tei:form>
                 </tei:nym>
@@ -1145,6 +1148,7 @@
                     <tei:form xml:lang="tr">Ocak</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-thānī</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Kān II</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Kan II</tei:form>
                     <tei:form xml:lang="ar">كانون الثاني</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ks</tei:form>
                 </tei:nym>
@@ -1160,6 +1164,7 @@
                     <tei:form xml:lang="tr">Ocak</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-thānī</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Kān II</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Kan II</tei:form>
                     <tei:form xml:lang="ar">كانون الثاني</tei:form>
                     <tei:form xml:lang="ar-EG">يناير</tei:form>
                     <tei:form xml:lang="en">January</tei:form>
@@ -1178,6 +1183,8 @@
                     <tei:form xml:lang="tr">Mart</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ādhār</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Ādhār</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Adhar</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Mār</tei:form>
                     <tei:form xml:lang="ar">آذار</tei:form>
                     <tei:form xml:lang="ar-EG">مارس</tei:form>
                     <tei:form xml:lang="en">March</tei:form>
@@ -1187,6 +1194,7 @@
                     <tei:form xml:lang="tr">Nisan</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Nīsān</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Nīs</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Nis</tei:form>
                     <tei:form xml:lang="ar">نيسان</tei:form>
                     <tei:form xml:lang="ar-EG">ابريل</tei:form>
                     <tei:form xml:lang="en">April</tei:form>
@@ -1196,6 +1204,7 @@
                     <tei:form xml:lang="tr">Mayıs</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ayyār</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Ayyār</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Ayyar</tei:form>
                     <tei:form xml:lang="ar">ايار</tei:form>
                     <tei:form xml:lang="ar-EG">مايو</tei:form>
                     <tei:form xml:lang="en">May</tei:form>
@@ -1204,6 +1213,7 @@
                     <tei:form xml:lang="tr">Haziran</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ḥazīrān</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Ḥaz</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Haz</tei:form>
                     <tei:form xml:lang="ar">حزيران</tei:form>
                     <tei:form xml:lang="ar-EG">يونيو</tei:form>
                     <tei:form xml:lang="ar-EG">يونيه</tei:form>
@@ -1259,7 +1269,8 @@
                 <tei:nym n="12">
                     <tei:form xml:lang="tr">Aralık</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-awwal</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-sente">Kān II</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Kān I</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Kan I</tei:form>
                     <tei:form xml:lang="ar">كانون الاول</tei:form>
                     <tei:form xml:lang="ar-EG">دسمبر</tei:form>
                     <tei:form xml:lang="ar-EG">ديسمبر</tei:form>
