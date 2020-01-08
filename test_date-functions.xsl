@@ -7,9 +7,9 @@
     version="3.0">
     <xsl:output method="html" indent="yes"/>
 <!--    <xsl:include href="https://tillgrallert.github.io/xslt-calendar-conversion/functions/date-functions.xsl"/>-->
-    <xsl:include href="date-function.xsl"/>
+    <xsl:include href="functions/date-functions.xsl"/>
     <xsl:template match="/">
-        <xsl:variable name="v_input" select="'13 June 1893'"/>
+        <xsl:variable name="v_input" select="'10 August 1907'"/>
         <xsl:variable name="v_gregorian-date" select="oape:date-normalise-input($v_input,'en', '#cal_gregorian')"/>
 <!--        <xsl:variable name="v_gregorian-date" select="oape:date-convert-julian-day-to-gregorian(oape:date-convert-coptic-to-julian-day('1609-10-07'))"/>-->
         <xsl:variable name="v_islamic-date" select="oape:date-convert-calendars($v_gregorian-date, '#cal_gregorian', '#cal_islamic')"/>
