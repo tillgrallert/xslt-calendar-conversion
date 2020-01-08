@@ -13,6 +13,8 @@
     <xd:doc scope="stylesheet" type="stylesheet">
         <xd:desc>
             <xd:p>XSL stylesheet for date conversions in XML. </xd:p>
+            <xd:p>NOTE: the stylesheet has been extensively updated to make use of functions instead of templates.
+                the documentation does not, yet, reflect these changes.</xd:p>
             <xd:p>The stylesheet currenly supports conversions between four calendars using a
                 calculation of the Julian Day: Gregorian, Julian, Ottoman fiscal (Mālī), and Hijrī
                 calendars. Many of the calculations were adapted from John Walker's Calender
@@ -425,7 +427,7 @@
     </xsl:function>
     <xd:doc>
         <xd:desc>This function converts Coptic dates to Julian Day </xd:desc>
-        <xd:param name="p_coptic-date"/>
+        <xd:param name="p_coptic-date">A coptic date, provided in the form "yyyy-mm-dd".</xd:param>
     </xd:doc>
     <xsl:function name="oape:date-convert-coptic-to-julian-day">
         <xsl:param name="p_coptic-date"/>
@@ -448,6 +450,10 @@
         <xsl:value-of select="$v_julian-day-of-input"/>
     </xsl:function>
     
+    <xd:doc>
+        <xd:desc>This function converts Julian Days to Coptic dates </xd:desc>
+        <xd:param name="p_julian-day">A Julian day</xd:param>
+    </xd:doc>
     <xsl:function name="oape:date-convert-julian-day-to-coptic">
         <xsl:param name="p_julian-day"/>
         <!-- substract the coptic epoch -->
@@ -1074,10 +1080,11 @@
                 <tei:nym n="2">
                     <tei:form xml:lang="tr">Nisan</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Nīsān</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-ijmes">Nīs</tei:form>
+<!--                    <tei:form xml:lang="ar-Latn-x-ijmes">Nīs</tei:form>-->
                     <tei:form xml:lang="ar">نيسان</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ni</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Nīs</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Nis</tei:form>
                 </tei:nym>
                 <tei:nym n="3">
                     <tei:form xml:lang="tr">Mayıs</tei:form>
@@ -1085,6 +1092,7 @@
                     <tei:form xml:lang="ar">مايس</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ma</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Māy</tei:form>
+                    
                 </tei:nym>
                 <tei:nym n="4">
                     <tei:form xml:lang="tr">Haziran</tei:form>
@@ -1132,6 +1140,7 @@
                     <tei:form xml:lang="tr">Aralık</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-awwal</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Kān I</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Kan I</tei:form>
                     <tei:form xml:lang="ar">كانون الاول</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ke</tei:form>
                 </tei:nym>
@@ -1139,6 +1148,7 @@
                     <tei:form xml:lang="tr">Ocak</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-thānī</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Kān II</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Kan II</tei:form>
                     <tei:form xml:lang="ar">كانون الثاني</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ks</tei:form>
                 </tei:nym>
@@ -1154,6 +1164,7 @@
                     <tei:form xml:lang="tr">Ocak</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-thānī</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Kān II</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Kan II</tei:form>
                     <tei:form xml:lang="ar">كانون الثاني</tei:form>
                     <tei:form xml:lang="ar-EG">يناير</tei:form>
                     <tei:form xml:lang="en">January</tei:form>
@@ -1164,7 +1175,7 @@
                     <tei:form xml:lang="ar-Latn-x-ijmes">Shubāṭ</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Shub</tei:form>
                     <tei:form xml:lang="ar">شباط</tei:form>
-                    <tei:form xml:lang="ar-EG">فباير</tei:form>
+                    <tei:form xml:lang="ar-EG">فبراير</tei:form>
                     <tei:form xml:lang="en">February</tei:form>
                     <tei:form xml:lang="en">Feb</tei:form>
                 </tei:nym>
@@ -1172,6 +1183,8 @@
                     <tei:form xml:lang="tr">Mart</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ādhār</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Ādhār</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Adhar</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Mār</tei:form>
                     <tei:form xml:lang="ar">آذار</tei:form>
                     <tei:form xml:lang="ar-EG">مارس</tei:form>
                     <tei:form xml:lang="en">March</tei:form>
@@ -1181,6 +1194,7 @@
                     <tei:form xml:lang="tr">Nisan</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Nīsān</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Nīs</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Nis</tei:form>
                     <tei:form xml:lang="ar">نيسان</tei:form>
                     <tei:form xml:lang="ar-EG">ابريل</tei:form>
                     <tei:form xml:lang="en">April</tei:form>
@@ -1190,6 +1204,7 @@
                     <tei:form xml:lang="tr">Mayıs</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ayyār</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Ayyār</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Ayyar</tei:form>
                     <tei:form xml:lang="ar">ايار</tei:form>
                     <tei:form xml:lang="ar-EG">مايو</tei:form>
                     <tei:form xml:lang="en">May</tei:form>
@@ -1198,8 +1213,10 @@
                     <tei:form xml:lang="tr">Haziran</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Ḥazīrān</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Ḥaz</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Haz</tei:form>
                     <tei:form xml:lang="ar">حزيران</tei:form>
                     <tei:form xml:lang="ar-EG">يونيو</tei:form>
+                    <tei:form xml:lang="ar-EG">يونيه</tei:form>
                     <tei:form xml:lang="en">June</tei:form>
                     <tei:form xml:lang="en">Jun</tei:form>
                 </tei:nym>
@@ -1244,6 +1261,7 @@
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-thānī</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Tish II</tei:form>
                     <tei:form xml:lang="ar">تسرين الثاني</tei:form>
+                    <tei:form xml:lang="ar-EG">نوفمبر</tei:form>
                     <tei:form xml:lang="ar-EG">نوڤمبر</tei:form>
                     <tei:form xml:lang="en">November</tei:form>
                     <tei:form xml:lang="en">Nov</tei:form>
@@ -1251,9 +1269,11 @@
                 <tei:nym n="12">
                     <tei:form xml:lang="tr">Aralık</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-awwal</tei:form>
-                    <tei:form xml:lang="ar-Latn-x-sente">Kān II</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Kān I</tei:form>
+                    <tei:form xml:lang="ar-Latn-x-sente">Kan I</tei:form>
                     <tei:form xml:lang="ar">كانون الاول</tei:form>
                     <tei:form xml:lang="ar-EG">دسمبر</tei:form>
+                    <tei:form xml:lang="ar-EG">ديسمبر</tei:form>
                     <tei:form xml:lang="en">December</tei:form>
                     <tei:form xml:lang="en">Dec</tei:form>
                 </tei:nym>
@@ -1284,7 +1304,7 @@
                     <tei:form xml:lang="ar-Latn-x-ijmes">Amshīr</tei:form>
                 </tei:nym>
                 <tei:nym n="7">
-                    <tei:form xml:lang="ar">برمهاة</tei:form>
+                    <tei:form xml:lang="ar">برمهات</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Baramhāt</tei:form>
                 </tei:nym>
                 <tei:nym n="8">
@@ -1436,7 +1456,7 @@
         <xsl:param name="p_input"/>
         <!-- This parameter selects the input language according to @xml:lang -->
         <xsl:param name="p_input-lang"/>
-        <!-- this parameter selects the input calendar using the TEI's @datingMethod -->
+        <!-- this parameter selects the input calendar using the TEI's @datingMethod or @calendar -->
         <xsl:param name="p_input-calendar"/>
         <!-- if the input language is Arabic, numericals must be first normalised. Otherwise they are read as characters -->
         <xsl:variable name="v_input-normalised" select="normalize-space(translate($p_input, $v_string-digits-ar, $v_string-digits-latn))"/>
@@ -1641,6 +1661,10 @@
         <xsl:param name="p_input-calendar"/>
         <xsl:param name="p_output-calendar"/>
         <xsl:choose>
+            <!-- input = output -->
+            <xsl:when test="$p_input-calendar = $p_output-calendar">
+                <xsl:value-of select="$p_input"/>
+            </xsl:when>
             <!-- input: gregorian -->
             <xsl:when test="$p_input-calendar = '#cal_gregorian'">
                 <xsl:variable name="v_julian-day-of-input" select="oape:date-convert-gregorian-to-julian-day($p_input)"/>
