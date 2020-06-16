@@ -1660,6 +1660,14 @@
         <xsl:param name="p_input"/>
         <xsl:param name="p_input-calendar"/>
         <xsl:param name="p_output-calendar"/>
+        <!-- test if the input is an ISO date -->
+        <xsl:if test="not(matches($p_input, '\d{4}-\d{2}-\d{2}'))">
+            <xsl:message terminate="yes">
+                <xsl:text>The input </xsl:text>
+                <xsl:value-of select="$p_input"/>
+                <xsl:text> is not a date</xsl:text>
+            </xsl:message>
+        </xsl:if>
         <xsl:choose>
             <!-- input = output -->
             <xsl:when test="$p_input-calendar = $p_output-calendar">
