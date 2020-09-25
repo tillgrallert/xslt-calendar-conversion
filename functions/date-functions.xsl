@@ -1446,6 +1446,106 @@
         <!--<xsl:choose><xsl:when test="$pCal='G'"/><xsl:otherwise><xsl:element name="tei:calendarDesc"><xsl:choose><xsl:when test="$pCal='J'"><xsl:element name="tei:calendar"><xsl:attribute name="xml:id">cal_julian</xsl:attribute><xsl:element name="tei:p"><xsl:text>Reformed Julian calendar beginning the Year with 1 January. In the Ottoman context usually referred to as Rūmī.</xsl:text></xsl:element></xsl:element></xsl:when><xsl:when test="$pCal='M'"><xsl:element name="tei:calendar"><xsl:attribute name="xml:id">cal_ottomanfiscal</xsl:attribute><xsl:element name="tei:p"><xsl:text>Ottoman fiscal calendar: an Old Julian calendar beginning the Year with 1 March. The year count is synchronised to the Islamic Hijrī calendar. In the Ottoman context usually referred to as Mālī or Rūmī.</xsl:text></xsl:element></xsl:element></xsl:when><xsl:when test="$pCal='H'"><xsl:element name="tei:calendar"><xsl:attribute name="xml:id">cal_islamic</xsl:attribute><xsl:element name="tei:p"><xsl:text>Islamic Hijrī calendar beginning the Year with 1 Muḥarram.</xsl:text></xsl:element></xsl:element></xsl:when></xsl:choose></xsl:element></xsl:otherwise></xsl:choose>-->
     </xsl:function>
     
+     <xd:doc>
+        <xd:desc>This function takes a tei:date node as input and outputs a correctly formatted tei:date node describing the month this date falls in, depending of the calendar of the input with @from, @from-custom, @to and @to-custom attributes. The language of the output can be selected through a parameter</xd:desc>
+        <xd:param name="p_date">Input date: string following the ISO standard of 'yyyy-mm-dd'.</xd:param>
+        <xd:param name="p_output-language">Accepts values of @xml:lang</xd:param>
+    </xd:doc>
+    <xsl:function name="oape:date-convert-tei-to-current-month">
+        <xsl:param name="p_date"/>
+        <xsl:param name="p_output-language"/>
+        <!-- check if this is a Gregorian date or not -->
+        <xsl:variable name="v_calendar">
+            <xsl:choose>
+                <xsl:when test="$p_date/@when-custom and $p_date/@datingMethod">
+                    <xsl:value-of select="$p_date/@datingMethod"/>
+                </xsl:when>
+                <xsl:when test="$p_date/@when-custom">
+                    <xsl:message>
+                        <xsl:text>The input date is missing the mandatory @datingMethod attribute</xsl:text>
+                    </xsl:message>
+                </xsl:when>
+                <xsl:when test="$p_date/@when">
+                    <xsl:value-of select="'#cal_gregorian'"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:message>
+                        <xsl:text>The input date has no machine-readible data</xsl:text>
+                    </xsl:message>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="v_date-iso">
+            <xsl:choose>
+                <xsl:when test="$v_calendar = ''">
+                    <xsl:message>
+                        <xsl:text>No calendar found</xsl:text>
+                    </xsl:message>
+                </xsl:when>
+                <xsl:when test="$v_calendar = '#cal_gregorian'">
+                    <xsl:value-of select="$p_date/@when"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$p_date/@when-custom"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="v_month" select="number(substring($v_date-iso,6,2))"/>
+        <xsl:variable name="v_year" select="substring($v_date-iso,1,4)"/>
+        <xsl:variable name="v_first-of-month" select="concat(substring($v_date-iso,1,8),'01')"/>
+        <!-- last of month: find the Julian day for the first of the following month, subtract one, and convert to the target calendar -->
+        <xsl:variable name="v_last-of-month">
+            <xsl:variable name="v_first-of-following-month" select="concat($v_year,'-',format-number($v_month + 1,'00'),'-01')"/>
+            <xsl:variable name="v_julian-day" select="oape:date-convert-date-to-julian-day($v_first-of-following-month, $v_calendar)"/>
+            <xsl:value-of select="oape:date-convert-julian-day-to-date($v_julian-day - 1, $v_calendar)"/>
+        </xsl:variable>
+        <xsl:variable name="v_date-tei">
+            <xsl:element name="date">
+                <xsl:attribute name="calendar" select="$v_calendar"/>
+                <xsl:attribute name="xml:lang" select="$p_output-language"/>
+                <!-- machine-readible dating in attributes -->
+                <xsl:choose>
+                    <xsl:when test="$v_calendar = '#cal_gregorian'">
+                        <xsl:attribute name="from" select="$v_first-of-month"/>
+                        <xsl:attribute name="to" select="$v_last-of-month"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:attribute name="from" select="oape:date-convert-calendars($v_first-of-month,$v_calendar, '#cal_gregorian')"/>
+                        <xsl:attribute name="to" select="oape:date-convert-calendars($v_last-of-month,$v_calendar, '#cal_gregorian')"/>
+                        <xsl:attribute name="from-custom" select="$v_first-of-month"/>
+                        <xsl:attribute name="to-custom" select="$v_last-of-month"/>
+                        <xsl:attribute name="datingMethod" select="$v_calendar"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+                <!-- content: formatted date by language -->
+                <xsl:if test="$p_output-language = 'ar'">
+                    <xsl:text>شهر </xsl:text>
+                </xsl:if>
+                <xsl:value-of select="oape:date-convert-months($v_month, 'name', $p_output-language ,$v_calendar)"/>
+                <xsl:text> </xsl:text>
+                <!-- if the target language is Arabic, then the digits should be translated -->
+                <xsl:choose>
+                    <xsl:when test="$p_output-language = 'ar'">
+                        <xsl:text>سنة </xsl:text>
+                        <xsl:value-of select="translate($v_year, $v_string-digits-latn, $v_string-digits-ar)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$v_year"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:element>
+        </xsl:variable>
+        <!-- debugging -->
+        <!--<xsl:message>
+            <xsl:value-of select="$v_calendar"/>
+            <xsl:value-of select="$v_month"/>
+            <xsl:value-of select="$v_first-of-month"/>
+            <xsl:value-of select="$v_last-of-month"/>
+        </xsl:message>-->
+        <!-- output -->
+        <xsl:copy-of select="$v_date-tei"/>
+    </xsl:function>
+    
     <xd:doc>
         <xd:desc>This funtion normalises a date input string mixing digits and month names. The output is "yyyy-mm-dd" </xd:desc>
         <xd:param name="p_input"/>
