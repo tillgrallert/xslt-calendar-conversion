@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="3.0" 
     xmlns:html="http://www.w3.org/1999/xhtml"
-    xmlns:tei="http://www.tei-c.org/ns/1.0" 
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    xmlns="http://www.tei-c.org/ns/1.0" 
     xmlns:oape="https://openarabicpe.github.io/ns"
     xmlns:tss="http://www.thirdstreetsoftware.com/SenteXML-1.0"
     xmlns:xdt="http://www.w3.org/2005/02/xpath-datatypes"
@@ -1373,7 +1374,7 @@
         <xsl:param name="p_inluce-weekday"/>
         <xsl:param name="p_lang"/>
         <xsl:variable name="vDateTei1">
-            <xsl:element name="tei:date">
+            <xsl:element name="date">
                 <!-- attributes -->
                 <xsl:attribute name="calendar" select="$p_input-calendar"/>
                 <xsl:attribute name="xml:lang" select="$p_lang"/>
@@ -1765,7 +1766,7 @@
             <xsl:message terminate="yes">
                 <xsl:text>The input </xsl:text>
                 <xsl:value-of select="$p_input"/>
-                <xsl:text> is not a date</xsl:text>
+                <xsl:text> is not an ISO date</xsl:text>
             </xsl:message>
         </xsl:if>
         <xsl:choose>
