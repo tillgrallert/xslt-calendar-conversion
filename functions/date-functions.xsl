@@ -1969,6 +1969,70 @@
             </xsl:analyze-string>
     </xsl:function>
     
+    <xsl:function name="oape:date-convert-date-to-julian-day">
+        <xsl:param name="p_date"/>
+        <xsl:param name="p_calendar"/>
+        <!-- test if the input is an ISO date -->
+        <xsl:if test="not(matches($p_date, '\d{4}-\d{2}-\d{2}'))">
+            <xsl:message terminate="yes">
+                <xsl:text>The input </xsl:text>
+                <xsl:value-of select="$p_date"/>
+                <xsl:text> is not an ISO date</xsl:text>
+            </xsl:message>
+        </xsl:if>
+                <!-- convert by calendar -->
+                <xsl:choose>
+                    <xsl:when test="$p_calendar = '#cal_gregorian'">
+                        <xsl:value-of select="oape:date-convert-gregorian-to-julian-day($p_date)"/>
+                    </xsl:when>
+                    <xsl:when test="$p_calendar = '#cal_coptic'">
+                        <xsl:value-of select="oape:date-convert-coptic-to-julian-day($p_date)"/>
+                    </xsl:when>
+                    <xsl:when test="$p_calendar = '#cal_julian'">
+                        <xsl:value-of select="oape:date-convert-julian-to-julian-day($p_date)"/>
+                    </xsl:when>
+                    <xsl:when test="$p_calendar = '#cal_islamic'">
+                        <xsl:value-of select="oape:date-convert-islamic-to-julian-day($p_date)"/>
+                    </xsl:when>
+                    <xsl:when test="$p_calendar = '#cal_ottomanfiscal'">
+                        <xsl:value-of select="oape:date-convert-julian-to-julian-day(oape:date-convert-ottoman-fiscal-to-julian($p_date))"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:message>
+                            <xsl:text>The calendar </xsl:text><xsl:value-of select="$p_calendar"/><xsl:text> is not supported</xsl:text>
+                        </xsl:message>
+                    </xsl:otherwise>
+                </xsl:choose>
+    </xsl:function>
+    <xsl:function name="oape:date-convert-julian-day-to-date">
+        <xsl:param name="p_julian-day"/>
+        <xsl:param name="p_calendar"/>
+                <!-- convert by calendar -->
+                <xsl:choose>
+                    <xsl:when test="$p_calendar = '#cal_gregorian'">
+                        <xsl:value-of select="oape:date-convert-julian-day-to-gregorian($p_julian-day)"/>
+                    </xsl:when>
+                    <xsl:when test="$p_calendar = '#cal_coptic'">
+                        <xsl:value-of select="oape:date-convert-julian-day-to-coptic($p_julian-day)"/>
+                    </xsl:when>
+                    <xsl:when test="$p_calendar = '#cal_julian'">
+                        <xsl:value-of select="oape:date-convert-julian-day-to-julian($p_julian-day)"/>
+                    </xsl:when>
+                    <xsl:when test="$p_calendar = '#cal_islamic'">
+                        <xsl:value-of select="oape:date-convert-julian-day-to-islamic($p_julian-day)"/>
+                    </xsl:when>
+                    <xsl:when test="$p_calendar = '#cal_ottomanfiscal'">
+                        <xsl:value-of select="oape:date-convert-julian-to-ottoman-fiscal(oape:date-convert-julian-day-to-julian($p_julian-day))"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:message>
+                            <xsl:text>The calendar </xsl:text><xsl:value-of select="$p_calendar"/><xsl:text> is not supported</xsl:text>
+                        </xsl:message>
+                    </xsl:otherwise>
+                </xsl:choose>
+           
+    </xsl:function>
+    
     <xsl:variable name="v_month-names-and-numbers">
             <tei:listNym corresp="#cal_islamic">
                 <tei:nym n="1">
