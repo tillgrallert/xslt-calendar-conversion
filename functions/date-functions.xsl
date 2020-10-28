@@ -996,7 +996,7 @@
         </xsl:variable>
         <xsl:if test="$v_month = ''">
             <xsl:message terminate="yes">
-                <xsl:text>There is no output data for your input of "</xsl:text><xsl:value-of select="$p_input-month"/><xsl:text>" using $p_input-lang="</xsl:text><xsl:value-of select="$p_input-lang"/><xsl:text>" and $p_calendar="</xsl:text><xsl:value-of select="$p_calendar"/><xsl:text>".</xsl:text>
+                <xsl:text>There is no output data for the month of "</xsl:text><xsl:value-of select="$p_input-month"/><xsl:text>" using $p_input-lang="</xsl:text><xsl:value-of select="$p_input-lang"/><xsl:text>" and $p_calendar="</xsl:text><xsl:value-of select="$p_calendar"/><xsl:text>".</xsl:text>
             </xsl:message>
         </xsl:if>
         <xsl:value-of select="$v_month"/>
@@ -1198,16 +1198,18 @@
         <xd:param name="p_input-lang"/>
         <xd:param name="p_input-calendar"/>
     </xd:doc>
+    <!-- PROBLEM: I got the following output: when-custom="1331-08-13١٣ شعبان ١٣٣١هـ" -->
+<!-- FIXED -->
     <xsl:function name="oape:date-normalise-input">
-        <xsl:param name="p_input"/>
+        <xsl:param name="p_input" as="xs:string"/>
         <!-- This parameter selects the input language according to @xml:lang -->
-        <xsl:param name="p_input-lang"/>
+        <xsl:param name="p_input-lang" as="xs:string"/>
         <!-- this parameter selects the input calendar using the TEI's @datingMethod or @calendar -->
-        <xsl:param name="p_input-calendar"/>
+        <xsl:param name="p_input-calendar" as="xs:string"/>
         <!-- if the input language is Arabic, numericals must be first normalised. Otherwise they are read as characters -->
         <xsl:variable name="v_input-normalised" select="normalize-space(translate($p_input, $v_string-digits-ar, $v_string-digits-latn))"/>
-        <xsl:variable name="vDateNode">
-            <xsl:analyze-string regex="\s*(\d{{4}})\-(\d{{1,2}})\-(\d{{1,2}})\s*|\s*(\d+)\s+(.*)\s+(\d{{4}})\s*|\s*(.*)\s+(\d+),\s+(\d{{4}})\s*" select="normalize-space($v_input-normalised)">
+        <xsl:variable name="v_date-output">
+            <xsl:analyze-string regex="\s*(\d{{4}})\-(\d{{1,2}})\-(\d{{1,2}})\s*|\s*(\d+)\s+(.*)\s+(\d{{4}})\s*.*|\s*(.*)\s+(\d+),\s+(\d{{4}})\s*.*" select="normalize-space($v_input-normalised)">
                 <xsl:matching-substring>
                     <xsl:choose>
                         <!-- 1) match yyyy-mm-dd: this works as expected -->
@@ -1220,8 +1222,9 @@
                             <xsl:value-of select="format-number(number(regex-group(3)), '00')"/>
                         </xsl:when>
                         <!-- 2) match dd MNn yyyy -->
-                        <xsl:when test="matches($v_input-normalised,'\s*(\d+)\s+(.*)\s+(\d{4})\s*')">
+                        <xsl:when test="matches($v_input-normalised,'\s*(\d+)\s+(.*)\s+(\d{4})\s*(هـ)*')">
                             <xsl:variable name="v_month-name" select="translate(regex-group(5), '.', '')"/>
+                            <xsl:variable name="v_month-name" select="replace($v_month-name,'\s*سنة\s*','')"/>
                             <xsl:variable name="v_month-number" select="oape:date-convert-months($v_month-name, 'number', $p_input-lang, $p_input-calendar)"/>
                             <!-- output -->
                             <xsl:value-of select="regex-group(6)"/>
@@ -1231,8 +1234,9 @@
                             <xsl:value-of select="format-number(number(regex-group(4)), '00')"/>
                         </xsl:when>
                         <!-- 3) match MNn dd, yyyy -->
-                        <xsl:when test="matches($v_input-normalised,'\s*(.*)\s+(\d+),\s+(\d{4})\s*')">
+                        <xsl:when test="matches($v_input-normalised,'\s*(.*)\s+(\d+),\s+(\d{4})\s*(هـ)*')">
                             <xsl:variable name="v_month-name" select="translate(regex-group(7), '.', '')"/>
+                            <xsl:variable name="v_month-name" select="replace($v_month-name,'\s*سنة\s*','')"/>
                             <xsl:variable name="v_month-number" select="oape:date-convert-months($v_month-name, 'number', $p_input-lang, $p_input-calendar)"/>
                             <!-- output -->
                             <xsl:value-of select="regex-group(9)"/>
@@ -1248,7 +1252,13 @@
                 </xsl:non-matching-substring>
             </xsl:analyze-string>
         </xsl:variable>
-        <xsl:value-of select="normalize-space($vDateNode)"/>
+        <!-- debugging -->
+        <xsl:if test="$p_debug = true()">
+            <xsl:message>
+                <xsl:text>Input: </xsl:text><xsl:value-of select="$p_input"/><xsl:text>; output: </xsl:text><xsl:copy-of select="$v_date-output"/>
+            </xsl:message>
+        </xsl:if>
+        <xsl:value-of select="normalize-space($v_date-output)"/>
     </xsl:function>
     <!-- v1e -->
     
