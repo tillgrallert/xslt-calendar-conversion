@@ -73,13 +73,14 @@
             <xd:p>Author: Till Grallert</xd:p>
         </xd:desc>
     </xd:doc>
-    <!-- v1b: Julian day was one too few! -->
     <!-- Julian day for Gregorian 0001-01-01 -->
     <xsl:param name="p_julian-day-for-gregorian-base" select="1721425.5"/>
     <!-- Julian day for Hijri 0001-01-01 -->
     <xsl:param name="p_julian-day-for-islamic-base" select="1948439.5"/>
     <!-- Julian day for Coptic 0001-01-01 -->
     <xsl:param name="p_julian-day-for-coptic-base" select="1825029"/>
+    <!-- treshhold year for deciding whether a date belongs to the Ottomann fiscal or the Julian calendar -->
+    <xsl:param name="p_ottoman-fiscal-last-year" select="1338"/>
     <xsl:param name="p_debug" select="true()"/>
     
    <!-- translate strings -->
@@ -1255,7 +1256,7 @@
         <!-- debugging -->
         <xsl:if test="$p_debug = true()">
             <xsl:message>
-                <xsl:text>Input: </xsl:text><xsl:value-of select="$p_input"/><xsl:text>; output: </xsl:text><xsl:copy-of select="$v_date-output"/>
+                <xsl:text>Input: </xsl:text><xsl:value-of select="$p_input"/><xsl:text>; calendar: </xsl:text><xsl:value-of select="$p_input-calendar"/><xsl:text>; output: </xsl:text><xsl:copy-of select="$v_date-output"/>
             </xsl:message>
         </xsl:if>
         <xsl:value-of select="normalize-space($v_date-output)"/>
@@ -1567,7 +1568,7 @@
         <xsl:choose>
             <xsl:when test="$v_month-name = ''">
                 <xsl:message>
-                    <xsl:text>Without a month name, I cannot try to establish a calendar</xsl:text>
+                    <xsl:text>I cannot try to establish a calendar without a month name.</xsl:text>
                 </xsl:message>
             </xsl:when>
             <xsl:when test="$v_month-names-and-numbers/descendant::tei:form = $v_month-name">
@@ -1575,11 +1576,44 @@
                 <!-- test if there are more than one calendars with this month name -->
                 <xsl:choose>
                     <xsl:when test="count($v_calendar/descendant-or-self::tei:listNym) > 1">
+                        <!-- debugging -->
                         <xsl:message>
-                            <xsl:text>Found more than one calendar</xsl:text>
+                            <xsl:text>Found more than one calendar for "</xsl:text><xsl:value-of select="$p_input"/><xsl:text>": </xsl:text>
+                            <xsl:for-each select="$v_calendar/descendant-or-self::tei:listNym">
+                                <xsl:value-of select="@corresp"/>
+                                <xsl:if test="not(position() = last())">
+                                    <xsl:text>, </xsl:text>
+                                </xsl:if>
+                            </xsl:for-each>
                         </xsl:message>
+                        <!-- Ottoman fiscal and Julian calendars share the same month names. Try to differentiate through the year -->
+                        <xsl:if test="$v_calendar/descendant-or-self::tei:listNym/@corresp = '#cal_julian'">
+                            <xsl:variable name="v_year" select="number(replace($p_input, '^.*(\d{4}).*$', '$1'))"/>
+                            <xsl:variable name="v_calendar">
+                                <xsl:choose>
+                                    <xsl:when test="$v_year &lt;= $p_ottoman-fiscal-last-year">
+                                        <xsl:text>#cal_ottomanfiscal</xsl:text>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:text>#cal_julian</xsl:text>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:variable>
+                            <xsl:message>
+                                <xsl:text>The input "</xsl:text><xsl:value-of select="$v_year"/><xsl:text>" most likely indicates the calendar: </xsl:text>
+                                <xsl:value-of select="$v_calendar"/>
+                            </xsl:message>
+                            <xsl:value-of select="$v_calendar"/>
+                        </xsl:if>
                     </xsl:when>
                     <xsl:otherwise>
+                        <!-- debugging -->
+                        <xsl:if test="$p_debug = true()">
+                            <xsl:message>
+                                <xsl:text>The input "</xsl:text><xsl:value-of select="$p_input"/><xsl:text>" indicates the calendar: </xsl:text>
+                                <xsl:value-of select="$v_calendar/descendant-or-self::tei:listNym/@corresp"/>
+                            </xsl:message>
+                        </xsl:if>
                         <xsl:value-of select="$v_calendar/descendant-or-self::tei:listNym/@corresp"/>
                     </xsl:otherwise>
                 </xsl:choose>
@@ -1618,7 +1652,7 @@
                 </xsl:matching-substring>
                 <xsl:non-matching-substring>
                     <xsl:message>
-                        <xsl:text>No month name found</xsl:text>
+                        <xsl:text>The input "</xsl:text><xsl:value-of select="$p_input"/><xsl:text>" contains no month name.</xsl:text>
                     </xsl:message>
                     <xsl:value-of select="''"/>
                 </xsl:non-matching-substring>
