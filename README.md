@@ -71,9 +71,20 @@ Originally the stylesheet was organised into templates but starting in 2018, I c
     - `date-format-iso-string-to-tei`: generate a full `<tei:date>` nodes with attributes for any of the supported calendars
     - `date-convert-tei-to-current-month`: takes a `<tei:date>` node as input and generates a correctly formatted tei:date node describing the month this date falls in, depending of the calendar of the input with `@from`, `@from-custom`, `@to` and `@to-custom` attributes. The language of the output can be selected through a parameter
 
-## Input / Output
+### Input / Output
 
-Unless otherwise specifiec, input and output for all templates converting dates between the various calendars follows the ISO standard for dates as "yyyy-mm-dd"
+- Dates: Unless otherwise specified, input and output for all templates converting dates between the various calendars follows the ISO standard for dates as "yyyy-mm-dd"
+- Calendars: Due to historical reasons, this code makes use of values specified for my project "Open Arabic Periodical Editions ([OpenArabicPE](https://openarabicpe.github.io/))". Unfortunately, they take the form of local references (`#cal_...`). For the future, I plan to use LOD references. Wikidate would be the place to go to, because one can add entities.
+    + Gregorian calendar: `#cal_gregorian`
+        * Wikidata: [Q12138](https://www.wikidata.org/wiki/Q12138)
+    + Islamic (*hirjrī*) calendar: `#cal_islamic`
+        * Wikidata: [Q28892](https://www.wikidata.org/wiki/Q28892)
+    + (New) Julian (*rūmī*) calendar: `#cal_julian`
+        * Wikidata: [Q1279922](https://www.wikidata.org/wiki/Q1279922)
+            * [Q11184](https://www.wikidata.org/wiki/Q11184) refers to the Old Julian calendar
+    + Ottoman fiscal (*mālī*) calendar: `#cal_ottomanfiscal`
+    + Coptic calendar: `#cal_coptic`
+        * Wikidata: [Q750430](https://www.wikidata.org/wiki/Q750430)
 
 ## License
 
