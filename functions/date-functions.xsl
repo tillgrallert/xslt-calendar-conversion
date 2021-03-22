@@ -1581,7 +1581,9 @@
         <!-- modes: date, month -->
         <xsl:param name="p_mode" as="xs:string"/>
         <!-- extract the month name from the input -->
-        <xsl:variable name="v_month-name" select="oape:date-extract-month-name($p_input)"/>
+        <!-- to do: remove harakat, hamza, etc for Arabic words -->
+        <xsl:variable name="v_month-name" select="if ($p_mode = 'date') then (oape:date-extract-month-name($p_input)) else ($p_input)"/>
+        <xsl:variable name="v_month-name" select="translate($v_month-name, $v_string-ar, $v_string-ar-normalised)"/>
         <!-- check if the month name is found in our reference table -->
         <xsl:choose>
             <xsl:when test="$v_month-name = ''">
@@ -1605,7 +1607,8 @@
                             </xsl:for-each>
                         </xsl:message>
                         <!-- Ottoman fiscal and Julian calendars share the same month names. Try to differentiate through the year -->
-                        <xsl:if test="$v_calendar/descendant-or-self::tei:listNym/@corresp = '#cal_julian'">
+                        <xsl:choose>
+                            <xsl:when test="$p_mode = 'date' and $v_calendar/descendant-or-self::tei:listNym/@corresp = '#cal_julian'">
                             <xsl:variable name="v_year" select="number(replace($p_input, '^.*(\d{4}).*$', '$1'))"/>
                             <xsl:variable name="v_calendar">
                                 <xsl:choose>
@@ -1622,7 +1625,11 @@
                                 <xsl:value-of select="$v_calendar"/>
                             </xsl:message>
                             <xsl:value-of select="$v_calendar"/>
-                        </xsl:if>
+                        </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="'NA'"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:when>
                     <xsl:otherwise>
                         <!-- debugging -->
@@ -1673,7 +1680,7 @@
                     <xsl:message>
                         <xsl:text>The input "</xsl:text><xsl:value-of select="$p_input"/><xsl:text>" contains no month name.</xsl:text>
                     </xsl:message>
-                    <xsl:value-of select="''"/>
+                    <xsl:value-of select="'NA'"/>
                 </xsl:non-matching-substring>
             </xsl:analyze-string>
     </xsl:function>
