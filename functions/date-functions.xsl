@@ -973,17 +973,18 @@
         <xsl:param name="p_calendar" as="xs:string"/>
         <!-- check if all necessary input is provided -->
         <xsl:if test="not($p_output-mode = ('name', 'number'))">
-            <xsl:message terminate="yes">
+            <xsl:message terminate="no">
                 <xsl:text>The value of $p_output-mode must be either 'name' or 'number'.</xsl:text>
             </xsl:message>
         </xsl:if>
         <xsl:if test="not($p_calendar = ('#cal_islamic', '#cal_julian', '#cal_ottomanfiscal', '#cal_gregorian', '#cal_coptic'))">
-            <xsl:message terminate="yes">
-                <xsl:text>The value of $p_calendar muse be either '#cal_islamic', '#cal_julian', '#cal_ottomanfiscal' or '#cal_gregorian'.</xsl:text>
+            <xsl:message terminate="no">
+                <xsl:text>The value of $p_calendar is "</xsl:text><xsl:value-of select="$p_calendar"/><xsl:text>" must be either '#cal_islamic', '#cal_julian', '#cal_ottomanfiscal', '#cal_coptic' or '#cal_gregorian'.</xsl:text>
             </xsl:message>
         </xsl:if>
         <!-- month names are similar for rūmī /sharqī / Julian and Gregorian calendars -->
-        <xsl:variable name="v_calendar">
+        <xsl:if test="$p_output-mode = ('name', 'number') and $p_calendar = ('#cal_islamic', '#cal_julian', '#cal_ottomanfiscal', '#cal_gregorian', '#cal_coptic')">
+            <xsl:variable name="v_calendar">
             <xsl:choose>
                 <xsl:when test="$p_calendar = '#cal_gregorian'">
                     <xsl:text>#cal_julian</xsl:text>
@@ -1014,6 +1015,7 @@
             </xsl:message>
         </xsl:if>
         <xsl:value-of select="$v_month"/>
+        </xsl:if>
     </xsl:function>
     
     <xd:doc>
@@ -1636,9 +1638,10 @@
             </xsl:when>
             <xsl:otherwise>
                 <xsl:message>
-                    <xsl:value-of select="$v_month-name"/>
+                    <xsl:text>Could not establish a calendar. The input "</xsl:text><xsl:value-of select="$v_month-name"/><xsl:text>"</xsl:text>
                     <xsl:text> was not found in the reference file of month names</xsl:text>
                 </xsl:message>
+                <xsl:value-of select="'NA'"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:function>
