@@ -962,11 +962,11 @@
     <xsl:function name="oape:date-convert-months">
         <xsl:param name="p_input-month"/>
         <!-- pMode has value 'name' or 'number' and toggles the output format -->
-        <xsl:param name="p_output-mode"/>
+        <xsl:param name="p_output-mode" as="xs:string"/>
         <!-- select the input lang by means of @xml:lang -->
-        <xsl:param name="p_input-lang"/>
+        <xsl:param name="p_input-lang" as="xs:string"/>
         <!-- select the input lang by means of TEI's @datingMethod -->
-        <xsl:param name="p_calendar"/>
+        <xsl:param name="p_calendar" as="xs:string"/>
         <!-- check if all necessary input is provided -->
         <xsl:if test="not($p_output-mode = ('name', 'number'))">
             <xsl:message terminate="yes">
@@ -1017,7 +1017,7 @@
         <xd:param name="p_input">Input date: string following the ISO standard of 'yyyy-mm-dd'.</xd:param>
         <xd:param name="p_input-calendar">Specify the input calendar with '#cal_islamic', '#cal_julian', '#cal_ottomanfiscal', '#cal_gregorian', or '#cal_coptic'</xd:param>
         <xd:param name="p_format-output">Bolean toggles between input string and formatted output string.</xd:param>
-        <xd:param name="p_inluce-weekday">Bolean toggle whether or not to include the weekday in the formatted output.</xd:param>
+        <xd:param name="p_include-weekday">Bolean toggle whether or not to include the weekday in the formatted output.</xd:param>
         <xd:param name="p_lang">Accepts values of @xml:lang</xd:param>
     </xd:doc>
     <xsl:function name="oape:date-format-iso-string-to-tei">
@@ -1026,7 +1026,7 @@
         <xsl:param name="p_input-calendar"/>
         <!-- p_format-output establishes whether the original input or a formatted date is produced as output / content of the tei:date node. Values are 'false()' and 'true()' -->
         <xsl:param name="p_format-output"/>
-        <xsl:param name="p_inluce-weekday"/>
+        <xsl:param name="p_include-weekday"/>
         <xsl:param name="p_lang"/>
         <xsl:variable name="vDateTei1">
             <xsl:element name="date">
@@ -1090,7 +1090,7 @@
                         <xsl:copy/>
                     </xsl:for-each>
                     <xsl:value-of select="."/>
-                    <xsl:if test="$p_inluce-weekday = true()">
+                    <xsl:if test="$p_include-weekday = true()">
                         <xsl:variable name="v_weekday" select="format-date(@when, '[FNn]')"/>
                         <xsl:value-of select="concat(', ', $v_weekday)"/>
                     </xsl:if>
@@ -1424,8 +1424,8 @@
     </xd:doc>
     <xsl:function name="oape:date-convert-calendars">
         <xsl:param name="p_input"/>
-        <xsl:param name="p_input-calendar"/>
-        <xsl:param name="p_output-calendar"/>
+        <xsl:param name="p_input-calendar" as="xs:string"/>
+        <xsl:param name="p_output-calendar" as="xs:string"/>
         <!-- test if the input is an ISO date -->
         <xsl:if test="not(matches($p_input, '\d{4}-\d{2}-\d{2}'))">
             <xsl:message terminate="yes">
@@ -1568,9 +1568,12 @@
         </xsl:choose>
     </xsl:function>
     
+    <!-- the function tries to establish a calender based on an input -->
     <xsl:function name="oape:date-establish-calendar">
-        <!-- $p_input is a date string name -->
-        <xsl:param name="p_input"/>
+        <!-- $p_input is a date or a month name -->
+        <xsl:param name="p_input" as="xs:string"/>
+        <!-- modes: date, month -->
+        <xsl:param name="p_mode" as="xs:string"/>
         <!-- extract the month name from the input -->
         <xsl:variable name="v_month-name" select="oape:date-extract-month-name($p_input)"/>
         <!-- check if the month name is found in our reference table -->
@@ -1637,7 +1640,7 @@
     </xsl:function>
     
      <xsl:function name="oape:date-extract-month-name">
-        <xsl:param name="p_input"/>
+        <xsl:param name="p_input" as="xs:string"/>
           <xsl:variable name="v_input-normalised" select="normalize-space(translate($p_input, $v_string-digits-ar, $v_string-digits-latn))"/>
             <xsl:analyze-string regex="\s*(\d{{4}})\-(\d{{1,2}})\-(\d{{1,2}})\s*|\s*(\d+)\s+(.*)\s+(\d{{4}})\s*|\s*(.*)\s+(\d+),\s+(\d{{4}})\s*" select="normalize-space($v_input-normalised)">
                  <xsl:matching-substring>
