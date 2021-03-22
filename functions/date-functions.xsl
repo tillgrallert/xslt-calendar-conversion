@@ -313,20 +313,24 @@
         <xsl:variable name="v_gregorian-date-onset" select="oape:date-convert-calendars($v_islamic-date-onset, '#cal_islamic', '#cal_gregorian')"/>
         <xsl:variable name="v_islamic-date-terminus" select="concat($p_islamic-year, '-12-29')"/>
         <xsl:variable name="v_gregorian-date-terminus" select="oape:date-convert-calendars($v_islamic-date-terminus, '#cal_islamic', '#cal_gregorian')"/>
+        <xsl:variable name="v_output">
         <xsl:value-of select="substring($v_gregorian-date-onset, 1, 4)"/>
         <!-- test if the Hijrī year spans more than one Gregorian year (this is not the case for 1295, 1329  -->
         <xsl:if test="substring($v_gregorian-date-onset, 1, 4) != substring($v_gregorian-date-terminus, 1, 4)">
             <xsl:text>-</xsl:text>
-            <xsl:choose>
-                <!-- the range 1899-1900 must be accounted for -->
+            <xsl:value-of select="substring($v_gregorian-date-terminus, 1, 4)"/>
+            <!--<xsl:choose>
+                <!-\- the range 1899-1900 must be accounted for -\->
                 <xsl:when test="substring($v_gregorian-date-terminus, 3, 2) = '00'">
                     <xsl:value-of select="substring($v_gregorian-date-terminus, 1, 4)"/>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:value-of select="substring($v_gregorian-date-terminus, 3, 2)"/>
                 </xsl:otherwise>
-            </xsl:choose>
+            </xsl:choose>-->
         </xsl:if>
+        </xsl:variable>
+        <xsl:value-of select="$v_output"/>
     </xsl:function>
     <!-- this template converts Gregorian to Mali dates (i.e. Julian, commencing on 1 Mar, minus 584 years from 13 March 1840 onwards)  -->
     
