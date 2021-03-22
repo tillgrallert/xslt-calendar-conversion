@@ -92,7 +92,7 @@
     <!-- regex variables -->
     <xsl:variable name="v_switch-calendars-at-year" select="1500"/>
     <xsl:variable name="v_regex-date-yyyy-mm-dd" select="'(\d{4})\-(\d{1,2})\-(\d{1,2})'"/>
-    <xsl:variable name="v_regex-date-dd-MNn-yyyy" select="'(\d{1,2})\s+((\w+\s){1,2}?)\s*(سنة)?\s+(\d{3,4})'"/>
+    <xsl:variable name="v_regex-date-dd-MNn-yyyy" select="'(\d{1,2})\s+((\w+\s){1,2}?)(\s*سنة)?\s*(\d{3,4})'"/>
     <xsl:variable name="v_regex-date-MNn-dd-yyyy" select="'(\w+)\s+(\d+),\s+(\d{4})'"/>
     <xsl:variable name="v_regex-date-calendars" select="'((هـ|هجرية*)|(م[\W]|ملادية*|للمسيح))'"/>
     <xsl:variable name="v_regex-date-yyyy-cal" select="concat('سنة\s+(\d{3,4})', '\s+', $v_regex-date-calendars, '*')"/>
@@ -1583,7 +1583,7 @@
         <!-- extract the month name from the input -->
         <!-- to do: remove harakat, hamza, etc for Arabic words -->
         <xsl:variable name="v_month-name" select="if ($p_mode = 'date') then (oape:date-extract-month-name($p_input)) else ($p_input)"/>
-        <xsl:variable name="v_month-name" select="translate($v_month-name, $v_string-ar, $v_string-ar-normalised)"/>
+        <xsl:variable name="v_month-name" select="normalize-space(translate($v_month-name, $v_string-ar, $v_string-ar-normalised))"/>
         <!-- check if the month name is found in our reference table -->
         <xsl:choose>
             <xsl:when test="$v_month-name = ''">
@@ -1653,32 +1653,38 @@
         </xsl:choose>
     </xsl:function>
     
-     <xsl:function name="oape:date-extract-month-name">
+    <xsl:function name="oape:date-extract-month-name">
         <xsl:param name="p_input" as="xs:string"/>
-          <xsl:variable name="v_input-normalised" select="normalize-space(translate($p_input, $v_string-digits-ar, $v_string-digits-latn))"/>
-            <xsl:analyze-string regex="\s*(\d{{4}})\-(\d{{1,2}})\-(\d{{1,2}})\s*|\s*(\d+)\s+(.*)\s+(\d{{4}})\s*|\s*(.*)\s+(\d+),\s+(\d{{4}})\s*" select="normalize-space($v_input-normalised)">
+        <xsl:variable name="v_input-normalised" select="normalize-space(translate($p_input, $v_string-digits-ar, $v_string-digits-latn))"/>
+            <!-- <xsl:analyze-string regex="\s*(\d{{4}})\-(\d{{1,2}})\-(\d{{1,2}})\s*|\s*(\d+)\s+(.*)\s+(\d{{4}})\s*|\s*(.*)\s+(\d+),\s+(\d{{4}})\s*" select="normalize-space($v_input-normalised)"> -->
+        <xsl:analyze-string regex="{concat($v_regex-date-yyyy-mm-dd, '|', $v_regex-date-dd-MNn-yyyy, '|', $v_regex-date-MNn-dd-yyyy)}" select="normalize-space($v_input-normalised)">
                  <xsl:matching-substring>
                     <xsl:choose>
                         <!-- 1) match yyyy-mm-dd: cannot guess calendar -->
-                        <xsl:when test="matches($v_input-normalised,'\s*(\d{4})\-(\d{1,2})\-(\d{1,2})\s*')">
-                            <!-- output -->
+                        <xsl:when test="matches(.,concat('(^|\D)', $v_regex-date-yyyy-mm-dd))">
+                            <!-- regex groups: 3 -->
                             <xsl:message>
                                 <xsl:text>No month name present</xsl:text>
                             </xsl:message>
                         </xsl:when>
                         <!-- 2) match dd MNn yyyy: guess based on month name -->
-                        <xsl:when test="matches($v_input-normalised,'\s*(\d+)\s+(.*)\s+(\d{4})\s*')">
+                        <xsl:when test="matches(.,concat('(^|\D)', $v_regex-date-dd-MNn-yyyy))">
+                            <!-- regex groups: 3 -->
                             <xsl:value-of select="translate(regex-group(5), '.', '')"/>
                         </xsl:when>
                         <!-- 3) match MNn dd, yyyy: guess based on month name -->
-                        <xsl:when test="matches($v_input-normalised,'\s*(.*)\s+(\d+),\s+(\d{4})\s*')">
+                        <xsl:when test="matches(.,concat('(^|\W)', $v_regex-date-MNn-dd-yyyy))">
+                            <!-- regex groups: 3 -->
                             <xsl:value-of select="translate(regex-group(7), '.', '')"/>
                         </xsl:when>
+                        <xsl:otherwise>
+                            <xsl:value-of select="'NA'"/>
+                        </xsl:otherwise>
                     </xsl:choose>
                 </xsl:matching-substring>
                 <xsl:non-matching-substring>
                     <xsl:message>
-                        <xsl:text>The input "</xsl:text><xsl:value-of select="$p_input"/><xsl:text>" contains no month name.</xsl:text>
+                        <xsl:text>The input "</xsl:text><xsl:value-of select="$v_input-normalised"/><xsl:text>" contains no month name.</xsl:text>
                     </xsl:message>
                     <xsl:value-of select="'NA'"/>
                 </xsl:non-matching-substring>
@@ -2140,7 +2146,7 @@
                     <xsl:if test="$v_format = 'full'">
                         <!--<xsl:value-of select="normalize-space(regex-group(3))"/>-->
                         <!-- this is a work around that corrects for some surprising matching. The regex should not have matched a trailing "sana", but it does -->
-                        <xsl:value-of select="replace(normalize-space(regex-group(3)), '(\sسنة$)', '')"/>
+                        <xsl:value-of select="replace(normalize-space(regex-group(3)), '\s+(سنة|من)', '')"/>
                     </xsl:if>
                 </xsl:variable>
                 <xsl:variable as="xs:integer" name="v_year">
