@@ -89,6 +89,15 @@
     <xsl:variable name="v_string-ar" select="'إأئؤ'"/>
     <xsl:variable name="v_string-ar-normalised" select="'اايو'"/>
     
+    <!-- regex variables -->
+    <xsl:variable name="v_switch-calendars-at-year" select="1500"/>
+    <xsl:variable name="v_regex-date-yyyy-mm-dd" select="'(\d{4})\-(\d{1,2})\-(\d{1,2})'"/>
+    <xsl:variable name="v_regex-date-dd-MNn-yyyy" select="'(\d{1,2})\s+((\w+\s){1,2}?)\s*(سنة)?\s+(\d{3,4})'"/>
+    <xsl:variable name="v_regex-date-MNn-dd-yyyy" select="'(\w+)\s+(\d+),\s+(\d{4})'"/>
+    <xsl:variable name="v_regex-date-calendars" select="'((هـ|هجرية*)|(م[\W]|ملادية*|للمسيح))'"/>
+    <xsl:variable name="v_regex-date-yyyy-cal" select="concat('سنة\s+(\d{3,4})', '\s+', $v_regex-date-calendars, '*')"/>
+    <xsl:variable name="v_regex-date-dd-MNn-yyyy-cal" select="concat($v_regex-date-dd-MNn-yyyy, '\s+', $v_regex-date-calendars, '*')"/>
+    
     <xd:doc>
         <xd:desc>This function determines whether Gregorian years are leap years. Returns 'true()' or 'false()'.</xd:desc>
         <xd:param name="p_gregorian-date"/>
@@ -2078,4 +2087,185 @@
                 </tei:nym>
             </tei:listNym>
         </xsl:variable>
+    
+    <xsl:function name="oape:find-dates">
+        <xsl:param as="xs:string" name="p_text"/>
+        <xsl:param as="xs:string" name="p_id-change"/>
+        <!-- the regex matches dd MNn yyyy with or without calendars -->
+        <xsl:analyze-string regex="{concat('(^|\D)', $v_regex-date-dd-MNn-yyyy-cal, '|', '(^|\W)', $v_regex-date-yyyy-cal)}" select="$p_text">
+            <xsl:matching-substring>
+                <xsl:variable name="v_format">
+                    <xsl:choose>
+                        <!-- 9 regex groups -->
+                        <xsl:when test="matches(., concat('(^|\D)', $v_regex-date-dd-MNn-yyyy-cal))">
+                            <xsl:text>full</xsl:text>
+                        </xsl:when>
+                        <!-- 5 regex groups -->
+                        <xsl:when test="matches(., concat('(^|\D)', $v_regex-date-yyyy-cal))">
+                            <xsl:text>year</xsl:text>
+                        </xsl:when>
+                    </xsl:choose>
+                </xsl:variable>
+                <xsl:variable name="v_prefix">
+                    <xsl:if test="$v_format = 'full'">
+                        <xsl:value-of select="regex-group(1)"/>
+                    </xsl:if>
+                    <xsl:if test="$v_format = 'year'">
+                        <xsl:value-of select="regex-group(10)"/>
+                    </xsl:if>
+                </xsl:variable>
+                <xsl:variable name="v_day">
+                    <xsl:if test="$v_format = 'full'">
+                        <xsl:value-of select="format-number(number(translate(regex-group(2), $v_string-digits-ar, $v_string-digits-latn)), '00')"/>
+                    </xsl:if>
+                </xsl:variable>
+                <xsl:variable name="v_month-name">
+                    <xsl:if test="$v_format = 'full'">
+                        <!--<xsl:value-of select="normalize-space(regex-group(3))"/>-->
+                        <!-- this is a work around that corrects for some surprising matching. The regex should not have matched a trailing "sana", but it does -->
+                        <xsl:value-of select="replace(normalize-space(regex-group(3)), '(\sسنة$)', '')"/>
+                    </xsl:if>
+                </xsl:variable>
+                <xsl:variable as="xs:integer" name="v_year">
+                    <xsl:if test="$v_format = 'full'">
+                        <xsl:value-of select="format-number(number(translate(regex-group(6), $v_string-digits-ar, $v_string-digits-latn)), '0000')"/>
+                    </xsl:if>
+                    <xsl:if test="$v_format = 'year'">
+                        <xsl:value-of select="format-number(number(translate(regex-group(11), $v_string-digits-ar, $v_string-digits-latn)), '0000')"/>
+                    </xsl:if>
+                </xsl:variable>
+                <xsl:variable name="v_calendar">
+                    <xsl:if test="$v_format = 'full'">
+                        <xsl:choose>
+                            <xsl:when test="regex-group(7) = '' and $v_month-name != ''">
+                                <!-- there is a weird error here: this function can return a calendar, for which the function oape:date-convert-months retruns a fatal error -->
+                                <!-- this was a wrong assumption. the error returns when the calendar is explicitly stated -->
+                                <!--<xsl:value-of select="oape:date-establish-calendar($v_month-name, 'month')"/>-->
+                                <xsl:value-of select="oape:date-establish-calendar(concat($v_day, ' ', $v_month-name, ' ', $v_year), 'date')"/>
+                            </xsl:when>
+                            <xsl:when test="regex-group(8) != ''">
+                                <xsl:text>#cal_islamic</xsl:text>
+                            </xsl:when>
+                            <xsl:when test="regex-group(9) != ''">
+                                <xsl:text>#cal_gregorian</xsl:text>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:text>NA</xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:if>
+                    <xsl:if test="$v_format = 'year'">
+                        <xsl:choose>
+                            <xsl:when test="regex-group(13) != ''">
+                                <xsl:text>#cal_islamic</xsl:text>
+                            </xsl:when>
+                            <xsl:when test="regex-group(14) != ''">
+                                <xsl:text>#cal_gregorian</xsl:text>
+                            </xsl:when>
+                            <xsl:when test="$v_year lt $v_switch-calendars-at-year">
+                                <xsl:text>#cal_islamic</xsl:text>
+                            </xsl:when>
+                            <xsl:when test="$v_year &gt;= $v_switch-calendars-at-year">
+                                <xsl:text>#cal_gregorian</xsl:text>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:text>NA</xsl:text>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:if>
+                </xsl:variable>
+                <!--<xsl:message>
+                    <xsl:value-of select="."/>
+                    <xsl:text> = format: </xsl:text>
+                    <xsl:value-of select="$v_format"/>
+                    <xsl:text>, day: </xsl:text>
+                    <xsl:value-of select="$v_day"/>
+                    <xsl:text>, month: </xsl:text>
+                    <xsl:value-of select="$v_month-name"/>
+                    <xsl:text>, year: </xsl:text>
+                    <xsl:value-of select="$v_year"/>
+                    <xsl:text>, calendar: </xsl:text>
+                    <xsl:value-of select="$v_calendar"/>
+                </xsl:message>-->
+                <xsl:choose>
+                    <!-- if there is an calendar -->
+                    <xsl:when test="$v_calendar != 'NA'">
+                        <xsl:if test="$p_debug = true() and $v_format = 'full'">
+                            <xsl:message>
+                                <xsl:text>month: </xsl:text>
+                    <xsl:value-of select="$v_month-name"/>
+                                <xsl:text>, calendar: </xsl:text>
+                    <xsl:value-of select="oape:date-establish-calendar($v_month-name, 'month')"/>
+                                <xsl:text>, number: </xsl:text>
+                    <xsl:value-of select="oape:date-convert-months($v_month-name, 'number', 'ar', $v_calendar)"/>
+                            </xsl:message>
+                        </xsl:if>
+                        <xsl:variable name="v_date-iso">
+                            <xsl:if test="$v_format = 'full'">
+                                <!-- there is a weird error here: oape:date-convert-months retruns a fatal error for a combination of month names and calendars -->
+                                <xsl:value-of
+                                    select="concat(format-number($v_year, '0000'), '-', format-number(oape:date-convert-months($v_month-name, 'number', 'ar', $v_calendar), '00'), '-', format-number($v_day, '00'))"
+                                />
+                            </xsl:if>
+                            <xsl:if test="$v_format = 'year'">
+                                <xsl:value-of select="format-number($v_year, '0000')"/>
+                            </xsl:if>
+                        </xsl:variable>
+                        <!-- construct TEI node -->
+                        <xsl:value-of select="$v_prefix"/>
+                        <xsl:element name="date">
+                            <xsl:attribute name="change" select="concat('#', $p_id-change)"/>
+                            <xsl:attribute name="calendar" select="$v_calendar"/>
+                            <xsl:attribute name="xml:lang" select="'ar'"/>
+                            <xsl:if test="$v_calendar != '#cal_gregorian'">
+                                <xsl:attribute name="datingMethod" select="$v_calendar"/>
+                                <xsl:attribute name="when-custom" select="$v_date-iso"/>
+                                <xsl:if test="$v_format = 'full'">
+                                    <xsl:attribute name="when" select="oape:date-convert-calendars($v_date-iso, $v_calendar, '#cal_gregorian')"/>
+                                </xsl:if>
+                                <xsl:if test="$v_format = 'year' and $v_calendar = '#cal_islamic'">
+                                    <xsl:variable name="v_year-range" select="oape:date-convert-islamic-year-to-gregorian($v_date-iso)"/>
+                                    <xsl:choose>
+                                        <xsl:when test="matches($v_year-range, '\d-\d')">
+                                            <xsl:attribute name="from" select="substring-before($v_year-range, '-')"/>
+                                            <xsl:attribute name="to" select="substring-after($v_year-range, '-')"/>
+                                        </xsl:when>
+                                        <xsl:otherwise>
+                                            <xsl:attribute name="when" select="$v_year-range"/>
+                                        </xsl:otherwise>
+                                    </xsl:choose>
+                                </xsl:if>
+                            </xsl:if>
+                            <xsl:if test="$v_calendar = '#cal_gregorian'">
+                                <xsl:attribute name="when" select="$v_date-iso"/>
+                            </xsl:if>
+                            <!-- content -->
+                            <xsl:value-of select="normalize-space(.)"/>
+                        </xsl:element>
+                        <xsl:text> </xsl:text>
+                    </xsl:when>
+                    <!-- fallback -->
+                    <xsl:otherwise>
+                        <xsl:message>
+                            <xsl:value-of select="."/>
+                            <xsl:text> = format: </xsl:text>
+                            <xsl:value-of select="$v_format"/>
+                            <xsl:text>, day: </xsl:text>
+                            <xsl:value-of select="$v_day"/>
+                            <xsl:text>, month: </xsl:text>
+                            <xsl:value-of select="$v_month-name"/>
+                            <xsl:text>, year: </xsl:text>
+                            <xsl:value-of select="$v_year"/>
+                            <xsl:text>, calendar: </xsl:text>
+                            <xsl:value-of select="$v_calendar"/>
+                        </xsl:message>
+                        <xsl:value-of select="."/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:matching-substring>
+            <xsl:non-matching-substring>
+                <xsl:value-of select="."/>
+            </xsl:non-matching-substring>
+        </xsl:analyze-string>
+    </xsl:function>
 </xsl:stylesheet>
