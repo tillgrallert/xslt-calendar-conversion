@@ -81,6 +81,7 @@
     <xsl:param name="p_julian-day-for-coptic-base" select="1825029"/>
     <!-- treshhold year for deciding whether a date belongs to the Ottomann fiscal or the Julian calendar -->
     <xsl:param name="p_ottoman-fiscal-last-year" select="1338"/>
+    <xsl:param name="p_islamic-last-year" select="number(substring(oape:date-convert-calendars(string(format-date(current-date(), '[Y0001]-[M01]-[D01]')), '#cal_gregorian', '#cal_islamic'), 1, 4))" as="xs:double"/>
     <xsl:param name="p_debug" select="true()"/>
     
    <!-- translate strings -->
@@ -90,7 +91,6 @@
     <xsl:variable name="v_string-ar-normalised" select="'اايو'"/>
     
     <!-- regex variables -->
-    <xsl:variable name="v_switch-calendars-at-year" select="1500"/>
     <xsl:variable name="v_regex-date-yyyy-mm-dd" select="'(\d{4})\-(\d{1,2})\-(\d{1,2})'"/>
     <xsl:variable name="v_regex-date-dd-MNn-yyyy" select="'(\d{1,2})\s+((\w+\s){1,2}?)(\s*سنة)?\s*(\d{3,4})'"/>
     <xsl:variable name="v_regex-date-MNn-dd-yyyy" select="'(\w+)\s+(\d+),\s+(\d{4})'"/>
@@ -1575,6 +1575,11 @@
     </xsl:function>
     
     <!-- the function tries to establish a calender based on an input -->
+    <xd:doc>
+        <xd:desc>This function tries to establish calendars for an input date string on the basis of month names. This approach will fail with calendars that use the same month names, such as the Gregorian and the new Julian calendar. The preference for any one of them needs to be set with an additional calendar.</xd:desc>
+        <xd:param name="p_input"/>
+         <xd:param name="p_mode"/>
+    </xd:doc>
     <xsl:function name="oape:date-establish-calendar">
         <!-- $p_input is a date or a month name -->
         <xsl:param name="p_input" as="xs:string"/>
@@ -1606,7 +1611,8 @@
                                 </xsl:if>
                             </xsl:for-each>
                         </xsl:message>
-                        <!-- Ottoman fiscal and Julian calendars share the same month names. Try to differentiate through the year -->
+                        <!-- Ottoman fiscal, Julian, and Gregorian calendars share the same month names. Try to differentiate through the year -->
+                        <!-- there are regions, such as Egypt, that did not make regular use of the Julian calendar. If month names come from this region, we could automatically switch calendars  -->
                         <xsl:choose>
                             <xsl:when test="$p_mode = 'date' and $v_calendar/descendant-or-self::tei:listNym/@corresp = '#cal_julian'">
                             <xsl:variable name="v_year" select="number(replace($p_input, '^.*(\d{4}).*$', '$1'))"/>
@@ -1614,6 +1620,9 @@
                                 <xsl:choose>
                                     <xsl:when test="$v_year &lt;= $p_ottoman-fiscal-last-year">
                                         <xsl:text>#cal_ottomanfiscal</xsl:text>
+                                    </xsl:when>
+                                    <xsl:when test="$v_calendar/descendant::tei:form[. = $v_month-name]/@xml:lang = 'ar-EG'" >
+                                        <xsl:text>#cal_gregorian</xsl:text>
                                     </xsl:when>
                                     <xsl:otherwise>
                                         <xsl:text>#cal_julian</xsl:text>
@@ -1630,6 +1639,10 @@
                                 <xsl:value-of select="'NA'"/>
                             </xsl:otherwise>
                         </xsl:choose>
+                    </xsl:when>
+                    <!-- a single hit: correct Julian to Gregorian for Egyptian contexts -->
+                    <xsl:when test="$v_calendar/descendant-or-self::tei:listNym/@corresp = '#cal_julian' and $v_calendar/descendant::tei:form[. = $v_month-name]/@xml:lang = 'ar-EG'">
+                        <xsl:text>#cal_gregorian</xsl:text>
                     </xsl:when>
                     <xsl:otherwise>
                         <!-- debugging -->
@@ -1653,6 +1666,10 @@
         </xsl:choose>
     </xsl:function>
     
+    <xd:doc>
+        <xd:desc>This function extracts likely month names from a text string. Output is a text string with a likely month name or 'NA' in cases that no such string was found.</xd:desc>
+        <xd:param name="p_input"/>
+    </xd:doc>
     <xsl:function name="oape:date-extract-month-name">
         <xsl:param name="p_input" as="xs:string"/>
         <xsl:variable name="v_input-normalised" select="normalize-space(translate($p_input, $v_string-digits-ar, $v_string-digits-latn))"/>
@@ -1936,6 +1953,7 @@
                     <tei:form xml:lang="ar">شباط</tei:form>
                 </tei:nym>
             </tei:listNym>
+            <!-- these are also the month names of the Gregorian calendar -->
             <tei:listNym corresp="#cal_julian">
                 <tei:nym n="1">
                     <tei:form xml:lang="tr">Ocak</tei:form>
@@ -2149,7 +2167,7 @@
                         <xsl:value-of select="replace(normalize-space(regex-group(3)), '\s+(سنة|من)', '')"/>
                     </xsl:if>
                 </xsl:variable>
-                <xsl:variable as="xs:integer" name="v_year">
+                <xsl:variable as="xs:double" name="v_year">
                     <xsl:if test="$v_format = 'full'">
                         <xsl:value-of select="format-number(number(translate(regex-group(6), $v_string-digits-ar, $v_string-digits-latn)), '0000')"/>
                     </xsl:if>
@@ -2185,10 +2203,10 @@
                             <xsl:when test="regex-group(14) != ''">
                                 <xsl:text>#cal_gregorian</xsl:text>
                             </xsl:when>
-                            <xsl:when test="$v_year lt $v_switch-calendars-at-year">
+                            <xsl:when test="$v_year lt $p_islamic-last-year">
                                 <xsl:text>#cal_islamic</xsl:text>
                             </xsl:when>
-                            <xsl:when test="$v_year &gt;= $v_switch-calendars-at-year">
+                            <xsl:when test="$v_year &gt;= $p_islamic-last-year">
                                 <xsl:text>#cal_gregorian</xsl:text>
                             </xsl:when>
                             <xsl:otherwise>
