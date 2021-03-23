@@ -2215,12 +2215,9 @@
                     <xsl:when test="$v_calendar != 'NA'">
                         <xsl:if test="$p_debug = true() and $v_format = 'full'">
                             <xsl:message>
-                                <xsl:text>month: </xsl:text>
-                    <xsl:value-of select="$v_month-name"/>
-                                <xsl:text>, calendar: </xsl:text>
-                    <xsl:value-of select="oape:date-establish-calendar($v_month-name, 'month')"/>
-                                <xsl:text>, number: </xsl:text>
-                    <xsl:value-of select="oape:date-convert-months($v_month-name, 'number', 'ar', $v_calendar)"/>
+                                <xsl:text>month: </xsl:text><xsl:value-of select="$v_month-name"/>
+                                <xsl:text>, calendar: </xsl:text><xsl:value-of select="oape:date-establish-calendar($v_month-name, 'month')"/>
+                                <xsl:text>, number: </xsl:text><xsl:value-of select="oape:date-convert-months($v_month-name, 'number', 'ar', $v_calendar)"/>
                             </xsl:message>
                         </xsl:if>
                         <xsl:variable name="v_date-iso">
@@ -2239,6 +2236,37 @@
                         <xsl:element name="date">
                             <xsl:attribute name="change" select="concat('#', $p_id-change)"/>
                             <xsl:attribute name="calendar" select="$v_calendar"/>
+                            <!-- responsibility and certainty -->
+                            <xsl:attribute name="resp" select="'#xslt'"/>
+                            <xsl:attribute name="cert">
+                                <xsl:choose>
+                                <!-- the confidence of calendar selection is generally high if based on an exiplicit information in the input string string -->
+                                    <xsl:when test="$v_format = 'full' and regex-group(7) != ''">
+                                        <xsl:text>high</xsl:text>
+                                    </xsl:when>
+                                    <xsl:when test="$v_format = 'year' and regex-group(12) != ''">
+                                        <xsl:text>high</xsl:text>
+                                    </xsl:when>
+                                <!-- if the date string is full and the calendar was established as Islamic through month names, the confidence is high -->
+                                    <xsl:when test="$v_format = 'full' and $v_calendar = '#cal_islamic'">
+                                        <xsl:text>high</xsl:text>
+                                    </xsl:when>
+                                <!-- if the date string is full and the calendar Ottoman fiscal has been ruled out through a threshold year, the confidence is high -->
+                                <!-- Ottoman fiscal is of medium high confidence as it is based on month names and an assumed threshold year -->
+                                    <xsl:when test="$v_format = 'full' and $v_calendar = '#cal_ottomanfiscal'">
+                                        <xsl:text>medium</xsl:text>
+                                    </xsl:when>
+                                    <xsl:when test="$v_format = 'full' and $v_calendar = ('#cal_julian', '#cal_gregorian')">
+                                        <xsl:text>low</xsl:text>
+                                    </xsl:when>
+                                    <xsl:when test="$v_format = 'year' and regex-group(12) = ''">
+                                        <xsl:text>low</xsl:text>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:text>undefined</xsl:text>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:attribute>
                             <xsl:attribute name="xml:lang" select="'ar'"/>
                             <xsl:if test="$v_calendar != '#cal_gregorian'">
                                 <xsl:attribute name="datingMethod" select="$v_calendar"/>
