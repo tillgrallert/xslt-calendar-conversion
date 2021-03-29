@@ -95,7 +95,9 @@
     <xsl:variable name="v_regex-date-dd-MNn-yyyy" select="'(\d{1,2})\s+((\w+\s){1,2})(\s*سنة)?\s*(\d{3,4})'"/>
     <xsl:variable name="v_regex-date-MNn-dd-yyyy" select="'(\w+)\s+(\d+),\s+(\d{4})'"/>
     <xsl:variable name="v_regex-date-calendars" select="'((هـ|هجرية*)|(م[\W]|ميلادية*|للمسيح|مسيحية|بعد المسيح)|(مالية))'"/>
-    <xsl:variable name="v_regex-date-yyyy-cal" select="concat('سنة\s+(\d{3,4})', '\s+', $v_regex-date-calendars, '*')"/>
+    <!-- one can make either the year indicator or the calendar optional, but not both -->
+    <xsl:variable name="v_regex-date-yyyy-cal" select="concat('(سنة\s+)?(\d{2,4})', '\s+', $v_regex-date-calendars)"/>
+    <xsl:variable name="v_regex-date-yyyy" select="'سنة\s+(\d{3,4})'"/>
     <xsl:variable name="v_regex-date-dd-MNn-yyyy-cal" select="concat($v_regex-date-dd-MNn-yyyy, '\s+', $v_regex-date-calendars, '?')"/>
     
     <xd:doc>
@@ -340,9 +342,10 @@
         <xd:param name="p_output-calendar"/>
     </xd:doc>
     <xsl:function name="oape:date-convert-years-between-calendars">
+        <!-- this will cause an error, if the input year has less than four digits. I should probably add a test -->
         <xsl:param name="p_year"/>
-        <xsl:param name="p_input-calendar"/>
-        <xsl:param name="p_output-calendar"/>
+        <xsl:param name="p_input-calendar" as="xs:string"/>
+        <xsl:param name="p_output-calendar"  as="xs:string"/>
         <xsl:variable name="v_input-date-onset" select="concat($p_year, '-01-01')"/>
         <xsl:variable name="v_output-date-onset" select="oape:date-convert-calendars($v_input-date-onset, $p_input-calendar, $p_output-calendar)"/>
         <xsl:variable name="v_input-date-terminus">
@@ -761,12 +764,12 @@
         <xd:param name="pMode"/>
         <xd:param name="p_input-lang"/>
     </xd:doc>
-    <xsl:template name="f_date-MonthNameNumber">
+    <!--<xsl:template name="f_date-MonthNameNumber">
         <xsl:param name="pDate"/>
         <xsl:param name="pMonth" select="number(tokenize($pDate, '([.,&quot;\-])')[2])"/>
-        <!-- pMode has value 'name' or 'number' and toggles the output format -->
+        <!-\- pMode has value 'name' or 'number' and toggles the output format -\->
         <xsl:param name="pMode" select="'name'"/>
-        <!-- p_input-lang has value 'HAr' 'HIjmes','HIjmesFull', 'HBoa', 'GEn','JIjmes', 'MIjmes', 'GEnFull', 'GDeFull', 'GTrFull', 'MTrFull' -->
+        <!-\- p_input-lang has value 'HAr' 'HIjmes','HIjmesFull', 'HBoa', 'GEn','JIjmes', 'MIjmes', 'GEnFull', 'GDeFull', 'GTrFull', 'MTrFull' -\->
         <xsl:param name="p_input-lang"/>
         <xsl:variable name="vNHIjmes"
             select="'Muḥ,Ṣaf,Rab I,Rab II,Jum I,Jum II,Raj,Shaʿ,Ram,Shaw,Dhu I,Dhu II'"/>
@@ -992,7 +995,7 @@
             </xsl:if>
         </xsl:variable>
         <xsl:value-of select="$vMonth"/>
-    </xsl:template>
+    </xsl:template>-->
     <xd:doc>
         <xd:desc>This function converts between month names and numbers according to various calendars.</xd:desc>
         <xd:param name="p_input-month">Input month name or number.</xd:param>
@@ -1397,7 +1400,7 @@
         </xsl:if>
     </xsl:template>
     
-    <xd:doc>
+    <!--<xd:doc>
         <xd:desc> this template is used to normalise and convert the date strings found in the BOA online catalogue </xd:desc>
         <xd:param name="pDateString"/>
     </xd:doc>
@@ -1437,7 +1440,7 @@
                 </xsl:analyze-string>
             </xsl:when>
             <xsl:otherwise>
-                <!-- Mālī, which they call Rūmī is marked by not being marked -->
+                <!-\- Mālī, which they call Rūmī is marked by not being marked -\->
                 <xsl:analyze-string regex="(\d+)/(.{{2}})/(\d{{4}})" select="$pDateString">
                     <xsl:matching-substring>
                         <xsl:variable name="v_ottoman-fiscal-month">
@@ -1459,7 +1462,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-     <xd:doc>
+-->     <xd:doc>
         <xd:desc>This function converts calendars. Input and output are ISO strings.</xd:desc>
         <xd:param name="p_input"/>
          <xd:param name="p_input-calendar"/>
@@ -1709,9 +1712,9 @@
     </xd:doc>
     <xsl:function name="oape:date-extract-month-name">
         <xsl:param name="p_input" as="xs:string"/>
-        <xsl:variable name="v_input-normalised" select="normalize-space(translate($p_input, $v_string-digits-ar, $v_string-digits-latn))"/>
-            <!-- <xsl:analyze-string regex="\s*(\d{{4}})\-(\d{{1,2}})\-(\d{{1,2}})\s*|\s*(\d+)\s+(.*)\s+(\d{{4}})\s*|\s*(.*)\s+(\d+),\s+(\d{{4}})\s*" select="normalize-space($v_input-normalised)"> -->
-        <xsl:analyze-string regex="{concat($v_regex-date-yyyy-mm-dd, '|', $v_regex-date-dd-MNn-yyyy, '|', $v_regex-date-MNn-dd-yyyy)}" select="normalize-space($v_input-normalised)">
+        <!-- this is no longer needed -->
+        <!--<xsl:variable name="v_input-normalised" select="normalize-space(translate($p_input, $v_string-digits-ar, $v_string-digits-latn))"/>-->
+        <xsl:analyze-string regex="{concat($v_regex-date-yyyy-mm-dd, '|', $v_regex-date-dd-MNn-yyyy, '|', $v_regex-date-MNn-dd-yyyy)}" select="normalize-space($p_input)">
                  <xsl:matching-substring>
                     <xsl:choose>
                         <!-- 1) match yyyy-mm-dd: cannot guess calendar -->
@@ -1738,7 +1741,7 @@
                 </xsl:matching-substring>
                 <xsl:non-matching-substring>
                     <xsl:message>
-                        <xsl:text>The input "</xsl:text><xsl:value-of select="$v_input-normalised"/><xsl:text>" contains no month name.</xsl:text>
+                        <xsl:text>The input "</xsl:text><xsl:value-of select="$p_input"/><xsl:text>" contains no month name.</xsl:text>
                     </xsl:message>
                     <xsl:value-of select="'NA'"/>
                 </xsl:non-matching-substring>
@@ -1846,6 +1849,7 @@
                     <!-- <tei:form xml:lang="tr">Temmuz</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Jumāda al-ulā</tei:form>
                     <tei:form xml:lang="ar">جمادى الاولى</tei:form>
+                    <tei:form xml:lang="ar">جمادي الاولى</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ca</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Jum I</tei:form>
                 </tei:nym>
@@ -1889,6 +1893,7 @@
                     <!-- <tei:form xml:lang="tr">Ocak</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Dhū al-qaʿda</tei:form>
                     <tei:form xml:lang="ar">ذو القعدة</tei:form>
+                    <tei:form xml:lang="ar">ذي القعدة</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Za</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Dhu I</tei:form>
                 </tei:nym>
@@ -1896,6 +1901,7 @@
                     <!-- <tei:form xml:lang="tr">Şubat</tei:form> -->
                     <tei:form xml:lang="ar-Latn-x-ijmes">Dhū al-ḥijja</tei:form>
                     <tei:form xml:lang="ar">ذو الحجة</tei:form>
+                    <tei:form xml:lang="ar">ذي الحجة</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Z</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Dhu II</tei:form>
                 </tei:nym>
@@ -1957,14 +1963,16 @@
                     <tei:form xml:lang="tr">Ekim</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-awwal</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Tish I</tei:form>
-                    <tei:form xml:lang="ar">تسرين الاول</tei:form>
+                    <tei:form xml:lang="ar">تشرين الاول</tei:form>
+                    <tei:form xml:lang="ar">ت ١</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Tş</tei:form>
                 </tei:nym>
                 <tei:nym n="9">
                     <tei:form xml:lang="tr">Kasım</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-thānī</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Tish II</tei:form>
-                    <tei:form xml:lang="ar">تسرين الثاني</tei:form>
+                    <tei:form xml:lang="ar">تشرين الثاني</tei:form>
+                    <tei:form xml:lang="ar">ت ٢</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Tn</tei:form>
                 </tei:nym>
                 <tei:nym n="10">
@@ -1973,6 +1981,7 @@
                     <tei:form xml:lang="ar-Latn-x-sente">Kān I</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Kan I</tei:form>
                     <tei:form xml:lang="ar">كانون الاول</tei:form>
+                    <tei:form xml:lang="ar">ك ١</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ke</tei:form>
                 </tei:nym>
                 <tei:nym n="11">
@@ -1980,7 +1989,7 @@
                     <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-thānī</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Kān II</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Kan II</tei:form>
-                    <tei:form xml:lang="ar">كانون الثاني</tei:form>
+                    <tei:form xml:lang="ar">ك ٢</tei:form>
                     <tei:form xml:lang="ota-Latn-x-boa">Ks</tei:form>
                 </tei:nym>
                 <tei:nym n="12">
@@ -1998,6 +2007,7 @@
                     <tei:form xml:lang="ar-Latn-x-sente">Kān II</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Kan II</tei:form>
                     <tei:form xml:lang="ar">كانون الثاني</tei:form>
+                    <tei:form xml:lang="ar">ك ٢</tei:form>
                     <tei:form xml:lang="ar-EG">يناير</tei:form>
                     <tei:form xml:lang="en">January</tei:form>
                     <tei:form xml:lang="en">Jan</tei:form>
@@ -2083,7 +2093,8 @@
                     <tei:form xml:lang="tr">Ekim</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-awwal</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Tish I</tei:form>
-                    <tei:form xml:lang="ar">تسرين الاول</tei:form>
+                    <tei:form xml:lang="ar">تشرين الاول</tei:form>
+                    <tei:form xml:lang="ar">ت ١</tei:form>
                     <tei:form xml:lang="ar-EG">اكتوبر</tei:form>
                     <tei:form xml:lang="en">October</tei:form>
                     <tei:form xml:lang="en">Oct</tei:form>
@@ -2092,7 +2103,8 @@
                     <tei:form xml:lang="tr">Kasım</tei:form>
                     <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-thānī</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Tish II</tei:form>
-                    <tei:form xml:lang="ar">تسرين الثاني</tei:form>
+                    <tei:form xml:lang="ar">تشرين الثاني</tei:form>
+                    <tei:form xml:lang="ar">ت ٢</tei:form>
                     <tei:form xml:lang="ar-EG">نوفمبر</tei:form>
                     <tei:form xml:lang="ar-EG">نوڤمبر</tei:form>
                     <tei:form xml:lang="en">November</tei:form>
@@ -2104,6 +2116,7 @@
                     <tei:form xml:lang="ar-Latn-x-sente">Kān I</tei:form>
                     <tei:form xml:lang="ar-Latn-x-sente">Kan I</tei:form>
                     <tei:form xml:lang="ar">كانون الاول</tei:form>
+                    <tei:form xml:lang="ar">ك ١</tei:form>
                     <tei:form xml:lang="ar-EG">دسمبر</tei:form>
                     <tei:form xml:lang="ar-EG">ديسمبر</tei:form>
                     <tei:form xml:lang="en">December</tei:form>
@@ -2172,7 +2185,7 @@
         <!-- the regex matches dd MNn yyyy with or without calendars -->
         <xsl:variable name="v_regex-1-count-groups" select="10"/>
         <xsl:variable name="v_regex-2-count-groups" select="6"/>
-        <xsl:analyze-string regex="{concat('(^|\D)', $v_regex-date-dd-MNn-yyyy-cal, '|', '(^|\W)', $v_regex-date-yyyy-cal)}" select="$p_text">
+        <xsl:analyze-string regex="{concat('(^|\D)', $v_regex-date-dd-MNn-yyyy-cal, '|', '(^|\W)', $v_regex-date-yyyy-cal,  '|', '(^|\W)', $v_regex-date-yyyy)}" select="$p_text">
             <xsl:matching-substring>
                 <xsl:variable name="v_format">
                     <xsl:choose>
@@ -2180,8 +2193,12 @@
                         <xsl:when test="matches(., concat('(^|\D)', $v_regex-date-dd-MNn-yyyy-cal))">
                             <xsl:text>full</xsl:text>
                         </xsl:when>
-                        <!-- 5 regex groups -->
-                        <xsl:when test="matches(., concat('(^|\D)', $v_regex-date-yyyy-cal))">
+                        <!-- 6 regex groups -->
+                        <xsl:when test="matches(., concat('(^|\W)', $v_regex-date-yyyy-cal))">
+                            <xsl:text>year-cal</xsl:text>
+                        </xsl:when>
+                        <!-- 1 regex group -->
+                        <xsl:when test="matches(., concat('(^|\W)', $v_regex-date-yyyy))">
                             <xsl:text>year</xsl:text>
                         </xsl:when>
                     </xsl:choose>
@@ -2190,8 +2207,11 @@
                     <xsl:if test="$v_format = 'full'">
                         <xsl:value-of select="regex-group(1)"/>
                     </xsl:if>
-                    <xsl:if test="$v_format = 'year'">
+                    <xsl:if test="$v_format = 'year-cal'">
                         <xsl:value-of select="regex-group($v_regex-1-count-groups + 1)"/>
+                    </xsl:if>
+                    <xsl:if test="$v_format = 'year'">
+                        <xsl:value-of select="regex-group($v_regex-1-count-groups + $v_regex-2-count-groups + 1)"/>
                     </xsl:if>
                 </xsl:variable>
                 <xsl:variable name="v_day">
@@ -2208,14 +2228,18 @@
                 </xsl:variable>
                 <xsl:variable as="xs:double" name="v_year">
                     <xsl:if test="$v_format = 'full'">
-                        <xsl:value-of select="format-number(number(translate(regex-group(6), $v_string-digits-ar, $v_string-digits-latn)), '0000')"/>
+                        <xsl:value-of select="number(translate(regex-group(6), $v_string-digits-ar, $v_string-digits-latn))"/>
+                    </xsl:if>
+                    <xsl:if test="$v_format = 'year-cal'">
+                        <xsl:value-of select="number(translate(regex-group($v_regex-1-count-groups + 3), $v_string-digits-ar, $v_string-digits-latn))"/>
                     </xsl:if>
                     <xsl:if test="$v_format = 'year'">
-                        <xsl:value-of select="format-number(number(translate(regex-group($v_regex-1-count-groups + 2), $v_string-digits-ar, $v_string-digits-latn)), '0000')"/>
+                        <xsl:value-of select="number(translate(regex-group($v_regex-1-count-groups + $v_regex-2-count-groups + 2), $v_string-digits-ar, $v_string-digits-latn))"/>
                     </xsl:if>
                 </xsl:variable>
                 <xsl:variable name="v_calendar">
-                    <xsl:if test="$v_format = 'full'">
+                    <xsl:choose>
+                    <xsl:when test="$v_format = 'full'">
                         <xsl:choose>
                             <xsl:when test="regex-group(7) = '' and $v_month-name != ''">
                                 <!-- there is a weird error here: this function can return a calendar, for which the function oape:date-convert-months retruns a fatal error -->
@@ -2236,16 +2260,16 @@
                                 <xsl:text>NA</xsl:text>
                             </xsl:otherwise>
                         </xsl:choose>
-                    </xsl:if>
-                    <xsl:if test="$v_format = 'year'">
+                    </xsl:when>
+                    <xsl:when test="$v_format = 'year-cal'">
                         <xsl:choose>
-                            <xsl:when test="regex-group($v_regex-1-count-groups + 4) != ''">
+                            <xsl:when test="regex-group($v_regex-1-count-groups + 5) != ''">
                                 <xsl:text>#cal_islamic</xsl:text>
                             </xsl:when>
-                            <xsl:when test="regex-group($v_regex-1-count-groups + 5) != ''">
+                            <xsl:when test="regex-group($v_regex-1-count-groups + 6) != ''">
                                 <xsl:text>#cal_gregorian</xsl:text>
                             </xsl:when>
-                            <xsl:when test="regex-group($v_regex-1-count-groups + 6) != ''">
+                            <xsl:when test="regex-group($v_regex-1-count-groups + 7) != ''">
                                 <xsl:text>#cal_ottomanfiscal</xsl:text>
                             </xsl:when>
                             <xsl:when test="$v_year lt $p_islamic-last-year">
@@ -2258,21 +2282,17 @@
                                 <xsl:text>NA</xsl:text>
                             </xsl:otherwise>
                         </xsl:choose>
-                    </xsl:if>
+                    </xsl:when>
+                        <xsl:when test="$v_format = 'year'">
+                            <!-- establish a preferred calendar -->
+                                <xsl:text>#cal_gregorian</xsl:text>
+                        </xsl:when>
+
+                            <xsl:otherwise>
+                                <xsl:text>NA</xsl:text>
+                            </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:variable>
-                <!--<xsl:message>
-                    <xsl:value-of select="."/>
-                    <xsl:text> = format: </xsl:text>
-                    <xsl:value-of select="$v_format"/>
-                    <xsl:text>, day: </xsl:text>
-                    <xsl:value-of select="$v_day"/>
-                    <xsl:text>, month: </xsl:text>
-                    <xsl:value-of select="$v_month-name"/>
-                    <xsl:text>, year: </xsl:text>
-                    <xsl:value-of select="$v_year"/>
-                    <xsl:text>, calendar: </xsl:text>
-                    <xsl:value-of select="$v_calendar"/>
-                </xsl:message>-->
                 <xsl:choose>
                     <!-- if there is an calendar -->
                     <xsl:when test="$v_calendar != 'NA'">
@@ -2290,15 +2310,15 @@
                                     select="concat(format-number($v_year, '0000'), '-', format-number(oape:date-convert-months($v_month-name, 'number', 'ar', $v_calendar), '00'), '-', format-number($v_day, '00'))"
                                 />
                             </xsl:if>
-                            <xsl:if test="$v_format = 'year'">
+                            <xsl:if test="$v_format = ('year-cal', 'year')">
                                 <xsl:value-of select="format-number($v_year, '0000')"/>
                             </xsl:if>
                         </xsl:variable>
                         <!-- construct TEI node -->
                         <xsl:value-of select="$v_prefix"/>
                         <xsl:element name="date">
-                            <xsl:attribute name="change" select="concat('#', $p_id-change)"/>
                             <xsl:attribute name="calendar" select="$v_calendar"/>
+                            <xsl:attribute name="change" select="concat('#', $p_id-change)"/>
                             <!-- responsibility and certainty -->
                             <xsl:attribute name="resp" select="'#xslt'"/>
                             <xsl:attribute name="cert">
@@ -2307,7 +2327,7 @@
                                     <xsl:when test="$v_format = 'full' and regex-group(7) != ''">
                                         <xsl:text>high</xsl:text>
                                     </xsl:when>
-                                    <xsl:when test="$v_format = 'year' and regex-group($v_regex-1-count-groups + 3) != ''">
+                                    <xsl:when test="$v_format = 'year-cal' and regex-group($v_regex-1-count-groups + 3) != ''">
                                         <xsl:text>high</xsl:text>
                                     </xsl:when>
                                 <!-- if the date string is full and the calendar was established as Islamic through month names, the confidence is high -->
@@ -2322,7 +2342,10 @@
                                     <xsl:when test="$v_format = 'full' and $v_calendar = ('#cal_julian', '#cal_gregorian')">
                                         <xsl:text>low</xsl:text>
                                     </xsl:when>
-                                    <xsl:when test="$v_format = 'year' and regex-group($v_regex-1-count-groups + 3) = ''">
+                                    <!--<xsl:when test="$v_format = 'year-cal' and regex-group($v_regex-1-count-groups + 3) = ''">
+                                        <xsl:text>low</xsl:text>
+                                    </xsl:when>-->
+                                    <xsl:when test="$v_format = 'year'">
                                         <xsl:text>low</xsl:text>
                                     </xsl:when>
                                     <xsl:otherwise>
@@ -2339,8 +2362,8 @@
                                 <xsl:when test="$v_format = 'full'">
                                     <xsl:attribute name="when" select="oape:date-convert-calendars($v_date-iso, $v_calendar, '#cal_gregorian')"/>
                                 </xsl:when>
-                                <xsl:when test="$v_format = 'year'">
-                                    <xsl:variable name="v_year-range" select="oape:date-convert-years-between-calendars($v_year, $v_calendar, '#cal_gregorian')"/>
+                                <xsl:when test="$v_format = 'year-cal'">
+                                    <xsl:variable name="v_year-range" select="oape:date-convert-years-between-calendars($v_date-iso, $v_calendar, '#cal_gregorian')"/>
                                     <xsl:choose>
                                         <xsl:when test="matches($v_year-range, '\d-\d')">
                                             <xsl:attribute name="from" select="substring-before($v_year-range, '-')"/>
