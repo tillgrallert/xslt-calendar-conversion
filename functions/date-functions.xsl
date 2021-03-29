@@ -2133,11 +2133,13 @@
         <xsl:param as="xs:string" name="p_text"/>
         <xsl:param as="xs:string" name="p_id-change"/>
         <!-- the regex matches dd MNn yyyy with or without calendars -->
+        <xsl:variable name="v_regex-1-count-groups" select="10"/>
+        <xsl:variable name="v_regex-2-count-groups" select="6"/>
         <xsl:analyze-string regex="{concat('(^|\D)', $v_regex-date-dd-MNn-yyyy-cal, '|', '(^|\W)', $v_regex-date-yyyy-cal)}" select="$p_text">
             <xsl:matching-substring>
                 <xsl:variable name="v_format">
                     <xsl:choose>
-                        <!-- 9 regex groups -->
+                        <!-- 10 regex groups -->
                         <xsl:when test="matches(., concat('(^|\D)', $v_regex-date-dd-MNn-yyyy-cal))">
                             <xsl:text>full</xsl:text>
                         </xsl:when>
@@ -2152,7 +2154,7 @@
                         <xsl:value-of select="regex-group(1)"/>
                     </xsl:if>
                     <xsl:if test="$v_format = 'year'">
-                        <xsl:value-of select="regex-group(10)"/>
+                        <xsl:value-of select="regex-group($v_regex-1-count-groups + 1)"/>
                     </xsl:if>
                 </xsl:variable>
                 <xsl:variable name="v_day">
@@ -2172,7 +2174,7 @@
                         <xsl:value-of select="format-number(number(translate(regex-group(6), $v_string-digits-ar, $v_string-digits-latn)), '0000')"/>
                     </xsl:if>
                     <xsl:if test="$v_format = 'year'">
-                        <xsl:value-of select="format-number(number(translate(regex-group(11), $v_string-digits-ar, $v_string-digits-latn)), '0000')"/>
+                        <xsl:value-of select="format-number(number(translate(regex-group($v_regex-1-count-groups + 2), $v_string-digits-ar, $v_string-digits-latn)), '0000')"/>
                     </xsl:if>
                 </xsl:variable>
                 <xsl:variable name="v_calendar">
@@ -2197,10 +2199,10 @@
                     </xsl:if>
                     <xsl:if test="$v_format = 'year'">
                         <xsl:choose>
-                            <xsl:when test="regex-group(13) != ''">
+                            <xsl:when test="regex-group($v_regex-1-count-groups + 4) != ''">
                                 <xsl:text>#cal_islamic</xsl:text>
                             </xsl:when>
-                            <xsl:when test="regex-group(14) != ''">
+                            <xsl:when test="regex-group($v_regex-1-count-groups + 5) != ''">
                                 <xsl:text>#cal_gregorian</xsl:text>
                             </xsl:when>
                             <xsl:when test="$v_year lt $p_islamic-last-year">
@@ -2262,7 +2264,7 @@
                                     <xsl:when test="$v_format = 'full' and regex-group(7) != ''">
                                         <xsl:text>high</xsl:text>
                                     </xsl:when>
-                                    <xsl:when test="$v_format = 'year' and regex-group(12) != ''">
+                                    <xsl:when test="$v_format = 'year' and regex-group($v_regex-1-count-groups + 3) != ''">
                                         <xsl:text>high</xsl:text>
                                     </xsl:when>
                                 <!-- if the date string is full and the calendar was established as Islamic through month names, the confidence is high -->
@@ -2277,7 +2279,7 @@
                                     <xsl:when test="$v_format = 'full' and $v_calendar = ('#cal_julian', '#cal_gregorian')">
                                         <xsl:text>low</xsl:text>
                                     </xsl:when>
-                                    <xsl:when test="$v_format = 'year' and regex-group(12) = ''">
+                                    <xsl:when test="$v_format = 'year' and regex-group($v_regex-1-count-groups + 3) = ''">
                                         <xsl:text>low</xsl:text>
                                     </xsl:when>
                                     <xsl:otherwise>
