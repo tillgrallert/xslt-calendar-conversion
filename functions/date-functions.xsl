@@ -332,6 +332,43 @@
         </xsl:variable>
         <xsl:value-of select="$v_output"/>
     </xsl:function>
+    
+    <xd:doc>
+        <xd:desc>This function converts Years from one calendar to year ranges in another</xd:desc>
+        <xd:param name="p_year"/>
+         <xd:param name="p_input-calendar"/>
+        <xd:param name="p_output-calendar"/>
+    </xd:doc>
+    <xsl:function name="oape:date-convert-years-between-calendars">
+        <xsl:param name="p_year"/>
+        <xsl:param name="p_input-calendar"/>
+        <xsl:param name="p_output-calendar"/>
+        <xsl:variable name="v_input-date-onset" select="concat($p_year, '-01-01')"/>
+        <xsl:variable name="v_output-date-onset" select="oape:date-convert-calendars($v_input-date-onset, $p_input-calendar, $p_output-calendar)"/>
+        <xsl:variable name="v_input-date-terminus">
+            <xsl:choose>
+                <xsl:when test="$p_input-calendar = ('#cal_islamic', '#cal_ottomanfiscal')">
+                    <xsl:value-of select="concat($p_year, '-12-29')"/>
+                </xsl:when>
+                <xsl:when test="$p_input-calendar = ('#cal_julian', '#cal_gregorian')">
+                    <xsl:value-of select="concat($p_year, '-12-31')"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="concat($p_year, '-12-31')"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="v_output-date-terminus" select="oape:date-convert-calendars($v_input-date-terminus, $p_input-calendar, $p_output-calendar)"/>
+        <xsl:variable name="v_output">
+        <xsl:value-of select="substring($v_output-date-onset, 1, 4)"/>
+        <!-- test if the output year spans more than one input year (this is not the case for 1295 aH, 1329 aH if converted to Gregorian)  -->
+        <xsl:if test="substring($v_output-date-onset, 1, 4) != substring($v_output-date-terminus, 1, 4)">
+            <xsl:text>-</xsl:text>
+            <xsl:value-of select="substring($v_output-date-terminus, 1, 4)"/>
+        </xsl:if>
+        </xsl:variable>
+        <xsl:value-of select="$v_output"/>
+    </xsl:function>
     <!-- this template converts Gregorian to Mali dates (i.e. Julian, commencing on 1 Mar, minus 584 years from 13 March 1840 onwards)  -->
     
    <!-- <xd:doc>
