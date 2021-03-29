@@ -340,9 +340,10 @@
         <xd:param name="p_output-calendar"/>
     </xd:doc>
     <xsl:function name="oape:date-convert-years-between-calendars">
+        <!-- this will cause an error, if the input year has less than four digits. I should probably add a test -->
         <xsl:param name="p_year"/>
-        <xsl:param name="p_input-calendar"/>
-        <xsl:param name="p_output-calendar"/>
+        <xsl:param name="p_input-calendar" as="xs:string"/>
+        <xsl:param name="p_output-calendar"  as="xs:string"/>
         <xsl:variable name="v_input-date-onset" select="concat($p_year, '-01-01')"/>
         <xsl:variable name="v_output-date-onset" select="oape:date-convert-calendars($v_input-date-onset, $p_input-calendar, $p_output-calendar)"/>
         <xsl:variable name="v_input-date-terminus">
@@ -2208,10 +2209,10 @@
                 </xsl:variable>
                 <xsl:variable as="xs:double" name="v_year">
                     <xsl:if test="$v_format = 'full'">
-                        <xsl:value-of select="format-number(number(translate(regex-group(6), $v_string-digits-ar, $v_string-digits-latn)), '0000')"/>
+                        <xsl:value-of select="number(translate(regex-group(6), $v_string-digits-ar, $v_string-digits-latn))"/>
                     </xsl:if>
                     <xsl:if test="$v_format = 'year'">
-                        <xsl:value-of select="format-number(number(translate(regex-group($v_regex-1-count-groups + 2), $v_string-digits-ar, $v_string-digits-latn)), '0000')"/>
+                        <xsl:value-of select="number(translate(regex-group($v_regex-1-count-groups + 2), $v_string-digits-ar, $v_string-digits-latn))"/>
                     </xsl:if>
                 </xsl:variable>
                 <xsl:variable name="v_calendar">
@@ -2260,19 +2261,6 @@
                         </xsl:choose>
                     </xsl:if>
                 </xsl:variable>
-                <!--<xsl:message>
-                    <xsl:value-of select="."/>
-                    <xsl:text> = format: </xsl:text>
-                    <xsl:value-of select="$v_format"/>
-                    <xsl:text>, day: </xsl:text>
-                    <xsl:value-of select="$v_day"/>
-                    <xsl:text>, month: </xsl:text>
-                    <xsl:value-of select="$v_month-name"/>
-                    <xsl:text>, year: </xsl:text>
-                    <xsl:value-of select="$v_year"/>
-                    <xsl:text>, calendar: </xsl:text>
-                    <xsl:value-of select="$v_calendar"/>
-                </xsl:message>-->
                 <xsl:choose>
                     <!-- if there is an calendar -->
                     <xsl:when test="$v_calendar != 'NA'">
@@ -2297,8 +2285,8 @@
                         <!-- construct TEI node -->
                         <xsl:value-of select="$v_prefix"/>
                         <xsl:element name="date">
-                            <xsl:attribute name="change" select="concat('#', $p_id-change)"/>
                             <xsl:attribute name="calendar" select="$v_calendar"/>
+                            <xsl:attribute name="change" select="concat('#', $p_id-change)"/>
                             <!-- responsibility and certainty -->
                             <xsl:attribute name="resp" select="'#xslt'"/>
                             <xsl:attribute name="cert">
@@ -2340,7 +2328,7 @@
                                     <xsl:attribute name="when" select="oape:date-convert-calendars($v_date-iso, $v_calendar, '#cal_gregorian')"/>
                                 </xsl:when>
                                 <xsl:when test="$v_format = 'year'">
-                                    <xsl:variable name="v_year-range" select="oape:date-convert-years-between-calendars($v_year, $v_calendar, '#cal_gregorian')"/>
+                                    <xsl:variable name="v_year-range" select="oape:date-convert-years-between-calendars($v_date-iso, $v_calendar, '#cal_gregorian')"/>
                                     <xsl:choose>
                                         <xsl:when test="matches($v_year-range, '\d-\d')">
                                             <xsl:attribute name="from" select="substring-before($v_year-range, '-')"/>
