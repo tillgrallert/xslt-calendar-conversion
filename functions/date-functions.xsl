@@ -91,13 +91,20 @@
     <xsl:variable name="v_string-ar-normalised" select="'اايو'"/>
     
     <!-- regex variables -->
+    <!-- regex-groups: 3 -->
     <xsl:variable name="v_regex-date-yyyy-mm-dd" select="'(\d{4})\-(\d{1,2})\-(\d{1,2})'"/>
+    <!-- regex-groups: 5 -->
     <xsl:variable name="v_regex-date-dd-MNn-yyyy" select="'(\d{1,2})\s+((\w+\s){1,2})(\s*سنة)?\s*(\d{3,4})'"/>
+    <!-- regex-groups: 3 -->
     <xsl:variable name="v_regex-date-MNn-dd-yyyy" select="'(\w+)\s+(\d+),\s+(\d{4})'"/>
+    <!-- regex-groups: 4 -->
     <xsl:variable name="v_regex-date-calendars" select="'((هـ|هجرية*)|(م[\W]|ميلادية*|للمسيح|مسيحية|بعد المسيح)|(مالية))'"/>
     <!-- one can make either the year indicator or the calendar optional, but not both -->
+    <!-- regex-groups: 2 + 4 -->
     <xsl:variable name="v_regex-date-yyyy-cal" select="concat('(سنة\s+)?(\d{2,4})', '\s+', $v_regex-date-calendars)"/>
+    <!-- regex-groups: 1 -->
     <xsl:variable name="v_regex-date-yyyy" select="'سنة\s+(\d{3,4})'"/>
+    <!-- regex-groups: 5 + 4 -->
     <xsl:variable name="v_regex-date-dd-MNn-yyyy-cal" select="concat($v_regex-date-dd-MNn-yyyy, '\s+', $v_regex-date-calendars, '?')"/>
     
     <xd:doc>
@@ -2183,17 +2190,17 @@
         <xsl:param as="xs:string" name="p_text"/>
         <xsl:param as="xs:string" name="p_id-change"/>
         <!-- the regex matches dd MNn yyyy with or without calendars -->
-        <xsl:variable name="v_regex-1-count-groups" select="10"/>
-        <xsl:variable name="v_regex-2-count-groups" select="6"/>
         <xsl:analyze-string regex="{concat('(^|\D)', $v_regex-date-dd-MNn-yyyy-cal, '|', '(^|\W)', $v_regex-date-yyyy-cal,  '|', '(^|\W)', $v_regex-date-yyyy)}" select="$p_text">
             <xsl:matching-substring>
+                <xsl:variable name="v_regex-1-count-groups" select="10"/>
+                <xsl:variable name="v_regex-2-count-groups" select="7"/>
                 <xsl:variable name="v_format">
                     <xsl:choose>
                         <!-- 10 regex groups -->
                         <xsl:when test="matches(., concat('(^|\D)', $v_regex-date-dd-MNn-yyyy-cal))">
                             <xsl:text>full</xsl:text>
                         </xsl:when>
-                        <!-- 6 regex groups -->
+                        <!-- 7 regex groups -->
                         <xsl:when test="matches(., concat('(^|\W)', $v_regex-date-yyyy-cal))">
                             <xsl:text>year-cal</xsl:text>
                         </xsl:when>
@@ -2284,10 +2291,18 @@
                         </xsl:choose>
                     </xsl:when>
                         <xsl:when test="$v_format = 'year'">
-                            <!-- establish a preferred calendar -->
+                           <xsl:choose>
+                               <xsl:when test="$v_year lt $p_islamic-last-year">
+                                <xsl:text>#cal_islamic</xsl:text>
+                            </xsl:when>
+                            <xsl:when test="$v_year &gt;= $p_islamic-last-year">
                                 <xsl:text>#cal_gregorian</xsl:text>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:text>NA</xsl:text>
+                            </xsl:otherwise>
+                           </xsl:choose>
                         </xsl:when>
-
                             <xsl:otherwise>
                                 <xsl:text>NA</xsl:text>
                             </xsl:otherwise>
@@ -2362,7 +2377,7 @@
                                 <xsl:when test="$v_format = 'full'">
                                     <xsl:attribute name="when" select="oape:date-convert-calendars($v_date-iso, $v_calendar, '#cal_gregorian')"/>
                                 </xsl:when>
-                                <xsl:when test="$v_format = 'year-cal'">
+                                <xsl:when test="$v_format = ('year-cal', 'year')">
                                     <xsl:variable name="v_year-range" select="oape:date-convert-years-between-calendars($v_date-iso, $v_calendar, '#cal_gregorian')"/>
                                     <xsl:choose>
                                         <xsl:when test="matches($v_year-range, '\d-\d')">
