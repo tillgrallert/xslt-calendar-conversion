@@ -762,12 +762,12 @@
         <xd:param name="pMode"/>
         <xd:param name="p_input-lang"/>
     </xd:doc>
-    <xsl:template name="f_date-MonthNameNumber">
+    <!--<xsl:template name="f_date-MonthNameNumber">
         <xsl:param name="pDate"/>
         <xsl:param name="pMonth" select="number(tokenize($pDate, '([.,&quot;\-])')[2])"/>
-        <!-- pMode has value 'name' or 'number' and toggles the output format -->
+        <!-\- pMode has value 'name' or 'number' and toggles the output format -\->
         <xsl:param name="pMode" select="'name'"/>
-        <!-- p_input-lang has value 'HAr' 'HIjmes','HIjmesFull', 'HBoa', 'GEn','JIjmes', 'MIjmes', 'GEnFull', 'GDeFull', 'GTrFull', 'MTrFull' -->
+        <!-\- p_input-lang has value 'HAr' 'HIjmes','HIjmesFull', 'HBoa', 'GEn','JIjmes', 'MIjmes', 'GEnFull', 'GDeFull', 'GTrFull', 'MTrFull' -\->
         <xsl:param name="p_input-lang"/>
         <xsl:variable name="vNHIjmes"
             select="'Muḥ,Ṣaf,Rab I,Rab II,Jum I,Jum II,Raj,Shaʿ,Ram,Shaw,Dhu I,Dhu II'"/>
@@ -993,7 +993,7 @@
             </xsl:if>
         </xsl:variable>
         <xsl:value-of select="$vMonth"/>
-    </xsl:template>
+    </xsl:template>-->
     <xd:doc>
         <xd:desc>This function converts between month names and numbers according to various calendars.</xd:desc>
         <xd:param name="p_input-month">Input month name or number.</xd:param>
@@ -1398,7 +1398,7 @@
         </xsl:if>
     </xsl:template>
     
-    <xd:doc>
+    <!--<xd:doc>
         <xd:desc> this template is used to normalise and convert the date strings found in the BOA online catalogue </xd:desc>
         <xd:param name="pDateString"/>
     </xd:doc>
@@ -1438,7 +1438,7 @@
                 </xsl:analyze-string>
             </xsl:when>
             <xsl:otherwise>
-                <!-- Mālī, which they call Rūmī is marked by not being marked -->
+                <!-\- Mālī, which they call Rūmī is marked by not being marked -\->
                 <xsl:analyze-string regex="(\d+)/(.{{2}})/(\d{{4}})" select="$pDateString">
                     <xsl:matching-substring>
                         <xsl:variable name="v_ottoman-fiscal-month">
@@ -1460,7 +1460,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-     <xd:doc>
+-->     <xd:doc>
         <xd:desc>This function converts calendars. Input and output are ISO strings.</xd:desc>
         <xd:param name="p_input"/>
          <xd:param name="p_input-calendar"/>
