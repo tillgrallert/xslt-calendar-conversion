@@ -1921,6 +1921,7 @@
                 <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-awwal</tei:form>
                 <tei:form xml:lang="ar-Latn-x-sente">Tish I</tei:form>
                 <tei:form xml:lang="ar">تشرين الاول</tei:form>
+                <tei:form xml:lang="ar">تشرين ١</tei:form>
                 <tei:form xml:lang="ar">ت ١</tei:form>
                 <tei:form xml:lang="ota-Latn-x-boa">Tş</tei:form>
             </tei:nym>
@@ -1929,6 +1930,7 @@
                 <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-thānī</tei:form>
                 <tei:form xml:lang="ar-Latn-x-sente">Tish II</tei:form>
                 <tei:form xml:lang="ar">تشرين الثاني</tei:form>
+                <tei:form xml:lang="ar">تشرين ٢</tei:form>
                 <tei:form xml:lang="ar">ت ٢</tei:form>
                 <tei:form xml:lang="ota-Latn-x-boa">Tn</tei:form>
             </tei:nym>
@@ -1938,6 +1940,7 @@
                 <tei:form xml:lang="ar-Latn-x-sente">Kān I</tei:form>
                 <tei:form xml:lang="ar-Latn-x-sente">Kan I</tei:form>
                 <tei:form xml:lang="ar">كانون الاول</tei:form>
+                <tei:form xml:lang="ar">كانون ١</tei:form>
                 <tei:form xml:lang="ar">ك ١</tei:form>
                 <tei:form xml:lang="ota-Latn-x-boa">Ke</tei:form>
             </tei:nym>
@@ -1946,6 +1949,8 @@
                 <tei:form xml:lang="ar-Latn-x-ijmes">Kānūn al-thānī</tei:form>
                 <tei:form xml:lang="ar-Latn-x-sente">Kān II</tei:form>
                 <tei:form xml:lang="ar-Latn-x-sente">Kan II</tei:form>
+                <tei:form xml:lang="ar">كانون الثاني</tei:form>
+                <tei:form xml:lang="ar">كانون ٢</tei:form>
                 <tei:form xml:lang="ar">ك ٢</tei:form>
                 <tei:form xml:lang="ota-Latn-x-boa">Ks</tei:form>
             </tei:nym>
@@ -1964,6 +1969,7 @@
                 <tei:form xml:lang="ar-Latn-x-sente">Kān II</tei:form>
                 <tei:form xml:lang="ar-Latn-x-sente">Kan II</tei:form>
                 <tei:form xml:lang="ar">كانون الثاني</tei:form>
+                <tei:form xml:lang="ar">كانون ٢</tei:form>
                 <tei:form xml:lang="ar">ك ٢</tei:form>
                 <tei:form xml:lang="ar-EG">يناير</tei:form>
                 <tei:form xml:lang="en">January</tei:form>
@@ -2051,6 +2057,7 @@
                 <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-awwal</tei:form>
                 <tei:form xml:lang="ar-Latn-x-sente">Tish I</tei:form>
                 <tei:form xml:lang="ar">تشرين الاول</tei:form>
+                <tei:form xml:lang="ar">تشرين ١</tei:form>
                 <tei:form xml:lang="ar">ت ١</tei:form>
                 <tei:form xml:lang="ar-EG">اكتوبر</tei:form>
                 <tei:form xml:lang="en">October</tei:form>
@@ -2061,6 +2068,7 @@
                 <tei:form xml:lang="ar-Latn-x-ijmes">Tishrīn al-thānī</tei:form>
                 <tei:form xml:lang="ar-Latn-x-sente">Tish II</tei:form>
                 <tei:form xml:lang="ar">تشرين الثاني</tei:form>
+                <tei:form xml:lang="ar">تشرين ٢</tei:form>
                 <tei:form xml:lang="ar">ت ٢</tei:form>
                 <tei:form xml:lang="ar-EG">نوفمبر</tei:form>
                 <tei:form xml:lang="ar-EG">نوڤمبر</tei:form>
@@ -2073,6 +2081,7 @@
                 <tei:form xml:lang="ar-Latn-x-sente">Kān I</tei:form>
                 <tei:form xml:lang="ar-Latn-x-sente">Kan I</tei:form>
                 <tei:form xml:lang="ar">كانون الاول</tei:form>
+                <tei:form xml:lang="ar">كانون ١</tei:form>
                 <tei:form xml:lang="ar">ك ١</tei:form>
                 <tei:form xml:lang="ar-EG">دسمبر</tei:form>
                 <tei:form xml:lang="ar-EG">ديسمبر</tei:form>
