@@ -2248,10 +2248,34 @@
                     <xsl:choose>
                     <xsl:when test="$v_format = 'full'">
                         <xsl:choose>
-                            <xsl:when test="regex-group(7) = '' and $v_month-name != ''">
-                                <!-- there is a weird error here: this function can return a calendar, for which the function oape:date-convert-months retruns a fatal error -->
+                             <!-- there is a weird error here: this function can return a calendar, for which the function oape:date-convert-months retruns a fatal error -->
                                 <!-- this was a wrong assumption. the error returns when the calendar is explicitly stated -->
-                                <!--<xsl:value-of select="oape:date-establish-calendar($v_month-name, 'month')"/>-->
+                            <xsl:when test="regex-group(7) != '' and $v_month-name != ''">
+                                <!-- test if the calendars match -->
+                                <xsl:variable name="v_calendar-month"  select="oape:date-establish-calendar(concat($v_day, ' ', $v_month-name, ' ', $v_year), 'date')"/>
+                                <xsl:variable name="v_calendar-explicit">
+                                    <xsl:choose>
+                                        <xsl:when test="regex-group(8) != ''">
+                                <xsl:text>#cal_islamic</xsl:text>
+                            </xsl:when>
+                            <xsl:when test="regex-group(9) != ''">
+                                <xsl:text>#cal_gregorian</xsl:text>
+                            </xsl:when>
+                            <xsl:when test="regex-group(10) != ''">
+                                <xsl:text>#cal_ottomanfiscal</xsl:text>
+                            </xsl:when>
+                                    </xsl:choose>
+                                </xsl:variable>
+                                <xsl:choose>
+                                    <xsl:when test="$v_calendar-explicit = $v_calendar-month">
+                                        <xsl:value-of select="$v_calendar-explicit"/>
+                                    </xsl:when>
+                                    <xsl:otherwise>
+                                        <xsl:text>NA</xsl:text>
+                                    </xsl:otherwise>
+                                </xsl:choose>
+                            </xsl:when>
+                            <xsl:when test="regex-group(7) = '' and $v_month-name != ''">
                                 <xsl:value-of select="oape:date-establish-calendar(concat($v_day, ' ', $v_month-name, ' ', $v_year), 'date')"/>
                             </xsl:when>
                             <xsl:when test="regex-group(8) != ''">
