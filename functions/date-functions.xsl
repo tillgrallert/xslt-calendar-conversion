@@ -94,7 +94,7 @@
     <xsl:variable name="v_regex-date-yyyy-mm-dd" select="'(\d{4})\-(\d{1,2})\-(\d{1,2})'"/>
     <xsl:variable name="v_regex-date-dd-MNn-yyyy" select="'(\d{1,2})\s+((\w+\s){1,2}?)(\s*سنة)?\s*(\d{3,4})'"/>
     <xsl:variable name="v_regex-date-MNn-dd-yyyy" select="'(\w+)\s+(\d+),\s+(\d{4})'"/>
-    <xsl:variable name="v_regex-date-calendars" select="'((هـ|هجرية*)|(م[\W]|ميلادية*|للمسيح|مسيحية|بعد المسيح))'"/>
+    <xsl:variable name="v_regex-date-calendars" select="'((هـ|هجرية*)|(م[\W]|ميلادية*|للمسيح|مسيحية|بعد المسيح)|(مالية))'"/>
     <xsl:variable name="v_regex-date-yyyy-cal" select="concat('سنة\s+(\d{3,4})', '\s+', $v_regex-date-calendars, '*')"/>
     <xsl:variable name="v_regex-date-dd-MNn-yyyy-cal" select="concat($v_regex-date-dd-MNn-yyyy, '\s+', $v_regex-date-calendars, '*')"/>
     
@@ -2229,6 +2229,9 @@
                             <xsl:when test="regex-group(9) != ''">
                                 <xsl:text>#cal_gregorian</xsl:text>
                             </xsl:when>
+                            <xsl:when test="regex-group(10) != ''">
+                                <xsl:text>#cal_ottomanfiscal</xsl:text>
+                            </xsl:when>
                             <xsl:otherwise>
                                 <xsl:text>NA</xsl:text>
                             </xsl:otherwise>
@@ -2241,6 +2244,9 @@
                             </xsl:when>
                             <xsl:when test="regex-group($v_regex-1-count-groups + 5) != ''">
                                 <xsl:text>#cal_gregorian</xsl:text>
+                            </xsl:when>
+                            <xsl:when test="regex-group($v_regex-1-count-groups + 6) != ''">
+                                <xsl:text>#cal_ottomanfiscal</xsl:text>
                             </xsl:when>
                             <xsl:when test="$v_year lt $p_islamic-last-year">
                                 <xsl:text>#cal_islamic</xsl:text>
@@ -2328,11 +2334,13 @@
                             <xsl:if test="$v_calendar != '#cal_gregorian'">
                                 <xsl:attribute name="datingMethod" select="$v_calendar"/>
                                 <xsl:attribute name="when-custom" select="$v_date-iso"/>
-                                <xsl:if test="$v_format = 'full'">
+                                <xsl:choose>
+                                    
+                                <xsl:when test="$v_format = 'full'">
                                     <xsl:attribute name="when" select="oape:date-convert-calendars($v_date-iso, $v_calendar, '#cal_gregorian')"/>
-                                </xsl:if>
-                                <xsl:if test="$v_format = 'year' and $v_calendar = '#cal_islamic'">
-                                    <xsl:variable name="v_year-range" select="oape:date-convert-islamic-year-to-gregorian($v_date-iso)"/>
+                                </xsl:when>
+                                <xsl:when test="$v_format = 'year'">
+                                    <xsl:variable name="v_year-range" select="oape:date-convert-years-between-calendars($v_year, $v_calendar, '#cal_gregorian')"/>
                                     <xsl:choose>
                                         <xsl:when test="matches($v_year-range, '\d-\d')">
                                             <xsl:attribute name="from" select="substring-before($v_year-range, '-')"/>
@@ -2342,7 +2350,8 @@
                                             <xsl:attribute name="when" select="$v_year-range"/>
                                         </xsl:otherwise>
                                     </xsl:choose>
-                                </xsl:if>
+                                </xsl:when>
+                                </xsl:choose>
                             </xsl:if>
                             <xsl:if test="$v_calendar = '#cal_gregorian'">
                                 <xsl:attribute name="when" select="$v_date-iso"/>
