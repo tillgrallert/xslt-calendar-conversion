@@ -94,7 +94,7 @@
     <xsl:variable name="v_regex-date-yyyy-mm-dd" select="'(\d{4})\-(\d{1,2})\-(\d{1,2})'"/>
     <xsl:variable name="v_regex-date-dd-MNn-yyyy" select="'(\d{1,2})\s+((\w+\s){1,2}?)(\s*سنة)?\s*(\d{3,4})'"/>
     <xsl:variable name="v_regex-date-MNn-dd-yyyy" select="'(\w+)\s+(\d+),\s+(\d{4})'"/>
-    <xsl:variable name="v_regex-date-calendars" select="'((هـ|هجرية*)|(م[\W]|ميلادية*|للمسيح|بعد المسيح))'"/>
+    <xsl:variable name="v_regex-date-calendars" select="'((هـ|هجرية*)|(م[\W]|ميلادية*|للمسيح|مسيحية|بعد المسيح))'"/>
     <xsl:variable name="v_regex-date-yyyy-cal" select="concat('سنة\s+(\d{3,4})', '\s+', $v_regex-date-calendars, '*')"/>
     <xsl:variable name="v_regex-date-dd-MNn-yyyy-cal" select="concat($v_regex-date-dd-MNn-yyyy, '\s+', $v_regex-date-calendars, '*')"/>
     
