@@ -984,16 +984,20 @@
                 </xsl:if>
                 <xsl:if test="$p_output-mode = 'number'">
                     <!-- normalise the input month for arabic -->
-                <xsl:variable name="v_input-month" select="translate($p_input-month, $v_string-ar, $v_string-ar-normalised)"/>
-                <xsl:value-of
-                    select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $v_calendar]/tei:nym[tei:form = $v_input-month]/@n"
-                />
-            </xsl:if>
-        </xsl:variable>
-        <xsl:if test="$v_month = ''">
-            <xsl:message terminate="yes">
-                <xsl:text>There is no output data for the month of "</xsl:text><xsl:value-of select="$p_input-month"/><xsl:text>" using $p_input-lang="</xsl:text><xsl:value-of select="$p_input-lang"/><xsl:text>" and $p_calendar="</xsl:text><xsl:value-of select="$p_calendar"/><xsl:text>".</xsl:text>
-            </xsl:message>
+                    <xsl:variable name="v_input-month" select="translate($p_input-month, $v_string-ar, $v_string-ar-normalised)"/>
+                    <xsl:value-of select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $v_calendar]/tei:nym[tei:form = $v_input-month]/@n"/>
+                </xsl:if>
+            </xsl:variable>
+            <xsl:if test="$v_month = ''">
+                <xsl:message terminate="yes">
+                    <xsl:text>There is no output data for the month of "</xsl:text>
+                    <xsl:value-of select="$p_input-month"/>
+                    <xsl:text>" using $p_input-lang="</xsl:text>
+                    <xsl:value-of select="$p_input-lang"/>
+                    <xsl:text>" and $p_calendar="</xsl:text>
+                    <xsl:value-of select="$p_calendar"/>
+                    <xsl:text>".</xsl:text>
+                </xsl:message>
             </xsl:if>
             <xsl:value-of select="$v_month"/>
         </xsl:if>
@@ -1416,16 +1420,18 @@
                     <xsl:value-of select="$p_input"/>
                 </xsl:when>
                 <xsl:when test="matches($p_input, '^\d{3,4}-\d{1,2}-\d{1,2}$')">
-                    <xsl:value-of select="concat(format-number(number(tokenize($p_input, '-')[1]), '0000'), '-', format-number(number(tokenize($p_input, '-')[2]), '00'), '-', format-number(number(tokenize($p_input, '-')[3]), '00'))"/>
+                    <xsl:value-of
+                        select="concat(format-number(number(tokenize($p_input, '-')[1]), '0000'), '-', format-number(number(tokenize($p_input, '-')[2]), '00'), '-', format-number(number(tokenize($p_input, '-')[3]), '00'))"
+                    />
                 </xsl:when>
                 <!-- date -->
                 <!-- something else -->
                 <xsl:otherwise>
-            <xsl:message terminate="yes">
-                <xsl:text>The input </xsl:text>
-                <xsl:value-of select="$p_input"/>
-                <xsl:text> is not an ISO date</xsl:text>
-            </xsl:message>
+                    <xsl:message terminate="yes">
+                        <xsl:text>The input </xsl:text>
+                        <xsl:value-of select="$p_input"/>
+                        <xsl:text> is not an ISO date</xsl:text>
+                    </xsl:message>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
@@ -1435,19 +1441,19 @@
                 <xsl:value-of select="$v_input"/>
             </xsl:when>
             <!-- input: gregorian -->
-            <xsl:when test="$p_input-calendar = '#cal_gregorian'">
+            <xsl:when test="$p_input-calendar = ('#cal_gregorian', 'https://www.wikidata.org/wiki/Q12138')">
                 <xsl:variable name="v_julian-day-of-input" select="oape:date-convert-gregorian-to-julian-day($v_input)"/>
                 <xsl:choose>
-                    <xsl:when test="$p_output-calendar = '#cal_julian'">
+                    <xsl:when test="$p_output-calendar = ('#cal_julian', 'https://www.wikidata.org/wiki/Q1279922')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-julian($v_julian-day-of-input)"/>
                     </xsl:when>
-                    <xsl:when test="$p_output-calendar = '#cal_islamic'">
+                    <xsl:when test="$p_output-calendar = ('#cal_islamic', 'https://www.wikidata.org/wiki/Q28892')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-islamic($v_julian-day-of-input)"/>
                     </xsl:when>
                     <xsl:when test="$p_output-calendar = '#cal_ottomanfiscal'">
                         <xsl:value-of select="oape:date-convert-julian-to-ottoman-fiscal(oape:date-convert-julian-day-to-julian($v_julian-day-of-input))"/>
                     </xsl:when>
-                    <xsl:when test="$p_output-calendar = '#cal_coptic'">
+                    <xsl:when test="$p_output-calendar = ('#cal_coptic', 'https://www.wikidata.org/wiki/Q750430')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-coptic($v_julian-day-of-input)"/>
                     </xsl:when>
                     <!-- fallback -->
@@ -1459,19 +1465,19 @@
                 </xsl:choose>
             </xsl:when>
             <!-- input: Islamic -->
-            <xsl:when test="$p_input-calendar = '#cal_islamic'">
+            <xsl:when test="$p_input-calendar = ('#cal_islamic', 'https://www.wikidata.org/wiki/Q28892')">
                 <xsl:variable name="v_julian-day-of-input" select="oape:date-convert-islamic-to-julian-day($v_input)"/>
                 <xsl:choose>
-                    <xsl:when test="$p_output-calendar = '#cal_gregorian'">
+                    <xsl:when test="$p_output-calendar = ('#cal_gregorian', 'https://www.wikidata.org/wiki/Q12138')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-gregorian($v_julian-day-of-input)"/>
                     </xsl:when>
-                    <xsl:when test="$p_output-calendar = '#cal_julian'">
+                    <xsl:when test="$p_output-calendar = ('#cal_julian', 'https://www.wikidata.org/wiki/Q1279922')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-julian($v_julian-day-of-input)"/>
                     </xsl:when>
                     <xsl:when test="$p_output-calendar = '#cal_ottomanfiscal'">
                         <xsl:value-of select="oape:date-convert-julian-to-ottoman-fiscal(oape:date-convert-julian-day-to-julian($v_julian-day-of-input))"/>
                     </xsl:when>
-                    <xsl:when test="$p_output-calendar = '#cal_coptic'">
+                    <xsl:when test="$p_output-calendar = ('#cal_coptic', 'https://www.wikidata.org/wiki/Q750430')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-coptic($v_julian-day-of-input)"/>
                     </xsl:when>
                     <!-- fallback -->
@@ -1483,19 +1489,19 @@
                 </xsl:choose>
             </xsl:when>
             <!-- input: Julian -->
-            <xsl:when test="$p_input-calendar = '#cal_julian'">
+            <xsl:when test="$p_input-calendar = ('#cal_julian', 'https://www.wikidata.org/wiki/Q1279922')">
                 <xsl:variable name="v_julian-day-of-input" select="oape:date-convert-julian-to-julian-day($v_input)"/>
                 <xsl:choose>
-                    <xsl:when test="$p_output-calendar = '#cal_gregorian'">
+                    <xsl:when test="$p_output-calendar = ('#cal_gregorian', 'https://www.wikidata.org/wiki/Q12138')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-gregorian($v_julian-day-of-input)"/>
                     </xsl:when>
-                    <xsl:when test="$p_output-calendar = '#cal_islamic'">
+                    <xsl:when test="$p_output-calendar = ('#cal_islamic', 'https://www.wikidata.org/wiki/Q28892')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-islamic($v_julian-day-of-input)"/>
                     </xsl:when>
                     <xsl:when test="$p_output-calendar = '#cal_ottomanfiscal'">
                         <xsl:value-of select="oape:date-convert-julian-to-ottoman-fiscal($v_input)"/>
                     </xsl:when>
-                    <xsl:when test="$p_output-calendar = '#cal_coptic'">
+                    <xsl:when test="$p_output-calendar = ('#cal_coptic', 'https://www.wikidata.org/wiki/Q750430')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-coptic($v_julian-day-of-input)"/>
                     </xsl:when>
                     <!-- fallback -->
@@ -1510,16 +1516,16 @@
             <xsl:when test="$p_input-calendar = '#cal_ottomanfiscal'">
                 <xsl:variable name="v_julian-day-of-input" select="oape:date-convert-julian-to-julian-day(oape:date-convert-ottoman-fiscal-to-julian($v_input))"/>
                 <xsl:choose>
-                    <xsl:when test="$p_output-calendar = '#cal_gregorian'">
+                    <xsl:when test="$p_output-calendar = ('#cal_gregorian', 'https://www.wikidata.org/wiki/Q12138')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-gregorian($v_julian-day-of-input)"/>
                     </xsl:when>
-                    <xsl:when test="$p_output-calendar = '#cal_islamic'">
+                    <xsl:when test="$p_output-calendar = ('#cal_islamic', 'https://www.wikidata.org/wiki/Q28892')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-islamic($v_julian-day-of-input)"/>
                     </xsl:when>
-                    <xsl:when test="$p_output-calendar = '#cal_julian'">
+                    <xsl:when test="$p_output-calendar = ('#cal_julian', 'https://www.wikidata.org/wiki/Q1279922')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-julian($v_julian-day-of-input)"/>
                     </xsl:when>
-                    <xsl:when test="$p_output-calendar = '#cal_coptic'">
+                    <xsl:when test="$p_output-calendar = ('#cal_coptic', 'https://www.wikidata.org/wiki/Q750430')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-coptic($v_julian-day-of-input)"/>
                     </xsl:when>
                     <!-- fallback -->
@@ -1531,16 +1537,17 @@
                 </xsl:choose>
             </xsl:when>
             <!-- input: Coptic -->
-            <xsl:when test="$p_input-calendar = '#cal_coptic'">
+            <xsl:when test="$p_input-calendar = ('#cal_coptic', 'https://www.wikidata.org/wiki/Q750430')">
                 <xsl:variable name="v_julian-day-of-input" select="oape:date-convert-coptic-to-julian-day($v_input)"/>
                 <xsl:choose>
-                    <xsl:when test="$p_output-calendar = '#cal_gregorian'">
+                    <xsl:when test="$p_output-calendar = ('#cal_gregorian', 'https://www.wikidata.org/wiki/Q12138')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-gregorian($v_julian-day-of-input)"/>
                     </xsl:when>
-                    <xsl:when test="$p_output-calendar = '#cal_islamic'">
+                    <xsl:when test="$p_output-calendar = ('#cal_islamic', 'https://www.wikidata.org/wiki/Q28892')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-islamic($v_julian-day-of-input)"/>
                     </xsl:when>
-                    <xsl:when test="$p_output-calendar = '#cal_julian'">
+                    <xsl:when test="$p_output-calendar = ('#cal_julian', 'https://www.wikidata.org/wiki/Q1279922')
+">
                         <xsl:value-of select="oape:date-convert-julian-day-to-julian($v_julian-day-of-input)"/>
                     </xsl:when>
                     <xsl:when test="$p_output-calendar = '#cal_ottomanfiscal'">
@@ -1567,6 +1574,7 @@
         <xd:desc>This function tries to establish calendars for an input date string on the basis of month names. This approach will fail with calendars that use the same month names, such as the Gregorian and the new Julian calendar. The preference for any one of them needs to be set with an additional calendar.</xd:desc>
         <xd:param name="p_input"/>
         <xd:param name="p_mode"/>
+        <xd:param name="p_assume-gregorian"/>
     </xd:doc>
     <xsl:function name="oape:date-establish-calendar">
         <!-- $p_input is a date or a month name -->
