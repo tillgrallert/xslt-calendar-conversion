@@ -12,8 +12,8 @@
         <xsl:variable name="v_input" select="'10 August 1907'"/>
         <xsl:variable name="v_gregorian-date" select="oape:date-normalise-input($v_input,'en', '#cal_gregorian')"/>
 <!--        <xsl:variable name="v_gregorian-date" select="oape:date-convert-julian-day-to-gregorian(oape:date-convert-coptic-to-julian-day('1609-10-07'))"/>-->
-        <xsl:variable name="v_islamic-date" select="oape:date-convert-calendars($v_gregorian-date, '#cal_gregorian', '#cal_islamic')"/>
-        <xsl:variable name="v_julian-date" select="oape:date-convert-calendars($v_gregorian-date, '#cal_gregorian', '#cal_julian')"/>
+        <xsl:variable name="v_islamic-date" select="oape:date-convert-calendars($v_gregorian-date, '#cal_gregorian', 'https://www.wikidata.org/wiki/Q28892')"/>
+        <xsl:variable name="v_julian-date" select="oape:date-convert-calendars($v_gregorian-date, '#cal_gregorian', 'https://www.wikidata.org/wiki/Q1279922')"/>
         <xsl:variable name="v_ottoman-fiscal-date" select="oape:date-convert-calendars($v_gregorian-date, '#cal_gregorian', '#cal_ottomanfiscal')"/>
         <xsl:variable name="v_coptic-date" select="oape:date-convert-calendars($v_gregorian-date,'#cal_gregorian', '#cal_coptic')"/>
         <!-- output -->
