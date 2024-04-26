@@ -75,7 +75,7 @@
     <xsl:param name="p_ottoman-fiscal-last-year" select="1338"/>
     <xsl:param as="xs:double" name="p_islamic-last-year"
         select="number(substring(oape:date-convert-calendars(string(format-date(current-date(), '[Y0001]-[M01]-[D01]')), '#cal_gregorian', '#cal_islamic'), 1, 4))"/>
-    <xsl:param name="p_debug" select="true()"/>
+    <xsl:param name="p_debug" select="false()"/>
     <!-- translate strings -->
     <xsl:variable name="v_string-digits-latn" select="'0123456789'"/>
     <xsl:variable name="v_string-digits-ar" select="'٠١٢٣٤٥٦٧٨٩'"/>
@@ -105,13 +105,11 @@
         <xsl:param name="p_gregorian-date"/>
         <xsl:variable name="v_gregorian-year" select="number(tokenize($p_gregorian-date, '([.,&quot;\-])')[1])"/>
         <!-- determines wether the year is a leap year: can be divided by four, but in centesial years divided by 400 -->
-        <xsl:value-of
-            select="
+        <xsl:value-of select="
                 if (($v_gregorian-year mod 4) = 0 and (not((($v_gregorian-year mod 100) = 0) and (not(($v_gregorian-year mod 400) = 0))))) then
                     (true())
                 else
-                    (false())"
-        />
+                    (false())"/>
     </xsl:function>
     <xd:doc>
         <xd:desc>This function converts Gregorian to Julian Day </xd:desc>
@@ -127,8 +125,7 @@
         <xsl:variable name="v_is-gregorian-leap-year" select="oape:date-is-gregorian-leap-year($p_gregorian-date)"/>
         <!-- v1b: p_julian-day-for-gregorian-base had been one too few -->
         <xsl:variable name="vA" select="(((367 * $v_gregorian-month) - 362) div 12)"/>
-        <xsl:variable name="vB"
-            select="
+        <xsl:variable name="vB" select="
                 (if ($v_gregorian-month &lt;= 2) then
                     (0)
                 else
@@ -179,8 +176,7 @@
         <xsl:variable name="vDquad" select="$vDcent mod 1461"/>
         <xsl:variable name="vYindex" select="floor($vDquad div 365)"/>
         <!-- year is correctly calculated -->
-        <xsl:variable name="v_gregorian-year"
-            select="
+        <xsl:variable name="v_gregorian-year" select="
                 if (not(($vCent = 4) or ($vYindex = 4))) then
                     ((($vQuadricent * 400) + ($vCent * 100) + ($vQuad * 4) + $vYindex) + 1)
                 else
@@ -411,14 +407,12 @@
         <xsl:variable name="v_julian-month" select="number(tokenize($p_julian-date, '([.,&quot;\-])')[2])"/>
         <xsl:variable name="v_julian-day" select="number(tokenize($p_julian-date, '([.,&quot;\-])')[3])"/>
         <!-- Algorithm as given in Meeus, Astronomical Algorithms, Chapter 7, page 61 -->
-        <xsl:variable name="v_julian-year-adjustment"
-            select="
+        <xsl:variable name="v_julian-year-adjustment" select="
                 if ($v_julian-month &lt;= 2) then
                     ($v_julian-year - 1)
                 else
                     ($v_julian-year)"/>
-        <xsl:variable name="v_julian-month-adjustment"
-            select="
+        <xsl:variable name="v_julian-month-adjustment" select="
                 if ($v_julian-month &lt;= 2) then
                     ($v_julian-month + 12)
                 else
@@ -497,15 +491,13 @@
         <xsl:variable name="v_julian-month" select="number(tokenize($p_julian-date, '([.,&quot;\-])')[2])"/>
         <xsl:variable name="v_julian-day" select="number(tokenize($p_julian-date, '([.,&quot;\-])')[3])"/>
         <!-- vMontM computes the months as staring with March -->
-        <xsl:variable name="v_ottoman-fiscal-month"
-            select="
+        <xsl:variable name="v_ottoman-fiscal-month" select="
                 if ($v_julian-month &lt;= 2) then
                     ($v_julian-month + 10)
                 else
                     ($v_julian-month - 2)"/>
         <!-- v_julian-year-old-system computes old Julian years beginning on 1 March -->
-        <xsl:variable name="v_julian-year-old-system"
-            select="
+        <xsl:variable name="v_julian-year-old-system" select="
                 if ($v_julian-month &lt;= 2) then
                     ($v_julian-year - 1)
                 else
@@ -587,15 +579,13 @@
         <xsl:variable name="v_ottoman-fiscal-month" select="number(tokenize($p_ottoman-fiscal-date, '([.,&quot;\-])')[2])"/>
         <xsl:variable name="v_ottoman-fiscal-day" select="number(tokenize($p_ottoman-fiscal-date, '([.,&quot;\-])')[3])"/>
         <!-- v_julian-month computes the months as staring with January -->
-        <xsl:variable name="v_julian-month"
-            select="
+        <xsl:variable name="v_julian-month" select="
                 if ($v_ottoman-fiscal-month &lt;= 10) then
                     ($v_ottoman-fiscal-month + 2)
                 else
                     ($v_ottoman-fiscal-month - 10)"/>
         <!-- v_julian-year-new-system computes Julian years beginning on 1 January -->
-        <xsl:variable name="v_julian-year-new-system"
-            select="
+        <xsl:variable name="v_julian-year-new-system" select="
                 if ($v_ottoman-fiscal-month &lt;= 10) then
                     ($v_ottoman-fiscal-year)
                 else
@@ -988,18 +978,22 @@
                     <xsl:value-of select="$v_month-names-and-numbers/descendant::tei:listNym[@corresp = $v_calendar]/tei:nym[tei:form = $v_input-month]/@n"/>
                 </xsl:if>
             </xsl:variable>
-            <xsl:if test="$v_month = ''">
-                <xsl:message terminate="yes">
-                    <xsl:text>There is no output data for the month of "</xsl:text>
-                    <xsl:value-of select="$p_input-month"/>
-                    <xsl:text>" using $p_input-lang="</xsl:text>
-                    <xsl:value-of select="$p_input-lang"/>
-                    <xsl:text>" and $p_calendar="</xsl:text>
-                    <xsl:value-of select="$p_calendar"/>
-                    <xsl:text>".</xsl:text>
-                </xsl:message>
-            </xsl:if>
-            <xsl:value-of select="$v_month"/>
+            <xsl:choose>
+                <xsl:when test="$v_month = ''">
+                    <xsl:message terminate="no">
+                        <xsl:text>There is no output data for the month of "</xsl:text>
+                        <xsl:value-of select="$p_input-month"/>
+                        <xsl:text>" using $p_input-lang="</xsl:text>
+                        <xsl:value-of select="$p_input-lang"/>
+                        <xsl:text>" and $p_calendar="</xsl:text>
+                        <xsl:value-of select="$p_calendar"/>
+                        <xsl:text>".</xsl:text>
+                    </xsl:message>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="$v_month"/>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:if>
     </xsl:function>
     <xd:doc>
@@ -1546,8 +1540,7 @@
                     <xsl:when test="$p_output-calendar = ('#cal_islamic', 'https://www.wikidata.org/wiki/Q28892')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-islamic($v_julian-day-of-input)"/>
                     </xsl:when>
-                    <xsl:when test="$p_output-calendar = ('#cal_julian', 'https://www.wikidata.org/wiki/Q1279922')
-">
+                    <xsl:when test="$p_output-calendar = ('#cal_julian', 'https://www.wikidata.org/wiki/Q1279922')">
                         <xsl:value-of select="oape:date-convert-julian-day-to-julian($v_julian-day-of-input)"/>
                     </xsl:when>
                     <xsl:when test="$p_output-calendar = '#cal_ottomanfiscal'">
@@ -1564,7 +1557,9 @@
             <!-- fallback -->
             <xsl:otherwise>
                 <xsl:message>
-                    <xsl:text>Input calendar has not been recognised.</xsl:text>
+                    <xsl:text>Input calendar "</xsl:text>
+                    <xsl:value-of select="$p_input-calendar"/>
+                    <xsl:text>" has not been recognised.</xsl:text>
                 </xsl:message>
             </xsl:otherwise>
         </xsl:choose>
@@ -1584,8 +1579,7 @@
         <xsl:param as="xs:boolean" name="p_assume-gregorian"/>
         <!-- extract the month name from the input -->
         <!-- to do: remove harakat, hamza, etc for Arabic words -->
-        <xsl:variable name="v_month-name"
-            select="
+        <xsl:variable name="v_month-name" select="
                 if ($p_mode = 'date') then
                     (oape:date-extract-month-name($p_input))
                 else
